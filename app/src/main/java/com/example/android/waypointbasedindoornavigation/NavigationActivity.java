@@ -22,7 +22,11 @@ Author:
 
 --*/
 
+import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,11 +34,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -61,10 +68,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import static com.example.android.waypointbasedindoornavigation.R.id.imageView;
 import static com.example.android.waypointbasedindoornavigation.Setting.getMobilityValue;
@@ -128,6 +137,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String PLEASE_WALK_UP_STAIR = "請走樓梯";
 
 
+    private BluetoothManager bluetoothManager;
+    private BluetoothAdapter mBluetoothAdapter;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
 
     // start ---------- Variables used to record important values ------------
 
@@ -156,6 +172,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // a list of Vertex object representing a navigation path
     List<Vertex> navigationPath = new ArrayList<Vertex>();
+    Queue<String> tmp_path = new LinkedList<>();
 
     HashMap<String, String> mappingOfRegionNameAndID = new HashMap<>();
 
@@ -230,8 +247,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     EditText waypointIDInput;
     Button waypointIDInputButton;
     int whichWaypointOnProgressBar = 0;
+    private Find_Loc LBD = new Find_Loc();
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
 
     @Override
@@ -520,13 +539,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-20"));
 
-        beaconManager.setForegroundScanPeriod(ONE_SECOND);
-        beaconManager.setForegroundBetweenScanPeriod(2*ONE_SECOND);
+        //beaconManager.setForegroundScanPeriod(ONE_SECOND);
+        //beaconManager.setForegroundBetweenScanPeriod(2*ONE_SECOND);
 
+
+        beaconManager.setForegroundScanPeriod(200);
+        beaconManager.setForegroundBetweenScanPeriod(0);
+        beaconManager.removeAllMonitorNotifiers();
+        beaconManager.removeAllRangeNotifiers();
 
         // Get the details for all the beacons we encounter.
         region = new Region("justGiveMeEverything", null, null, null);
-
+        bluetoothManager = (BluetoothManager)
+                getSystemService(Context.BLUETOOTH_SERVICE);
+        ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
     }
 
     @Override
@@ -547,7 +573,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(beacon);
+                        logBeaconData(LBD.Find_Loc(beacon,true));
                     }
                 }
             }
@@ -565,19 +591,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // load beacon ID
-    private void logBeaconData(Beacon beacon) {
+    private void logBeaconData(List<String> beacon) {
 
-        if (beacon.getRssi() > RSSI_THRESHOLD) {
+        if (beacon.size()>2) {
+            LBD.wrtieFileOnInternalStorage("Log.txt","NAP1:"+beacon.toString());
 
-            String CConvX, CConvY;
-            CConvX = beacon.getId2().toString();
-            CConvY = beacon.getId3().toString();
-
-            Log.i("beacon","Recieved ID: "+CConvX.concat(CConvY)+" " +
-                    "Length: "+CConvX.concat(CConvY).length());
+            String receivebeacon = beacon.get(1);
 
             // block the Lbeacon ID the navigator just received
-            if(!currentLBeaconID.equals(CConvX.concat(CConvY))){
+            if (!currentLBeaconID.equals(receivebeacon)) {
 
                 // draw a navigation progress bar
                 paint.setAntiAlias(true);
@@ -585,19 +607,19 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 paint.setStyle(Style.FILL_AND_STROKE);
                 paint.setStrokeWidth(10);
 
-                canvas.drawCircle(200+base*whichWaypointOnProgressBar,250, 15,paint);
-                canvas.drawLine(200+base*whichWaypointOnProgressBar, 250,
-                        200+base*(whichWaypointOnProgressBar+1),250, paint);
+                canvas.drawCircle(200 + base * whichWaypointOnProgressBar, 250, 15, paint);
+                canvas.drawLine(200 + base * whichWaypointOnProgressBar, 250,
+                        200 + base * (whichWaypointOnProgressBar + 1), 250, paint);
 
                 whichWaypointOnProgressBar += 1;
 
                 // update the currentLbeaconID and go to handlerForLbeacon
-                currentLBeaconID = CConvX.concat(CConvY);
+                currentLBeaconID = receivebeacon;
+//                currentLBeaconID = CConvX.concat(CConvY);
                 synchronized (sync) {
-                sync.notify();
+                    sync.notify();
                 }
             }
-
         }
     }
 
@@ -717,7 +739,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                      navigationPath.remove(i);
             }
         }
-        
+
+
+        for (int i = 0; i<navigationPath.size(); i++)
+            tmp_path.offer(navigationPath.get(i).getID());
+        LBD.setpath(tmp_path);
+//        Log.i("NAP",tmp_path.toString());
 
         //Draw a navigation progress bar based on navigation path
         drawProgressBar(navigationPath);
