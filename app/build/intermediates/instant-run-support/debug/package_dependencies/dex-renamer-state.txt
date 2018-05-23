@@ -1,0 +1,4 @@
+#Wed May 02 13:04:51 CST 2018
+base.0=/Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/build/intermediates/transforms/dexMerger/debug/86
+path.0=classes.dex
+renamed.0=classes.dex

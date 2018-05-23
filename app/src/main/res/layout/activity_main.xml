@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#BDBDBD"
+    android:id="@+id/mainActivityLayout"
+    tools:context="com.example.android.waypointbasedindoornavigation.MainActivity">
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Starting Point"
+        android:textSize="40dp"
+        android:textColor="@android:color/white"
+        android:paddingTop="40sp"
+        />
+
+    <EditText
+        android:id="@+id/start"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:textSize="30sp"
+        android:ems="10"
+        android:onClick="switchToListView"
+        android:background="@drawable/edittext"
+        android:gravity="center_horizontal"
+        android:hint="choose a starting point"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Destination"
+        android:textSize="40dp"
+        android:textColor="@android:color/white"
+        android:paddingTop="40sp"/>
+
+    <EditText
+        android:id="@+id/destination"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:textSize="30sp"
+        android:ems="10"
+        android:onClick="switchToListView"
+        android:background="@drawable/edittext"
+        android:gravity="center_horizontal"
+        android:hint="choose a destination"/>
+
+    <!--<Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startScanning"
+        android:text="scan"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="104dp">
+
+        <Button
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#1976D2"
+            android:onClick="startNavigation"
+            android:text="Start"
+            android:textColor="@android:color/white"
+            android:textSize="50dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Preference Setting"
+        android:textSize="25dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+            <RadioButton android:id="@+id/p1"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="Elevator"
+                         android:paddingRight="40sp"
+                         android:onClick="onPreferenceButtonClicked"
+                         android:textSize="20dp"/>
+
+            <RadioButton android:id="@+id/p2"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="Stair"
+                         android:paddingRight="40sp"
+                         android:onClick="onPreferenceButtonClicked"
+                         android:textSize="20dp"/>
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

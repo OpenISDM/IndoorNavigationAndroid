@@ -1,0 +1,239 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+MERGED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/ab00e343aa8fbb095bcc7cb767b5c684/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-25.3.1.aar/b07fe2987036feff062859ad6b16027f/AndroidManifest.xml:17:1-26:12
+MERGED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:2:1-44:12
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:17:1-28:12
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:17:1-31:12
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:17:1-31:12
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+	package
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:3:11-70
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:1-24:12
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:5:5-22:19
+MERGED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/ab00e343aa8fbb095bcc7cb767b5c684/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/ab00e343aa8fbb095bcc7cb767b5c684/AndroidManifest.xml:9:5-20
+MERGED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:20:5-42:19
+MERGED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:20:5-42:19
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:29:5-20
+	android:supportsRtl
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:10:9-35
+	android:label
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:8:9-41
+	android:roundIcon
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:9:9-54
+	android:icon
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:7:9-43
+	android:allowBackup
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:6:9-35
+	android:theme
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:11:9-40
+activity#com.example.android.waypointbasedindoornavigation.MainActivity
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:12:9-18:20
+	android:name
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:12:19-47
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:13:13-17:29
+action#android.intent.action.MAIN
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:14:17-68
+	android:name
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:14:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:16:17-76
+	android:name
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:16:27-74
+activity#com.example.android.waypointbasedindoornavigation.ListViewActivity
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:19:9-102
+	android:name
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:19:19-100
+activity#com.example.android.waypointbasedindoornavigation.NavigationActivity
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:20:9-104
+	android:name
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:20:19-102
+activity#com.example.android.waypointbasedindoornavigation.CompassActivity
+ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:21:9-101
+	android:name
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml:21:19-99
+uses-sdk
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+MERGED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/ab00e343aa8fbb095bcc7cb767b5c684/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.0.2.aar/ab00e343aa8fbb095bcc7cb767b5c684/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-25.3.1.aar/b07fe2987036feff062859ad6b16027f/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-25.3.1.aar/b07fe2987036feff062859ad6b16027f/AndroidManifest.xml:20:5-43
+MERGED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:7:5-9:41
+MERGED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:21:5-23:58
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		ADDED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/phil/AndroidStudioProjects/WayPointBasedIndoorNavigation/app/src/main/AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:appcompat-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.3.1.aar/f108bc1f71dc8140d0e182714df3d46c/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-25.3.1.aar/b07fe2987036feff062859ad6b16027f/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:recyclerview-v7:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/recyclerview-v7-25.3.1.aar/b07fe2987036feff062859ad6b16027f/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-25.3.1.aar/97fca69dc7b5215200c9cae315b8e656/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-25.3.1.aar/64cf818b880eb2471a8cae3f71c1b760/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:transition:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/transition-25.3.1.aar/983258f9a46d2c9e6493c9e9b27827e3/AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-v4:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-v4-25.3.1.aar/e40d239e4b2c4af402042b9dca410605/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-fragment-25.3.1.aar/b6ead6ae6b8632e91d6cd8c1a6289ae8/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-ui-25.3.1.aar/8808fbeb45c5efc8a6e2d3ebb02be603/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-media-compat-25.3.1.aar/59e48edb2d92e9da72f58418882fffc5/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-core-utils-25.3.1.aar/ebd4d51638a1b60c88078ea6518b2fe2/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-compat:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/support-compat-25.3.1.aar/82ae21118a3e70c09de9438e21872aa7/AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:design:25.3.1] /Users/phil/.gradle/caches/transforms-1/files-1.1/design-25.3.1.aar/b43190fa8f7e8b750b71ad6b1acac379/AndroidManifest.xml:26:9-47
+uses-permission#android.permission.BLUETOOTH
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:11:5-13:36
+	android:required
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:13:9-33
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:12:9-52
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:14:5-16:36
+	android:required
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:16:9-33
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:15:9-58
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:17:5-81
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:17:22-78
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:18:5-81
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:18:22-78
+receiver#org.altbeacon.beacon.startup.StartupBroadcastReceiver
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:21:9-27:20
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:21:19-87
+intent-filter#android.intent.action.ACTION_POWER_CONNECTED+android.intent.action.ACTION_POWER_DISCONNECTED+android.intent.action.BOOT_COMPLETED
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:22:13-26:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:23:17-79
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:23:25-76
+action#android.intent.action.ACTION_POWER_CONNECTED
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:24:17-87
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:24:25-84
+action#android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:25:17-90
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:25:25-87
+service#org.altbeacon.beacon.service.BeaconService
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:29:9-34:38
+	android:enabled
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:31:13-35
+	android:label
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:34:13-35
+	android:exported
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:32:13-37
+	android:isolatedProcess
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:33:13-44
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:30:13-70
+service#org.altbeacon.beacon.BeaconIntentProcessor
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:35:9-38:40
+	android:enabled
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:38:13-37
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:36:13-70
+service#org.altbeacon.beacon.service.ScanJob
+ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:39:9-41:72
+	android:permission
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:41:13-69
+	android:name
+		ADDED from [org.altbeacon:android-beacon-library:2.12.2] /Users/phil/.gradle/caches/transforms-1/files-1.1/android-beacon-library-2.12.2.aar/e3cec8fbecfcf9f12b40183c1b525823/AndroidManifest.xml:40:13-64
