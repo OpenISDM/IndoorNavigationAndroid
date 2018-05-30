@@ -4,7 +4,7 @@ package com.example.android.waypointbasedindoornavigation;
 
 Module Name:
 
-    Vertex.java
+    Node.java
 
 Abstract:
 
@@ -18,45 +18,47 @@ Author:
 
 import java.util.List;
 
-public class Vertex implements Comparable<Vertex> {
+class Node implements Comparable<Node> {
 
-    String _id;
-    String _name;
+    String _waypointID;
+    String _waypointName;
     double _lat;
     double _lon;
-    String _region;
+    String _regionID;
     String _category;
     int _nodeType;
-    int _connectPointID;
+    int _transferPointID;
 
-    List<String> _neighbors;
-    Edge[] adjacencies;
+    List<String> _adjacentWaypoints;
+    Edge[] _edges;
     double minDistance = Double.POSITIVE_INFINITY;
-    Vertex previous;
+    Node previous;
 
 
-    // constructor of Vertex object for route computation
-    Vertex(String id, String name, double lat, double lon, List<String> neighbors,
-           String region, String category, int nodeType, int connectPointID) {
+    // constructor of Node object for route computation
+    Node(String id, String name, double lat, double lon, List<String> adjacentNode,
+         String region, String category, int nodeType, int connectPointID) {
 
-        this._id = id;
-        this._name = name;
+        this._waypointID = id;
+        this._waypointName = name;
         this._lat = lat;
         this._lon = lon;
-        this._neighbors = neighbors;
-        this._region = region;
+        this._adjacentWaypoints = adjacentNode;
+        this._regionID = region;
         this._category = category;
         this._nodeType = nodeType;
-        this._connectPointID = connectPointID;
+        this._transferPointID = connectPointID;
 
     }
 
-    // constructor for a Vertex object for UI display
-    public Vertex(String id, String name, String region, String category) {
 
-        this._id = id;
-        this._name = name;
-        this._region = region;
+
+    // constructor for a Node object for UI display
+    public Node(String id, String name, String region, String category) {
+
+        this._waypointID = id;
+        this._waypointName = name;
+        this._regionID = region;
         this._category = category;
 
     }
@@ -64,23 +66,23 @@ public class Vertex implements Comparable<Vertex> {
 
     //Ｇet ID
     public String getID() {
-        return this._id;
+        return this._waypointID;
     }
 
     //Ｓet ID
     public void setID(String id) {
-        this._id = id;
+        this._waypointID = id;
     }
 
     //Ｇet name
     public String getName() {
-        return this._name;
+        return this._waypointName;
     }
 
 
-    //Ｇet _region
-    public String get_region() {
-        return this._region;
+    //Ｇet _regionID
+    public String get_regionID() {
+        return this._regionID;
     }
 
     //Ｇet _category
@@ -95,7 +97,7 @@ public class Vertex implements Comparable<Vertex> {
 
     //set name
     public void setName(String name) {
-        this._name = name;
+        this._waypointName = name;
     }
 
     //Ｇet X Coordinate
@@ -120,7 +122,7 @@ public class Vertex implements Comparable<Vertex> {
 
 
     @Override
-    public int compareTo(Vertex other) {
+    public int compareTo(Node other) {
         return Double.compare(minDistance, other.minDistance);
     }
 }

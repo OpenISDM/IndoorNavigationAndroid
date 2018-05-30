@@ -170,8 +170,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     RegionGraph regionGraph = new RegionGraph();
     //HashMap<String, com.example.android.waypointbasedindoornavigation.Region> regionData = new HashMap<>();
 
-    // a list of Vertex object representing a navigation path
-    List<Vertex> navigationPath = new ArrayList<Vertex>();
+    // a list of Node object representing a navigation path
+    List<Node> navigationPath = new ArrayList<Node>();
     Queue<String> tmp_path = new LinkedList<>();
 
     HashMap<String, String> mappingOfRegionNameAndID = new HashMap<>();
@@ -308,7 +308,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         startNavigation();
 
         //set text of destination
-        destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._name);
+        destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
 
 
         // create a thread to handle the Lbeacon signal
@@ -445,7 +445,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         nextTurnMovement.setText("");
                         imageTurnIndicator.setImageResource(R.drawable.stair);
                         walkedWaypoint = 0;
-                        sourceID = navigationPath.get(1)._id;
+                        sourceID = navigationPath.get(1)._waypointID;
                         break;
 
                     case ELEVATOR:
@@ -457,7 +457,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         nextTurnMovement.setText("");
                         imageTurnIndicator.setImageResource(R.drawable.elevator);
                         walkedWaypoint = 0;
-                        sourceID = navigationPath.get(1)._id;
+                        sourceID = navigationPath.get(1)._waypointID;
                         break;
 
                     case ARRIVED:
@@ -470,7 +470,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         canvas.drawColor(Color.WHITE);
                         showPopupWindow(WRONGWAY_NOTIFIER);
                         walkedWaypoint = 0;
-                        sourceRegion = navigationPath.get(0)._region;
+                        sourceRegion = navigationPath.get(0)._regionID;
                         break;
                 }
 
@@ -639,11 +639,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         regionPath = regionGraph.getRegionPath(sourceRegion, destinationRegion);
         //regionPath = getRegionPath(sourceRegion, destinationRegion);
 
+        //String s = regionGraph.regionData.get(sourceID)._regionID;
+        //List<Node> l = regionGraph.regionData.get(sourceID)._transferNodes;
+
+
         // a list of String of region name in regionPath
         List<String> regionPathID = new ArrayList<>();
 
         for(int i=0; i<regionPath.size(); i++)
-            regionPathID.add(regionPath.get(i)._name);
+            regionPathID.add(regionPath.get(i)._regionName);
 
 
         //Load waypoint data from the navigation subgraphs according to the regionPathID
@@ -654,9 +658,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     public void startNavigation() {
 
-        // get the two Vertex objects that represent starting point and destination
-        Vertex startVertex = navigationGraph.get(0).verticesInSubgraph.get(sourceID);
-        Vertex endVertex = navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(destinationID);
+        // get the two Node objects that represent starting point and destination
+        Node startNode = navigationGraph.get(0).verticesInSubgraph.get(sourceID);
+        Node endNode = navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(destinationID);
 
         // temporary variable to record connectPointID
         int connectPointID;
@@ -664,8 +668,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         // navigation in the same region
         if(navigationGraph.size()==1)
 
-            // preform typical dijkstra's algorithm with two given Vertex objects
-            navigationPath = computeDijkstraShortestPath(startVertex, endVertex);
+            // preform typical dijkstra's algorithm with two given Node objects
+            navigationPath = computeDijkstraShortestPath(startNode, endNode);
 
         // navigation between several regions
         else{
@@ -676,7 +680,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             for(int i = 0; i< navigationGraph.size()-1; i++){
 
                 // a destination vertex for each region
-                Vertex destinationOfARegion = null;
+                Node destinationOfARegion = null;
 
                 // the source vertex becomes a normal waypoint
                 navigationGraph.get(i).verticesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
@@ -703,15 +707,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             navigationGraph.get(i).verticesInSubgraph.get(sourceID),false, i+1);
 
                     // get the connectPointID of the transfer node
-                    connectPointID = destinationOfARegion._connectPointID;
+                    connectPointID = destinationOfARegion._transferPointID;
 
                     // find the transfer node with the same connectPointID in the next region
                     // where elevation is different from the current region
-                    for(Entry<String, Vertex> entry : navigationGraph.get(i+1).verticesInSubgraph.entrySet()){
+                    for(Entry<String, Node> entry : navigationGraph.get(i+1).verticesInSubgraph.entrySet()){
 
-                        Vertex v = entry.getValue();
+                        Node v = entry.getValue();
 
-                        if(v._connectPointID == connectPointID){
+                        if(v._transferPointID == connectPointID){
 
                             sourceID = v.getID();
                             break;
@@ -726,16 +730,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             Log.i("bb", "sourceID: " + sourceID);
             //Compute navigation path in the last region
-            List<Vertex> pathInLastRegion = computeDijkstraShortestPath(
+            List<Node> pathInLastRegion = computeDijkstraShortestPath(
                     navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(sourceID),
-                    endVertex);
+                    endNode);
 
             // complete the navigation path
             navigationPath.addAll(pathInLastRegion);
 
             // remove duplicated waypoints which are used as connecting points in the same elevation
             for(int i = 1; i<navigationPath.size(); i++){
-                if(navigationPath.get(i)._id.equals(navigationPath.get(i-1)._id))
+                if(navigationPath.get(i)._waypointID.equals(navigationPath.get(i-1)._waypointID))
                      navigationPath.remove(i);
             }
         }
@@ -752,25 +756,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // compute a shortest path with given starting point and destination
-    public List<Vertex> computeDijkstraShortestPath(Vertex source, Vertex destination) {
+    public List<Node> computeDijkstraShortestPath(Node source, Node destination) {
         source.minDistance = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
-        vertexQueue.add(source);
-        while (!vertexQueue.isEmpty()) {
-            Vertex v = vertexQueue.poll();
+        PriorityQueue<Node> nodeQueue = new PriorityQueue<Node>();
+        nodeQueue.add(source);
+        while (!nodeQueue.isEmpty()) {
+            Node v = nodeQueue.poll();
             //Stop searching when reach the destination node
-            if (v._id.equals(destination._id))
+            if (v._waypointID.equals(destination._waypointID))
                 break;
             // Visit each edge that is adjacent to v
-            for (Edge e : v.adjacencies) {
-                Vertex a = e.target;
+            for (Edge e : v._edges) {
+                Node a = e.target;
                 double weight = e.weight;
                 double distanceThroughU = v.minDistance + weight;
                 if (distanceThroughU < a.minDistance) {
-                    vertexQueue.remove(a);
+                    nodeQueue.remove(a);
                     a.minDistance = distanceThroughU;
                     a.previous = v;
-                    vertexQueue.add(a);
+                    nodeQueue.add(a);
                 }
             }
         }
@@ -778,27 +782,27 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     // compute a shortest path from a given starting point to a transfer node (e.g., elevator, stairwell)
-    public Vertex computePathToTraversePoint(Vertex source, Boolean sameElevation, int indexOfNextRegion) {
+    public Node computePathToTraversePoint(Node source, Boolean sameElevation, int indexOfNextRegion) {
 
         source.minDistance = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
-        vertexQueue.add(source);
+        PriorityQueue<Node> nodeQueue = new PriorityQueue<Node>();
+        nodeQueue.add(source);
 
-        while (!vertexQueue.isEmpty()) {
+        while (!nodeQueue.isEmpty()) {
 
-            Vertex u = vertexQueue.poll();
+            Node u = nodeQueue.poll();
 
             // Visit each edge exiting u
-            for (Edge e : u.adjacencies) {
-                Vertex v = e.target;
+            for (Edge e : u._edges) {
+                Node v = e.target;
                 double weight = e.weight;
                 double distanceThroughU = u.minDistance + weight;
                 if (distanceThroughU < v.minDistance) {
-                    vertexQueue.remove(v);
+                    nodeQueue.remove(v);
 
                     v.minDistance = distanceThroughU;
                     v.previous = u;
-                    vertexQueue.add(v);
+                    nodeQueue.add(v);
                 }
 
                 // if the elevation of the next region to travel is same as current region
@@ -806,7 +810,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(sameElevation == true && v._nodeType == CONNECTPOINT){
 
                     // return v, only if the connect point is in the next region
-                    if(navigationGraph.get(indexOfNextRegion).verticesInSubgraph.get(v._id) != null)
+                    if(navigationGraph.get(indexOfNextRegion).verticesInSubgraph.get(v._waypointID) != null)
                             return v;
 
                 }
@@ -823,10 +827,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // get shortest path by traversing previous waypoint back to the source
-    public List<Vertex> getShortestPathToDestination(Vertex destination) {
-        List<Vertex> path = new ArrayList<Vertex>();
-        for (Vertex vertex = destination; vertex != null; vertex = vertex.previous)
-            path.add(vertex);
+    public List<Node> getShortestPathToDestination(Node destination) {
+        List<Node> path = new ArrayList<Node>();
+        for (Node node = destination; node != null; node = node.previous)
+            path.add(node);
 
         // reverse path to get correct order
         Collections.reverse(path);
@@ -955,7 +959,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
 
                 // if the received ID matches the ID of the next waypoint in the navigation path
-                if (navigationPath.get(0)._id.equals(currentLBeaconID)) {
+                if (navigationPath.get(0)._waypointID.equals(currentLBeaconID)) {
 
                     // three message objects send messages to corresponding handlers
                     Message messageFromInstructionHandler = instructionHandler.obtainMessage();
@@ -963,15 +967,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Message messageFromWalkedPointHandler = walkedPointHandler.obtainMessage();
 
                     // CurrentPositionHandler get the message of currently matched waypoint name
-                    messageFromCurrentPositionHandler.obj = navigationPath.get(0)._name;
+                    messageFromCurrentPositionHandler.obj = navigationPath.get(0)._waypointName;
 
                     // if the navigation path has more than three waypoints to travel
                     if (navigationPath.size() >= 3) {
 
                         // if the next two waypoints are in the same region as the current waypoint
                         // get the turn direction at the next waypoint
-                        if (navigationPath.get(0)._region.equals(navigationPath.get(1)._region) &&
-                                navigationPath.get(1)._region.equals(navigationPath.get(2)._region)){
+                        if (navigationPath.get(0)._regionID.equals(navigationPath.get(1)._regionID) &&
+                                navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID)){
                             messageFromInstructionHandler.obj =
                                     GeoCalulation.getDirectionFromBearing(navigationPath.get(0),
                                             navigationPath.get(1), navigationPath.get(2));
@@ -979,13 +983,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                         // if the next two waypoints are not in the same region
                         // means that the next waypoint is the last waypoint of the region to travel
-                        else if (!(navigationPath.get(1)._region.equals(navigationPath.get(2)._region))) {
+                        else if (!(navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))) {
                             messageFromInstructionHandler.obj = FRONT;
                         }
 
                         // if the current waypoint and the next waypoint are not in the same region
                         // transfer through elevator or stairwell
-                        else if (!(navigationPath.get(0)._region.equals(navigationPath.get(1)._region))) {
+                        else if (!(navigationPath.get(0)._regionID.equals(navigationPath.get(1)._regionID))) {
                             if (navigationPath.get(0)._nodeType == ELEVATOR_WAYPOINT)
                                 messageFromInstructionHandler.obj = ELEVATOR;
                             else if(navigationPath.get(0)._nodeType == STAIRWELL_WAYPOINT)
@@ -1001,7 +1005,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     else if (navigationPath.size() == 2) {
 
                         // if the current waypoint and the next waypoint are not in the same region
-                        if (!(navigationPath.get(0)._region.equals(navigationPath.get(1)._region))) {
+                        if (!(navigationPath.get(0)._regionID.equals(navigationPath.get(1)._regionID))) {
 
                             if (navigationPath.get(0)._nodeType == ELEVATOR_WAYPOINT)
                                 messageFromInstructionHandler.obj = ELEVATOR;
@@ -1032,7 +1036,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     currentPositiontHandler.sendMessage(messageFromCurrentPositionHandler);
                 }
                 // if the received ID does not match the ID of waypoint in the navigation path
-                else if (!(navigationPath.get(0)._id.equals(currentLBeaconID))) {
+                else if (!(navigationPath.get(0)._waypointID.equals(currentLBeaconID))) {
 
                     // send a "wrong" message to the handler
                     Message messageFromInstructionHandler = instructionHandler.obtainMessage();
@@ -1045,7 +1049,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // draw navigation progress bar
-    public void drawProgressBar(List<Vertex> navigationPath){
+    public void drawProgressBar(List<Node> navigationPath){
 
 
 
@@ -1080,7 +1084,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         // draw progress bar
         canvas.drawLine(paddingLeft, paddingBottom,
-                paddingLeft+base*(navigationPath.size()-1), 250, paint);
+                paddingLeft+base*(navigationPath.size()-1), paddingBottom, paint);
 
         //Set drawing style
         paint.setAntiAlias(true);
@@ -1092,11 +1096,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         // show all the waypoint name above the progress bar (for demo)
         for(int i = 0; i < navigationPath.size(); i++)
-            canvas.drawText(navigationPath.get(i)._name, (paddingBottom-70)+base*i , paddingBottom-100, paint);
+            canvas.drawText(navigationPath.get(i)._waypointName, (paddingBottom-70)+base*i , paddingBottom-100, paint);
 
         /*// draw the name of starting point and destination above progress bar
-        canvas.drawText(navigationPath.get(0)._name, 50+base , 150, paint);
-        canvas.drawText(navigationPath.get(navigationPath.size()-1)._name,
+        canvas.drawText(navigationPath.get(0)._waypointName, 50+base , 150, paint);
+        canvas.drawText(navigationPath.get(navigationPath.size()-1)._waypointName,
          50+base*(navigationPath.size()) , 150, paint);*/
 
         // set up drawPanel
@@ -1109,6 +1113,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // enter a waypoint ID to emulate the navigator receiving the corresponding Lbeacon ID (for demo)
     public void enterWaypointID(View view){
 
+
+        if(popupWindow != null)
+            popupWindow.dismiss();
 
         paint.setAntiAlias(true);
         paint.setColor(Color.RED);

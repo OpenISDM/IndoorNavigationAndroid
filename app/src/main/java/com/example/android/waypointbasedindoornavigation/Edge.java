@@ -20,14 +20,14 @@ Author:
 class Edge
 {
     // specify which waypoint the edge is connected to
-    final Vertex target;
+    final Node target;
 
     // the distance of the edge
     final double weight;
 
     // constructor of Edge object
-    Edge(Vertex targetVertex, double weightedDistanceToTarget) {
-        target = targetVertex;
+    Edge(Node targetNode, double weightedDistanceToTarget) {
+        target = targetNode;
         weight = weightedDistanceToTarget;
     }
 }
