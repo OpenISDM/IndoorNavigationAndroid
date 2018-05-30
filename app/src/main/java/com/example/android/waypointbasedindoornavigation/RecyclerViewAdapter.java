@@ -36,11 +36,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
     private LayoutInflater inflater;
 
-    List<Vertex> data = Collections.emptyList();
+    List<Node> data = Collections.emptyList();
 
     Context context;
 
-    public RecyclerViewAdapter(Context context, List<Vertex> data){
+    public RecyclerViewAdapter(Context context, List<Node> data){
 
         inflater = LayoutInflater.from(context);
         this.data = data;
@@ -59,11 +59,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-        final Vertex current = data.get(position);
+        final Node current = data.get(position);
 
         // determine which of location information to be displayed on UI
         holder.title.setText(current.getName());
-        holder.region.setText(current.get_region());
+        holder.region.setText(current.get_regionID());
 
         // an onclick listener for location names in ListViewActivity
         holder.title.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
                 Intent i = new Intent(context, MainActivity.class);
                 i.putExtra("name", current.getName());
                 i.putExtra("id", current.getID());
-                i.putExtra("region", current.get_region());
+                i.putExtra("region", current.get_regionID());
                 context.startActivity(i);
                 ((Activity)context).finish();
             }

@@ -21,19 +21,23 @@ import java.util.List;
 
 class Region {
 
-    String _id;
-    String _name;
-    List<String> _neighbors;
-    List<Vertex> _locationsOfRegion;
+    String _regionID;
+    String _regionName;
+    List<String> _adjacentRegions;
+    List<Node> _transferNodes;
+    List<Node> _locationsOfRegion;
+
     int _elevation;
     boolean visited;
 
     // constructor of Region object
-    Region(String name, List<String> neighbors,
-           List<Vertex> locationsOfRegion, int elevation){
+    Region(String id, String name, List<String> adjacentRegions,
+           List<Node> locationsOfRegion, int elevation){
 
-        this._name = name;
-        this._neighbors = neighbors;
+        this._regionID = id;
+        this._regionName = name;
+        this._adjacentRegions = adjacentRegions;
+
         this._locationsOfRegion = locationsOfRegion;
         this._elevation = elevation;
         this.visited = false;
