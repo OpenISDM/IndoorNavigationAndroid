@@ -45,7 +45,7 @@ public class ListViewActivity extends AppCompatActivity
     List<String> categoryList = new ArrayList<>();
 
     //A HashMap which has String as key and list of vertice as value to be retrieved
-    HashMap<String, List<Vertex>> categorizedDataList = new HashMap<>();
+    HashMap<String, List<Node>> categorizedDataList = new HashMap<>();
 
     //RecyclerView provide a smooth sliding list for user to view location information
     private RecyclerView recyclerView;
@@ -89,23 +89,23 @@ public class ListViewActivity extends AppCompatActivity
         RegionGraph regionGraph = DataParser.getRegionDataFromRegionGraph(this);
 
         //List of vertice for storing location data from regionData
-        List<Vertex> listForStoringAllVertex = new ArrayList<>();
+        List<Node> listForStoringAllNodes = new ArrayList<>();
 
         //Get all category names of POI(point of interest) of the test building
         categoryList = DataParser.getCategoryList();
 
         //Retrieve all location information from regionData and store it as a list of vertice
         for(Region r : regionGraph.regionData.values()){
-            listForStoringAllVertex.addAll(r._locationsOfRegion);
+            listForStoringAllNodes.addAll(r._locationsOfRegion);
         }
 
         //Categorize Vertices into data list,
         //the Vertices in the same data list have the same category
         for(int i = 0; i< categoryList.size(); i++){
 
-            List<Vertex> tmpDataList = new ArrayList<>();
+            List<Node> tmpDataList = new ArrayList<>();
 
-            for(Vertex v : listForStoringAllVertex){
+            for(Node v : listForStoringAllNodes){
 
                 if(v._category.equals(categoryList.get(i)))
                 tmpDataList.add(v);

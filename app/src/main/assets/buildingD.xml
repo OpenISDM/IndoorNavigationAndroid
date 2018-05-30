@@ -3,23 +3,23 @@
 
 
     <region id='1' name='region1' neighbor1='2' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
-        <location id='1' name='Stair(A)' region='region1' category='Facility'/>
-        <location id='2' name='Information' region='region1' category='Service' />
-        <location id='3' name='Healthcare ' region='region1' category='Service' />
-        <location id='4' name='Cash Point' region='region1' category='Service' />
-        <location id='5' name='Drug Consultation' region='region1' category='Service' />
-        <location id='7' name='Elevator(G)' region='region1' category='Facility'/>
-        <location id='10' name='Pharmacy' region='region1' category='Service'/>
-        <location id='12' name='Registration' region='region1' category='Service'/>
+        <POI id='2' name='Information' region='region1' category='Service' />
+        <POI id='3' name='Healthcare ' region='region1' category='Service' />
+        <POI id='4' name='Cash Point' region='region1' category='Service' />
+        <POI id='5' name='Drug Consultation' region='region1' category='Service' />
+        <POI id='10' name='Pharmacy' region='region1' category='Service'/>
+        <POI id='12' name='Registration' region='region1' category='Service'/>
+        <transferNode id='1' name='Stair(A)' region='region1' category='Facility'/>
+        <transferNode id='7' name='Elevator(G)' region='region1' category='Facility'/>
     </region>
 
 
     <region id='2' name='region2' neighbor1='1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>
-        <location id='15' name='Stair(O)' region='region2' category='Facility'/>
-        <location id='21' name='Elevator(U)' region='region2' category='Facility'/>
-        <location id='23' name='Blood test1(W)' region='region2' category='Laboratory'/>
-        <location id='25' name='Clinic room1(Y)' region='region2' category='Clinic room'/>
-        <location id='26' name='Clinic room2(Z)' region='region2' category='Clinic room'/>
+        <POI id='23' name='Blood test1(W)' region='region2' category='Laboratory'/>
+        <POI id='25' name='Clinic room1(Y)' region='region2' category='Clinic room'/>
+        <POI id='26' name='Clinic room2(Z)' region='region2' category='Clinic room'/>
+        <transferNode id='15' name='Stair(O)' region='region2' category='Facility'/>
+        <transferNode id='21' name='Elevator(U)' region='region2' category='Facility'/>
     </region>
 
 

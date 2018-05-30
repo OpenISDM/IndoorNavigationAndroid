@@ -38,12 +38,12 @@ public class GeoCalulation {
     //Get the bearing which is the direction of travel as displayed
     // on a compass when moving from point A to point B
 
-    public static int getBearingOfTwoPoints(Vertex A, Vertex B){
+    public static int getBearingOfTwoPoints(Node A, Node B){
 
-        double latA = Math.toRadians(A._lat); //latitude for Vertex A
-        double longA = Math.toRadians(A._lon); //longitude for Vertex A
-        double latB = Math.toRadians(B._lat); //latitude for Vertex B
-        double longB = Math.toRadians(B._lon); //longitude for Vertex B
+        double latA = Math.toRadians(A._lat); //latitude for Node A
+        double longA = Math.toRadians(A._lon); //longitude for Node A
+        double latB = Math.toRadians(B._lat); //latitude for Node B
+        double longB = Math.toRadians(B._lon); //longitude for Node B
 
         double deltaLon = (longB - longA);
 
@@ -61,8 +61,8 @@ public class GeoCalulation {
     }
 
 
-    //Get the turn direction at Vertex B, when moving from Vertex A to Vertex B to Vertex C
-    public static String getDirectionFromBearing(Vertex A, Vertex B, Vertex C){
+    //Get the turn direction at Node B, when moving from Node A to Node B to Node C
+    public static String getDirectionFromBearing(Node A, Node B, Node C){
 
         // direction result;
         String direction = null;
@@ -105,12 +105,12 @@ public class GeoCalulation {
 
 
     // Get the distance in meter between two vertices A and B with latitudes and longitudes given
-    public static int getDistance(Vertex A, Vertex B) {
+    public static int getDistance(Node A, Node B) {
 
-        double latA = A._lat; //latitude for Vertex A
-        double lonA = A._lon; //longitude for Vertex A
-        double latB = B._lat; //latitude for Vertex B
-        double lonB = B._lon; //longitude for Vertex B
+        double latA = A._lat; //latitude for Node A
+        double lonA = A._lon; //longitude for Node A
+        double latB = B._lat; //latitude for Node B
+        double lonB = B._lon; //longitude for Node B
 
         double latDistance = Math.toRadians(latB - latA);
         double lonDistance = Math.toRadians(lonB - lonA);

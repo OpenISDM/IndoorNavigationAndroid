@@ -23,40 +23,40 @@ import java.util.List;
 import java.util.Map.Entry;
 
 
-public class NavigationSubgraph {
+class NavigationSubgraph {
 
     // hash map for storing all waypoint data of a navigation subgraph
-    HashMap<String, Vertex> verticesInSubgraph;
+    HashMap<String, Node> verticesInSubgraph;
 
     // Constructor
-    public NavigationSubgraph(){
+    NavigationSubgraph(){
 
         this.verticesInSubgraph = new HashMap<>();
     }
 
     // all vertices are added with edge(s) to link their neighbors
-    public void addEdges() {
+    void addEdges() {
 
         //For-loop retrieves all Vertices from HashMap
-        for (Entry<String, Vertex> entry : verticesInSubgraph.entrySet()) {
+        for (Entry<String, Node> entry : verticesInSubgraph.entrySet()) {
 
-            Vertex vertex = entry.getValue();
+            Node node = entry.getValue();
 
-            // an ArrayList for storing Edge(s) for a Vertex object
+            // an ArrayList for storing Edge(s) for a Node object
             List<Edge> listOfEdge = new ArrayList<>();
 
-            for(int i=0; i<vertex._neighbors.size(); i++){
+            for(int i = 0; i< node._adjacentWaypoints.size(); i++){
 
                 //Initialize an Edge object to represent a connection to a neighbor
-                Edge e = new Edge(verticesInSubgraph.get(vertex._neighbors.get(i)),
-                        GeoCalulation.getDistance(vertex,
-                                verticesInSubgraph.get(vertex._neighbors.get(i))));
+                Edge e = new Edge(verticesInSubgraph.get(node._adjacentWaypoints.get(i)),
+                        GeoCalulation.getDistance(node,
+                                verticesInSubgraph.get(node._adjacentWaypoints.get(i))));
 
                 listOfEdge.add(e);
             }
 
             // convert ArrayList into array
-            vertex.adjacencies = listOfEdge.toArray(new Edge[0]);
+            node._edges = listOfEdge.toArray(new Edge[0]);
         }
     }
 }

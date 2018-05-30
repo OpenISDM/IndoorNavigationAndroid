@@ -21,7 +21,6 @@ Author:
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -68,18 +67,21 @@ public class DataParser {
 
                     if(tag.equals("region")) {
 
-                        List<Vertex> listOfLoactions = new ArrayList<>();
+                        List<Node> listOfLoactions = new ArrayList<>();
 
-                        String nameOfRegion = null;
+                        String regionID = null;
+                        String regionName = null;
                         String neighbor1 = null;
                         String neighbor2 = null;
                         String neighbor3 = null;
                         String neighbor4 = null;
                         List<String> neighbors = new ArrayList<>();
+                        List<String> transforNodes = new ArrayList<>();
                         int elevation = 0;
 
                         // get the information of each Region
-                        nameOfRegion = pullParser.getAttributeValue(null, "name");
+                        regionID = pullParser.getAttributeValue(null, "id");
+                        regionName = pullParser.getAttributeValue(null, "name");
                         neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
                         neighbor2 = pullParser.getAttributeValue(null, "neighbor2");
                         neighbor3 = pullParser.getAttributeValue(null, "neighbor3");
@@ -108,7 +110,7 @@ public class DataParser {
 
                             if (eventType == XmlPullParser.START_TAG) {
 
-                                if(pullParser.getName().equals("location")){
+                                if(pullParser.getName().equals("node")){
 
                                 String id = null;
                                 String name = null;
@@ -128,8 +130,8 @@ public class DataParser {
                                 categoryList.add(category);
 
                             // add the information of a waypoint to a list belongs to a Region
-                            Vertex vertex = new Vertex(id, name, region, category);
-                            listOfLoactions.add(vertex);
+                            Node node = new Node(id, name, region, category);
+                            listOfLoactions.add(node);
 
                                 }
                             }
@@ -138,11 +140,11 @@ public class DataParser {
                         }
 
                         // a Region object is created
-                        Region region = new Region(nameOfRegion, neighbors, listOfLoactions ,elevation);
+                        Region region = new Region(regionID, regionName, neighbors, listOfLoactions ,elevation);
 
                         // put the Region object into hashmap with its name as the key
-                        regionGraph.regionData.put(region._name, region);
-                        //hashMapOfRegion.put(region._name, region);
+                        regionGraph.regionData.put(region._regionName, region);
+                        //hashMapOfRegion.put(region._waypointName, region);
                     }
 
                 }
@@ -193,7 +195,7 @@ public class DataParser {
                     int nodeType = 0;
                     int connectPointID = 0;
                     int elevation = 0;
-                    List<String> neighbors = new ArrayList<>();
+                    List<String> adjacentNodes = new ArrayList<>();
 
                     // get complete waypoint data from navigation subgraph
                     if (eventType == XmlPullParser.START_TAG) {
@@ -216,13 +218,13 @@ public class DataParser {
                             neighbor4 = pullParser.getAttributeValue(null, "neighbor4");
 
                             if(!neighbor1.isEmpty())
-                                neighbors.add(neighbor1);
+                                adjacentNodes.add(neighbor1);
                             if(!neighbor2.isEmpty())
-                                neighbors.add(neighbor2);
+                                adjacentNodes.add(neighbor2);
                             if(!neighbor3.isEmpty())
-                                neighbors.add(neighbor3);
+                                adjacentNodes.add(neighbor3);
                             if(!neighbor4.isEmpty())
-                                neighbors.add(neighbor4);
+                                adjacentNodes.add(neighbor4);
 
 
                             if (!pullParser.getAttributeValue(null, "nodeType").isEmpty())
@@ -238,13 +240,13 @@ public class DataParser {
                                         "elevation"));
 
 
-                            // create a Vertex object initialized with the retrieved data
-                            Vertex vertex = new Vertex(id, name, lon, lat, neighbors, region,
+                            // create a Node object initialized with the retrieved data
+                            Node node = new Node(id, name, lon, lat, adjacentNodes, region,
                                     category, nodeType, connectPointID);
 
 
-                            // put each Vertex object into a navigationSubgraph object
-                            navigationSubgraph.verticesInSubgraph.put(id, vertex);
+                            // put each Node object into a navigationSubgraph object
+                            navigationSubgraph.verticesInSubgraph.put(id, node);
 
                         }
                     }

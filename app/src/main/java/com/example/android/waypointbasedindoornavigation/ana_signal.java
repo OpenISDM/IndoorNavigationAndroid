@@ -1,10 +1,8 @@
 package com.example.android.waypointbasedindoornavigation;
 
-import android.app.Notification;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

@@ -32,21 +32,21 @@ class RegionGraph {
         Queue<Region> queue = new LinkedList<>();
         HashMap<String, com.example.android.waypointbasedindoornavigation.Region> path = new HashMap<>();
         queue.add(regionData.get(sourceRegion));
-        path.put(regionData.get(sourceRegion)._name, null);
+        path.put(regionData.get(sourceRegion)._regionName, null);
         regionData.get(sourceRegion).visited=true;
 
         while(!queue.isEmpty()){
 
             com.example.android.waypointbasedindoornavigation.Region regionNode = queue.remove();
 
-            for(int i=0; i<regionNode._neighbors.size(); i++){
+            for(int i = 0; i<regionNode._adjacentRegions.size(); i++){
 
-                String nameOfNeighbor = regionNode._neighbors.get(i);
+                String nameOfNeighbor = regionNode._adjacentRegions.get(i);
 
                 if(regionData.get(nameOfNeighbor)!=null && !regionData.get(nameOfNeighbor).visited){
 
                     queue.add(regionData.get(nameOfNeighbor));
-                    path.put(regionData.get(nameOfNeighbor)._name, regionNode);
+                    path.put(regionData.get(nameOfNeighbor)._regionName, regionNode);
 
                     regionData.get(nameOfNeighbor).visited = true;
                 }
@@ -60,8 +60,8 @@ class RegionGraph {
 
             shortestRegionPath.add(regionData.get(destinationRegion));
 
-            if(!regionData.get(destinationRegion)._name.equals(sourceRegion))
-                destinationRegion = path.get(regionData.get(destinationRegion)._name)._name;
+            if(!regionData.get(destinationRegion)._regionName.equals(sourceRegion))
+                destinationRegion = path.get(regionData.get(destinationRegion)._regionName)._regionName;
             else
                 break;
 
@@ -81,7 +81,7 @@ class RegionGraph {
 
             Region region = entry.getValue();
 
-            nameOfRegion.add(region._name);
+            nameOfRegion.add(region._regionName);
         }
 
         return nameOfRegion;
