@@ -603,20 +603,29 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // block the Lbeacon ID the navigator just received
             if (!currentLBeaconID.equals(receivebeacon)) {
 
-                // draw a navigation progress bar
+
+                if(popupWindow != null)
+                    popupWindow.dismiss();
+
                 paint.setAntiAlias(true);
                 paint.setColor(Color.RED);
                 paint.setStyle(Style.FILL_AND_STROKE);
                 paint.setStrokeWidth(10);
 
-                canvas.drawCircle(200 + base * whichWaypointOnProgressBar, 250, 15, paint);
-                canvas.drawLine(200 + base * whichWaypointOnProgressBar, 250,
-                        200 + base * (whichWaypointOnProgressBar + 1), 250, paint);
+                canvas.drawCircle(paddingLeft+base*whichWaypointOnProgressBar,paddingBottom, 15,paint);
+
+                if(navigationPath.size()>1)
+                    canvas.drawLine(paddingLeft+base*whichWaypointOnProgressBar, paddingBottom,
+                            paddingLeft+base*(whichWaypointOnProgressBar+1),paddingBottom, paint);
+
 
                 whichWaypointOnProgressBar += 1;
 
-                // update the currentLbeaconID and go to handlerForLbeacon
+                // Input waypoint name for debug mode
+                String nameOFWaypoint = waypointIDInput.getText().toString();
+
                 currentLBeaconID = receivebeacon;
+
 //                currentLBeaconID = CConvX.concat(CConvY);
                 synchronized (sync) {
                     sync.notify();
@@ -649,7 +658,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         List<String> regionPathID = new ArrayList<>();
 
         for(int i=0; i<regionPath.size(); i++)
-            regionPathID.add(regionPath.get(i)._name);
+            regionPathID.add(regionPath.get(i)._regionName);
         //Load waypoint data from the navigation subgraphs according to the regionPathID
         navigationGraph = DataParser.getWaypointDataFromNavigationGraph(this, regionPathID);
 
@@ -659,8 +668,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public void startNavigation() {
 
         // get the two Node objects that represent starting point and destination
-        Node startNode = navigationGraph.get(0).verticesInSubgraph.get(sourceID);
-        Node endNode = navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(destinationID);
+        Node startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
+        Node endNode = navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(destinationID);
 
         // temporary variable to record connectPointID
         int connectPointID;
@@ -683,7 +692,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Node destinationOfARegion = null;
 
                 // the source vertex becomes a normal waypoint
-                navigationGraph.get(i).verticesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
+                navigationGraph.get(i).nodesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
 
                 //If the elevation of the next region to travel is same as the current region
                 if(regionPath.get(i)._elevation == regionPath.get(i+1)._elevation){
@@ -691,7 +700,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     // compute a path to a transfer point of current region
                     // return the transfer point
                     destinationOfARegion = computePathToTraversePoint(
-                            navigationGraph.get(i).verticesInSubgraph.get(sourceID),true, i+1);
+                            navigationGraph.get(i).nodesInSubgraph.get(sourceID),true, i+1);
 
                     // sourceID is updated with the ID of transfer node for the next computation
                     // since the transfer node has the same ID in the same elevation
@@ -704,14 +713,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     // compute a path to a transfer point(elevator or stairwell) of current region
                     // return the transfer point
                     destinationOfARegion = computePathToTraversePoint(
-                            navigationGraph.get(i).verticesInSubgraph.get(sourceID),false, i+1);
+                            navigationGraph.get(i).nodesInSubgraph.get(sourceID),false, i+1);
 
                     // get the connectPointID of the transfer node
                     connectPointID = destinationOfARegion._transferPointID;
 
                     // find the transfer node with the same connectPointID in the next region
                     // where elevation is different from the current region
-                    for(Entry<String, Node> entry : navigationGraph.get(i+1).verticesInSubgraph.entrySet()){
+                    for(Entry<String, Node> entry : navigationGraph.get(i+1).nodesInSubgraph.entrySet()){
 
                         Node v = entry.getValue();
 
@@ -731,7 +740,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("bb", "sourceID: " + sourceID);
             //Compute navigation path in the last region
             List<Node> pathInLastRegion = computeDijkstraShortestPath(
-                    navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(sourceID),
+                    navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(sourceID),
                     endNode);
 
             // complete the navigation path
@@ -808,7 +817,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(sameElevation == true && v._nodeType == CONNECTPOINT){
 
                     // return v, only if the connect point is in the next region
-                    if(navigationGraph.get(indexOfNextRegion).verticesInSubgraph.get(v._waypointID) != null)
+                    if(navigationGraph.get(indexOfNextRegion).nodesInSubgraph.get(v._waypointID) != null)
                             return v;
 
                 }

@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
 
-
     <region1>
         <node id='0x0193bd410x780df142' name='A01' region='region1' lat='23.6968558' lon='120.5263214' neighbor1='0xfb92bd410x680df142' neighbor2='' neighbor3='' neighbor4='' category='Category1' nodeType='' connectPointID='' elevation='3'/>
         <node id='0xfb92bd410x680df142' name='A03' region='region1' lat='23.6968242' lon='120.526149' neighbor1='0x0193bd410x780df142' neighbor2='0x4993bd410x640df142' neighbor3='' neighbor4='' category='Category1' nodeType='' connectPointID='' elevation='3'/>

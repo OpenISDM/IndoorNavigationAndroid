@@ -246,7 +246,7 @@ public class DataParser {
 
 
                             // put each Node object into a navigationSubgraph object
-                            navigationSubgraph.verticesInSubgraph.put(id, node);
+                            navigationSubgraph.nodesInSubgraph.put(id, node);
 
                         }
                     }

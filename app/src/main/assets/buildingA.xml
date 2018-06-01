@@ -1,16 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
 
-    <region name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='3'>
-        <location id='0x0193bd410x780df142' name='A01' region='region1' category='Category1'/>
-        <location id='0xfb92bd410x680df142' name='A03' region='region1' category='Category1'/>
-        <location id='0x4993bd410x640df142' name='A04' region='region1' category='Category1'/>
-        <location id='0x6793bd410x5d0df142' name='A05' region='region1' category='Category1'/>
-        <location id='0x8193bd410x540df142' name='A06' region='region1' category='Category1'/>
-        <location id='0x0e94bd410x4e0df142' name='A08' region='region1' category='Category1'/>
-        <location id='0x2f94bd410x3c0df142' name='A20' region='region1' category='Category1'/>
+    <region id='1' name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='3'>
+        <node id='0x0193bd410x780df142' name='A01' region='region1' category='Category1'/>
+        <node id='0xfb92bd410x680df142' name='A03' region='region1' category='Category1'/>
+        <node id='0x4993bd410x640df142' name='A04' region='region1' category='Category1'/>
+        <node id='0x6793bd410x5d0df142' name='A05' region='region1' category='Category1'/>
+        <node id='0x8193bd410x540df142' name='A06' region='region1' category='Category1'/>
+        <node id='0x0e94bd410x4e0df142' name='A08' region='region1' category='Category1'/>
+        <node id='0x2f94bd410x3c0df142' name='A20' region='region1' category='Category1'/>
     </region>
-
     <!--<region name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='3'>-->
         <!--<location id='38' name='38' region='region1' category='Category1'/>-->
         <!--<location id='41' name='41' region='region1' category='Category1'/>-->
