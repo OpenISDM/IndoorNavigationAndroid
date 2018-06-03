@@ -56,13 +56,10 @@ public class MainActivity extends AppCompatActivity {
     //PopupWindow to notify user search bar can not be blank when start a navigation tour
     private PopupWindow popupWindow;
     private LinearLayout positionOfPopup;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //Get the position of popupwindow (center of phone screen)
         positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
 
@@ -161,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         TextView popupText = (TextView) customView.findViewById(R.id.popupText);
 
         popupText.setText("Empyt Starting Point or Destination!");
-        popupButton.setText("OK");
+        popupButton.setText("PK");
         popupButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
