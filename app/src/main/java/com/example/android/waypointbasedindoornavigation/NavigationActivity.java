@@ -57,6 +57,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
+import com.example.android.waypointbasedindoornavigation.Find_loc.Write_File;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -65,7 +66,10 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -250,6 +254,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     Button waypointIDInputButton;
     int whichWaypointOnProgressBar = 0;
     private Find_Loc LBD = new Find_Loc();
+    private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
+    private Write_File wf  = new Write_File();
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -277,7 +283,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         workingBitmap = Bitmap.createBitmap(myBitmap);
         mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
         canvas = new Canvas(mutableBitmap);
-
+        wf.setFile_name("Log"+df.format(Calendar.getInstance().getTime()));
 
         // voice engine setup
         tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -597,7 +603,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private void logBeaconData(List<String> beacon) {
 
         if (beacon.size()>=2) {
-            LBD.wrtieFileOnInternalStorage("Log.txt","NAP1:"+beacon.toString());
+            wf.wrtieFile("NAP1:"+beacon.toString());
             String receivebeacon = beacon.get(1);
 
             // block the Lbeacon ID the navigator just received
