@@ -603,7 +603,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private void logBeaconData(List<String> beacon) {
 
         if (beacon.size()>=2) {
-            wf.wrtieFile("NAP1:"+beacon.toString());
+            wf.writeFile("NAP1:"+beacon.toString());
             String receivebeacon = beacon.get(1);
 
             // block the Lbeacon ID the navigator just received
