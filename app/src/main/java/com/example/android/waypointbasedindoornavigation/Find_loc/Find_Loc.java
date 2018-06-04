@@ -50,7 +50,7 @@ public class Find_Loc {
                 researchdata.addAll(as.ana_signal(data_queue,algo_num,1));
                 Log.i("LBD",researchdata.toString());
                 data_queue.clear();
-                wf.wrtieFile("LBD:"+researchdata.toString() +"\t"+path_queue.toString());
+                wf.writeFile("LBD:"+researchdata.toString() +"\t"+path_queue.toString());
                 if(researchdata.get(1).equals(path_queue.peek())
                         && researchdata.get(2).equals("close")
                         && researchdata.get(1).equals(researchdata.get(3))){
