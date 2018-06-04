@@ -1,20 +1,32 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.os.Environment;
+import android.util.JsonReader;
 import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
-public class Write_File {
+public class ReadWrite_File {
     private File file;
     private static String file_name = "Log";
-    private final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+    private final File path  = new File(Environment.getExternalStorageDirectory() +
+            File.separator +"WPBIN");
 //    設定固定檔案名稱
+    public ReadWrite_File(){
+        if(!path.exists()) path.mkdir();
+    }
     public void setFile_name (String s){
         Log.i("Msg", "set name "+s);
         this.file_name = s;
@@ -29,9 +41,9 @@ public class Write_File {
         file = new File(path,sFileName+".txt");
         writefunction(file,sBody);
     }
-    public void writejson(JSONObject j){
+    public void writejson(String j){
         file = new File(path,"DeviceParamation.json");
-        writejsonfunction(file,j);
+        writefunction(file,j);
     }
 //    寫入含式
     private void writefunction(File file, String sBody){
@@ -60,29 +72,17 @@ public class Write_File {
             e.printStackTrace();
         }
     }
-    private void writejsonfunction(File file, JSONObject j){
-        BufferedWriter buf;
-        Log.i("Msg0", String.valueOf(this.file.exists()));
-        if(!this.file.exists()){
-            try
-            {
-                this.file.createNewFile();
-                this.file.setExecutable(true,false);
-            }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+    public String  ReadJsonFile(){
+        BufferedReader buf;
         try{
-            buf = new BufferedWriter(new FileWriter(this.file, true));
-            buf.write(j.toString());
+            buf = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = buf.readLine()) != null)
+                buf.readLine();
             buf.close();
-            Log.i("Msg2", "success"+ this.file.getAbsolutePath());
         }catch (Exception e){
-            Log.i("Msg3", "fail"+ this.file.getAbsolutePath());
             e.printStackTrace();
         }
+        return null;
     }
 }

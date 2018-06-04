@@ -57,7 +57,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
-import com.example.android.waypointbasedindoornavigation.Find_loc.Write_File;
+import com.example.android.waypointbasedindoornavigation.Find_loc.ReadWrite_File;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -255,9 +255,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     int whichWaypointOnProgressBar = 0;
     private Find_Loc LBD = new Find_Loc();
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
-    private Write_File wf  = new Write_File();
-
-
+    private ReadWrite_File wf  = new ReadWrite_File();
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
 
@@ -763,6 +761,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             tmp_path.offer(navigationPath.get(i).getID());
         }
         LBD.setpath(tmp_path);
+
         //Draw a navigation progress bar based on navigation path
         drawProgressBar(navigationPath);
     }

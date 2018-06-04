@@ -9,9 +9,15 @@ public class siganl_data_type implements Comparable<siganl_data_type>{
     private int sort_ways = 0;
     private List<Integer> rssi = new ArrayList<>();
     private String uuid = null;
+    private int parameter;
     public siganl_data_type(String s, int i){
-        rssi.add(i);
         uuid = s;
+        rssi.add(i);
+    }
+    public siganl_data_type(String s, int i, int j){
+        uuid = s;
+        rssi.add(i);
+        parameter = j;
     }
     public void setvalue(String s){
         uuid = s;

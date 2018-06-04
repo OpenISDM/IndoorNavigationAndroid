@@ -28,6 +28,7 @@ public class ana_signal {
                         setvalue(Integer.parseInt(((List<String>) lq.get(i)).get(1)));
             }
         }
+
         for (int i = 0; i <data_list.size(); i++)
             data_list.get(i).set_sort_way(1);
         Collections.sort(data_list);
