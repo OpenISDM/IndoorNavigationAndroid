@@ -56,6 +56,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.example.android.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
 import com.example.android.waypointbasedindoornavigation.Find_loc.ReadWrite_File;
 
@@ -756,11 +757,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                      navigationPath.remove(i);
             }
         }
-        Queue<String> tmp_path = new LinkedList<>();
-        for (int i = 0; i<navigationPath.size(); i++) {
-            tmp_path.offer(navigationPath.get(i).getID());
-        }
-        LBD.setpath(tmp_path);
+        new DeviceParameter().setupDeviceParameter(this);
+//        Queue<String> tmp_path = new LinkedList<>();
+//        for (int i = 0; i<navigationPath.size(); i++) {
+//            tmp_path.offer(navigationPath.get(i).getID());
+//        }
+//        LBD.setpath(tmp_path);
 
         //Draw a navigation progress bar based on navigation path
         drawProgressBar(navigationPath);

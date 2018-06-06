@@ -4,19 +4,16 @@ import android.os.Environment;
 import android.util.JsonReader;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
 public class ReadWrite_File {
     private File file;
@@ -72,17 +69,23 @@ public class ReadWrite_File {
             e.printStackTrace();
         }
     }
-    public String  ReadJsonFile(){
-        BufferedReader buf;
-        try{
-            buf = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = buf.readLine()) != null)
-                buf.readLine();
-            buf.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+    public JSONArray ReadJsonFile() {
+        file = new File(path, "DeviceParamation.json");
+        JSONArray jarray = null;
+        if(file.exists()) {
+            try {
+                FileInputStream is = new FileInputStream(file);
+                int tmp_size = is.available();
+                byte[] buffer = new byte[tmp_size];
+                is.read(buffer);
+                is.close();
+                String jsonText = new String(buffer, "UTF-8");
+                jarray = new JSONArray(jsonText);
+                Log.i("JSON","load json success");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else   Log.i("JSON","don't have file");
+        return jarray;
     }
 }

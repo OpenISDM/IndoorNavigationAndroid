@@ -1,5 +1,6 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
@@ -19,10 +20,7 @@ public class Find_Loc {
     private int algo_num = 3;
     private ReadWrite_File wf = new ReadWrite_File();
     private long startT = System.currentTimeMillis();
-    public void setpath(Queue path_queue){
-        this.path_queue = path_queue;
-        new DeviceParameterParser().initdivice(new ArrayList<String>(path_queue));
-    }
+    public void setpath(Queue path_queue){ this.path_queue = path_queue; }
     public List<String> Find_Loc(Beacon beacon, boolean ana_switch){
 //    public List<String> logBeaconData(Beacon beacon, boolean ana_switch){
         String[] beacondata = new String[]{

@@ -2,6 +2,8 @@ package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.util.Log;
 
+import com.example.android.waypointbasedindoornavigation.DataParser;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -12,6 +14,7 @@ public class ana_signal {
     private Queue<siganl_data_type> weight_queue = new LinkedList<>();
     private  List<siganl_data_type> data_list = new ArrayList<>();
     private int weight_size = 5;
+    private static DeviceParameter dp = new DeviceParameter();
     public List<String> ana_signal(Queue q, int algo_Type, int weight_type) {
         List lq = new ArrayList<String>(q);
         List<String> tmp_data_list = new ArrayList<>();
@@ -28,20 +31,21 @@ public class ana_signal {
                         setvalue(Integer.parseInt(((List<String>) lq.get(i)).get(1)));
             }
         }
-
         for (int i = 0; i <data_list.size(); i++)
             data_list.get(i).set_sort_way(1);
         Collections.sort(data_list);
         List<String> location_range = new ArrayList<>();
-        if (data_list.size()>1) {
+        if (data_list.size() >1) {
             int tmp_dif = Math.abs(Math.round(data_list.get(0).countavg() - data_list.get(1).countavg()));
-            if (tmp_dif > 10 && data_list.get(0).countavg()>-65){
+            if (tmp_dif > 10 && data_list.get(0).countavg() >
+                    dp.get_Paramater(data_list.get(0).getUuid())){
                 Log.i("def_range", "close " + data_list.get(0).getUuid());
                 location_range.add("close");
                 location_range.add(data_list.get(0).getUuid());
             }
             else if (tmp_dif < 5) {
-                Log.i("def_range", "middle of " + data_list.get(0).getUuid() + " and " + data_list.get(1).getUuid());
+                Log.i("def_range", "middle of " + data_list.get(0).getUuid()
+                        + " and " + data_list.get(1).getUuid());
                 location_range.add(data_list.get(0).getUuid());
                 location_range.add(data_list.get(1).getUuid());
             }
@@ -53,7 +57,7 @@ public class ana_signal {
         }
         else {
             int tmp_dif = Math.round(data_list.get(0).countavg());
-            if (tmp_dif > -65) {
+            if (tmp_dif > dp.get_Paramater(data_list.get(0).getUuid())) {
                 Log.i("def_range", "close " + data_list.get(0).getUuid());
                 location_range.add("close");
                 location_range.add(data_list.get(0).getUuid());
