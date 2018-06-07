@@ -23,7 +23,9 @@ Author:
 --*/
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -39,6 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -55,6 +58,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
@@ -254,6 +258,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     EditText waypointIDInput;
     Button waypointIDInputButton;
     int whichWaypointOnProgressBar = 0;
+
+    // Find_loc part
     private Find_Loc LBD = new Find_Loc();
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
     private ReadWrite_File wf  = new ReadWrite_File();
@@ -833,7 +839,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 // find the nearest elevator or stairwell based on user's preference
                 else if(sameElevation == false && v._nodeType == getMobilityValue())
                             return v;
-
             }
         }
         return source;
@@ -853,9 +858,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // popup window for turn direction notification
+    @SuppressLint("WrongConstant")
     public void showPopupWindow(final int instruction){
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        Vibrator myVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
         View customView = inflater.inflate(R.layout.popup, null);
 
         popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -867,11 +874,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             popupText.setText(YOU_HAVE_ARRIVE);
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
             popupButton.setText("OK");
+            Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
+            myVibrator.vibrate(new long[]{10, 300, 10, 300, 10, 300}, -1);
         }
         else if(instruction== WRONGWAY_NOTIFIER){
             popupText.setText(GET_LOST);
             popupButton.setText("重新導航");
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+            Toast.makeText(this,"重新導航", 500).show();
+            myVibrator.vibrate(3000);
         }
         else if(instruction== MAKETURN_NOTIFIER){
 
@@ -879,47 +890,55 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 case RIGHT:
                     popupText.setText(PLEASE_TURN_RIGHT);
+                    Toast.makeText(this,PLEASE_TURN_RIGHT, 500).show();
                     break;
                 case LEFT:
                     popupText.setText(PLEASE_TURN_LEFT);
+                    Toast.makeText(this,PLEASE_TURN_LEFT, 500).show();
                     break;
                 case FRONT_RIGHT:
                     popupText.setText(PLEASE_TURN__FRONT_RIGHT);
+                    Toast.makeText(this,PLEASE_TURN__FRONT_RIGHT, 500).show();
                     break;
                 case FRONT_LEFT:
                     popupText.setText(PLEASE_TURN_FRONT_LEFT);
+                    Toast.makeText(this,PLEASE_TURN_FRONT_LEFT, 500).show();
                     break;
                 case REAR_RIGHT:
                     popupText.setText(PLEASE_TURN__REAR_RIGHT);
+                    Toast.makeText(this,PLEASE_TURN__REAR_RIGHT, 500).show();
                     break;
                 case REAR_LEFT:
                     popupText.setText(PLEASE_TURN_REAR_LEFT);
+                    Toast.makeText(this,PLEASE_TURN_REAR_LEFT, 500).show();
                     break;
                 case FRONT:
                     popupText.setText(PLEASE_GO_STRAIGHT);
+                    Toast.makeText(this,PLEASE_GO_STRAIGHT, 500).show();
                     break;
                 case ELEVATOR:
                     popupText.setText(PLEASE_TAKE_ELEVATOR);
+                    Toast.makeText(this,PLEASE_TAKE_ELEVATOR, 500).show();
                     break;
                 case STAIR:
                     popupText.setText(PLEASE_WALK_UP_STAIR);
+                    Toast.makeText(this,PLEASE_WALK_UP_STAIR, 500).show();
                     break;
                 case ARRIVED:
                     popupText.setText(YOU_HAVE_ARRIVE);
+                    Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
                     break;
 
             }
+            myVibrator.vibrate(new long[]{10, 100, 10, 100, 10, 100}, -1);
             popupButton.setText("OK");
-
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
         }
-
         popupButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
 
             public void onClick(View v){
-
                 //Navigation tour finished, back to home screen
                 if(instruction== ARRIVED_NOTIFIER){
                     Intent i = new Intent(v.getContext(), MainActivity.class);;
@@ -948,8 +967,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }
         });
-
-        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
+//        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
 
 
@@ -1126,8 +1144,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // enter a waypoint ID to emulate the navigator receiving the corresponding Lbeacon ID (for demo)
     public void enterWaypointID(View view){
-
-
         if(popupWindow != null)
             popupWindow.dismiss();
 

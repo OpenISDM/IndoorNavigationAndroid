@@ -35,10 +35,10 @@ public class Find_Loc {
         researchdata.clear();
         researchdata.add(beacondata[1].concat(beacondata[2]));
         List<String> data_list = Arrays.asList(beacondata[1].concat(beacondata[2]),beacondata[3]);
-        if (ana_switch && !path_queue.isEmpty()){
+        if (ana_switch){
             data_queue.add(data_list);
             long endT = System.currentTimeMillis();
-            if ((endT-startT)>2000){
+            if ((endT-startT)>1800){
                 startT = System.currentTimeMillis();
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
@@ -53,9 +53,8 @@ public class Find_Loc {
                     path_queue.poll();
                     tmp_back.clear();
                     tmp_back.addAll(researchdata);
-                    wf.writeFile("LBD2:"+researchdata.toString()
-                            +"\t"+path_queue.toString());
-                    Log.i("LBD2", researchdata.toString()+"\t"+path_queue.toString());
+                    wf.writeFile("LBD2:"+researchdata.toString());
+                    Log.i("LBD2", researchdata.toString());
                     return researchdata;
                 }
                 else {
