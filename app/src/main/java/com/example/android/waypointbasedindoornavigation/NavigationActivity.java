@@ -967,7 +967,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }
         });
-//        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
+        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
 
 

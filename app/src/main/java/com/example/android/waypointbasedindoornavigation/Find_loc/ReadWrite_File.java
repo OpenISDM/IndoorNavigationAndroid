@@ -31,20 +31,20 @@ public class ReadWrite_File {
 //    以固定名稱寫入
     public void writeFile(String sBody){
         file = new File(path,file_name+".txt");
-        writefunction(file,sBody);
+        writefunction(file,sBody,1);
     }
 //    自定名稱寫入
     public void writeFile(String sFileName, String sBody){
         file = new File(path,sFileName+".txt");
-        writefunction(file,sBody);
+        writefunction(file,sBody,1);
     }
     public void writejson(String j){
         file = new File(path,"DeviceParamation.json");
-        writefunction(file,j);
+        writefunction(file,j,0);
+
     }
 //    寫入含式
-    private void writefunction(File file, String sBody){
-        BufferedWriter buf;
+    private void writefunction(File file, String sBody, int T){
         Log.i("Msg0", String.valueOf(file.exists()));
         if(!file.exists()){
             try
@@ -59,10 +59,17 @@ public class ReadWrite_File {
             }
         }
         try{
-            buf = new BufferedWriter(new FileWriter(file, true));
-            buf.append(sBody);
-            buf.newLine();
-            buf.close();
+            if (T == 0) {
+                BufferedWriter buf = new BufferedWriter(new FileWriter(file, false));
+                buf.write(sBody);
+                buf.close();
+            }
+            else if(T == 1){
+                BufferedWriter buf = new BufferedWriter(new FileWriter(file, true));
+                buf.append(sBody);
+                buf.newLine();
+                buf.close();
+            }
             Log.i("Msg2", "success"+file.getAbsolutePath());
         }catch (Exception e){
             Log.i("Msg3", "fail"+file.getAbsolutePath());

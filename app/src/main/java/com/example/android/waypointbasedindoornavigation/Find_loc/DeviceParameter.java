@@ -21,7 +21,7 @@ import static java.lang.Integer.numberOfLeadingZeros;
 import static java.lang.Integer.parseInt;
 
 public class DeviceParameter {
-    private static JSONArray jarray = null;
+    private static JSONArray jarray = new JSONArray();
     private ReadWrite_File wf= new ReadWrite_File();
     private static Context c;
     public void setupDeviceParameter(Context c) {
@@ -62,7 +62,8 @@ public class DeviceParameter {
                 if(tmp_jobject.getString("id").equals(id)){
                     JSONObject tmp_jobject2 = new JSONObject();
                     tmp_jobject2.put("id",id);
-                    tmp_jobject2.put("parameter",parameter);
+                    tmp_jobject2.put("parameter",
+                             tmp_jobject.getInt("parameter")+parameter);
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -71,11 +72,13 @@ public class DeviceParameter {
             }
         }
         jarray = tmp_jarray;
+        Log.i("JSONCP", jarray.toString());
         wf.writejson(jarray.toString());
     }
     public void initdivice(){
         XmlPullParser pullParser = Xml.newPullParser();
         AssetManager assetManager = c.getAssets();
+        JSONArray tmp_jarray = new JSONArray();
         try {
             InputStream is = assetManager.open("buildingA.xml");
             pullParser.setInput(is , "utf-8");
@@ -96,7 +99,8 @@ public class DeviceParameter {
                                     jobject.put("id", pullParser.
                                             getAttributeValue(null, "id"));
                                     jobject.put("parameter", -65);
-                                    jarray.put(jobject);
+                                    Log.i("JSONDP",jobject.toString());
+                                    tmp_jarray.put(jobject);
                                 }
                             }
                             eventType = pullParser.next();
@@ -105,7 +109,8 @@ public class DeviceParameter {
                 }
                 eventType = pullParser.next();
             }
-            wf.writejson(jarray.toString());
+            wf.writejson(tmp_jarray.toString());
+            jarray = tmp_jarray;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
