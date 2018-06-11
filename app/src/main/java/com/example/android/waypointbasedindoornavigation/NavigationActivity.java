@@ -934,11 +934,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 //            popupButton.setText("OK");
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
         }
+
         popupButton1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 dp.Change_paramation(currentLBeaconID,-2);
                 Log.i("NAbutton",currentLBeaconID +"\t P:-2");
+                onclickevent(v,instruction);
                 popupWindow.dismiss();
             }
         });
@@ -946,6 +948,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             @Override
             public void onClick(View v) {
                 Log.i("NAbutton",currentLBeaconID +"\t P:0");
+                onclickevent(v,instruction);
                 popupWindow.dismiss();
             }
         });
@@ -954,41 +957,38 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             public void onClick(View v) {
                 dp.Change_paramation(currentLBeaconID,2);
                 Log.i("NAbutton",currentLBeaconID +"\t P:+2");
+                onclickevent(v,instruction);
                 popupWindow.dismiss();
             }
         });
-//        popupButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                //Navigation tour finished, back to home screen
-//                if(instruction== ARRIVED_NOTIFIER){
-//                    Intent i = new Intent(v.getContext(), MainActivity.class);
-//                    v.getContext().startActivity(i);
-//                    ((Activity)v.getContext()).finish();
-//                    popupWindow.dismiss();
-//                }//User get wrong way, reload waypoint data and restart navigation
-//                else if(instruction== WRONGWAY_NOTIFIER){
-//                    navigationPath.clear();
-//                    sourceID = currentLBeaconID;
-//                    loadWaypointsData();
-//                    startNavigation();
-//                    whichWaypointOnProgressBar = 0;
-//                    popupWindow.dismiss();
-//
-//                    /*
-//                    // back to main screen
-//                    Intent i = new Intent(v.getContext(), MainActivity.class);;
-//                    v.getContext().startActivity(i);
-//                    ((Activity)v.getContext()).finish();
-//                    popupWindow.dismiss();*/
-//                }//Check button for every turn instruction
-//                else if(instruction== MAKETURN_NOTIFIER){
-//                    tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() + nextTurnMovement.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-//                    popupWindow.dismiss();
-//                }
-//            }
-//        });
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
+    }
+    private void onclickevent(View v, int instruction){
+        if(instruction== ARRIVED_NOTIFIER){
+            Intent i = new Intent(v.getContext(), MainActivity.class);
+            v.getContext().startActivity(i);
+            ((Activity)v.getContext()).finish();
+//            popupWindow.dismiss();
+        }//User get wrong way, reload waypoint data and restart navigation
+        else if(instruction== WRONGWAY_NOTIFIER){
+            navigationPath.clear();
+            sourceID = currentLBeaconID;
+            loadWaypointsData();
+            startNavigation();
+            whichWaypointOnProgressBar = 0;
+//            popupWindow.dismiss();
+            /*
+            // back to main screen
+            Intent i = new Intent(v.getContext(), MainActivity.class);;
+            v.getContext().startActivity(i);
+            ((Activity)v.getContext()).finish();
+            popupWindow.dismiss();*/
+        }//Check button for every turn instruction
+        else if(instruction== MAKETURN_NOTIFIER){
+            tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() +
+                    nextTurnMovement.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+//            popupWindow.dismiss();
+        }
     }
     //Create a thread to handle the currently received Lbeacon ID
     class NavigationTread implements Runnable {

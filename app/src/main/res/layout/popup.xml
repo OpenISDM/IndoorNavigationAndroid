@@ -8,8 +8,9 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:id="@+id/popupText"
         android:textSize="30dp"
         android:textColor="@android:color/holo_red_dark"/>
@@ -23,6 +24,7 @@
             android:id="@+id/popupButton1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:paddingLeft="20dp"
             android:text="太快"
@@ -32,6 +34,7 @@
             android:id="@+id/popupButton2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:paddingLeft="20dp"
             android:text="適中"
@@ -41,6 +44,7 @@
             android:id="@+id/popupButton3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:paddingLeft="20dp"
             android:text="太慢"
