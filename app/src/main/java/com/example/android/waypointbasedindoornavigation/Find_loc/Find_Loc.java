@@ -40,6 +40,7 @@ public class Find_Loc {
             long endT = System.currentTimeMillis();
             if ((endT-startT)>1900){
                 startT = System.currentTimeMillis();
+
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
 //                Log.i("LBD_queue", String.valueOf(data_queue.size()));

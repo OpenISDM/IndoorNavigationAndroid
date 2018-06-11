@@ -14,13 +14,38 @@
         android:textSize="30dp"
         android:textColor="@android:color/holo_red_dark"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/popupButton"
-        android:text="OK"
-        android:textSize="30dp"
-        android:paddingLeft="20dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/popupButton1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:text="太快"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/popupButton2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:text="適中"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/popupButton3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:text="太慢"
+            android:textSize="30dp" />
+    </LinearLayout>
 
 
 </LinearLayout>

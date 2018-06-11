@@ -75,7 +75,7 @@ public class DeviceParameter {
         Log.i("JSONCP", jarray.toString());
         wf.writejson(jarray.toString());
     }
-    public void initdivice(){
+    private void initdivice(){
         XmlPullParser pullParser = Xml.newPullParser();
         AssetManager assetManager = c.getAssets();
         JSONArray tmp_jarray = new JSONArray();

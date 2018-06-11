@@ -40,7 +40,6 @@ public class ana_signal {
             if (tmp_dif > 10 && data_list.get(0).countavg() >
                     dp.get_Paramater(data_list.get(0).getUuid())){
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
-//                dp.Change_paramation(data_list.get(0).getUuid(), 2);
                 Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
                         dp.get_Paramater(data_list.get(0).getUuid()));
                 location_range.add("close");
@@ -62,7 +61,6 @@ public class ana_signal {
             int tmp_dif = Math.round(data_list.get(0).countavg());
 
             if (tmp_dif > dp.get_Paramater(data_list.get(0).getUuid())) {
-//                dp.Change_paramation(data_list.get(0).getUuid(), 2);
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
                 location_range.add("close");
