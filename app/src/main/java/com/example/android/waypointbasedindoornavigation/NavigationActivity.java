@@ -957,8 +957,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
     private void onclickevent(View v, int instruction){
-        dp.count_dis(receivebeacon.get(3),Integer.parseInt(receivebeacon.get(4)),0);
-        dp.count_dis(receivebeacon.get(5),Integer.parseInt(receivebeacon.get(6)),0);
+//        dp.count_dis(receivebeacon.get(3),Integer.parseInt(receivebeacon.get(4)),0);
+////        dp.count_dis(receivebeacon.get(5),Integer.parseInt(receivebeacon.get(6)),0);
         if(instruction== ARRIVED_NOTIFIER){
             Intent i = new Intent(v.getContext(), MainActivity.class);
             v.getContext().startActivity(i);

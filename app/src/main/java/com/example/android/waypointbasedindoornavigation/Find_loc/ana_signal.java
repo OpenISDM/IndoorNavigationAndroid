@@ -43,11 +43,11 @@ public class ana_signal {
                     dp.get_Paramater(data_list.get(0).getUuid())){
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
                 Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-                        dp.get_Paramater(data_list.get(0).getUuid()));
+                        dp.get_Paramater(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
                 location_range.add("close");
                 for (siganl_data_type tmp_sdt : data_list){
                     location_range.add(tmp_sdt.getUuid());
-                    location_range.add(String.valueOf(data_list.get(0).countavg()));
+                    location_range.add(String.valueOf(tmp_sdt.countavg()));
                 }
 //                location_range.add(data_list.get(0).getUuid());
 //                location_range.add(String.valueOf(data_list.get(0).countavg()));
