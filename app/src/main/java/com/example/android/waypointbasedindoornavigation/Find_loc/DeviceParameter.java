@@ -75,6 +75,28 @@ public class DeviceParameter {
         Log.i("JSONCP", jarray.toString());
         wf.writejson(jarray.toString());
     }
+    public void count_dis(String id, int startrssi, int endrssi){
+        JSONArray tmp_jarray = new JSONArray();
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString("id").equals(id)){
+                    JSONObject tmp_jobject2 = new JSONObject();
+                    tmp_jobject2.put("id",id);
+                    tmp_jobject2.put("parameter", tmp_jobject.getInt("parameter"));
+                    if (startrssi != 0)tmp_jobject2.put("startRSSI", startrssi);
+                    if (endrssi != 0)tmp_jobject2.put("endRSSI", endrssi);
+                    tmp_jarray.put(tmp_jobject2);
+                }
+                else tmp_jarray.put(tmp_jobject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        jarray = tmp_jarray;
+        Log.i("JSONCP", jarray.toString());
+        wf.writejson(jarray.toString());
+    }
     private void initdivice(){
         XmlPullParser pullParser = Xml.newPullParser();
         AssetManager assetManager = c.getAssets();
@@ -99,6 +121,8 @@ public class DeviceParameter {
                                     jobject.put("id", pullParser.
                                             getAttributeValue(null, "id"));
                                     jobject.put("parameter", -65);
+                                    jobject.put("startRSSI", 0);
+                                    jobject.put("endRSSI", 0);
                                     Log.i("JSONDP",jobject.toString());
                                     tmp_jarray.put(jobject);
                                 }

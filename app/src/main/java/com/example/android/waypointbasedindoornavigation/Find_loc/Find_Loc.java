@@ -3,12 +3,17 @@ package com.example.android.waypointbasedindoornavigation.Find_loc;
 import android.content.Context;
 import android.util.Log;
 
-import org.altbeacon.beacon.Beacon;
+import com.example.android.waypointbasedindoornavigation.GeoCalulation;
 
+import org.altbeacon.beacon.Beacon;
+import org.w3c.dom.Node;
+
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Find_Loc {
@@ -16,11 +21,12 @@ public class Find_Loc {
     private ana_signal as = new ana_signal();
     private Queue<List<String>> data_queue = new LinkedList<>();
     private List<String> tmp_back = new ArrayList<>();
-    private Queue<String> path_queue = new LinkedList<>();
+    private List<com.example.android.waypointbasedindoornavigation.Node> path_queue = new ArrayList<>();
     private int algo_num = 3;
     private ReadWrite_File wf = new ReadWrite_File();
     private long startT = System.currentTimeMillis();
-    public void setpath(Queue path_queue){ this.path_queue = path_queue; }
+    private DeviceParameter dp = new DeviceParameter();
+    public void setpath(List<com.example.android.waypointbasedindoornavigation.Node> tmp_queue) { this.path_queue = tmp_queue;}
     public List<String> Find_Loc(Beacon beacon, boolean ana_switch){
 //    public List<String> logBeaconData(Beacon beacon, boolean ana_switch){
         String[] beacondata = new String[]{
@@ -36,22 +42,22 @@ public class Find_Loc {
         researchdata.add(beacondata[1].concat(beacondata[2]));
         List<String> data_list = Arrays.asList(beacondata[1].concat(beacondata[2]),beacondata[3]);
         if (ana_switch){
-            data_queue.add(data_list);
-            long endT = System.currentTimeMillis();
-            if ((endT-startT)>1900){
-                startT = System.currentTimeMillis();
-
+                data_queue.add(data_list);
+                long endT = System.currentTimeMillis();
+                if ((endT-startT)>1900){
+                    startT = System.currentTimeMillis();
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
 //                Log.i("LBD_queue", String.valueOf(data_queue.size()));
-                researchdata.addAll(as.ana_signal(data_queue,algo_num,1));
-                wf.writeFile("LBD:"+data_queue.toString() +"\t"
-                        +String.valueOf(data_queue.size()));
-                Log.i("LBD",researchdata.toString());
+                    as.set_distance(GeoCalulation.getDistance(path_queue.get(0),path_queue.get(1)));
+                    researchdata.addAll(as.ana_signal(data_queue,algo_num,1));
+                    wf.writeFile("LBD:"+data_queue.toString() +"\t"
+                            +String.valueOf(data_queue.size()));
+                    Log.i("LBD",researchdata.toString());
                 data_queue.clear();
                 if(researchdata.get(2).equals("close")
                         && researchdata.get(1).equals(researchdata.get(3))){
-                    path_queue.poll();
+//                    path_queue.remove(0);
                     tmp_back.clear();
                     tmp_back.addAll(researchdata);
                     wf.writeFile("LBD2:"+researchdata.toString());

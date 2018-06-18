@@ -42,6 +42,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
+import android.renderscript.RenderScript;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -179,7 +180,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // a list of Node object representing a navigation path
     List<Node> navigationPath = new ArrayList<Node>();
-    Queue<String> tmp_path = new LinkedList<>();
 
     HashMap<String, String> mappingOfRegionNameAndID = new HashMap<>();
 
@@ -260,7 +260,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
     private ReadWrite_File wf  = new ReadWrite_File();
     private DeviceParameter dp = new DeviceParameter();
-    String receivebeacon;
+    private List<String> receivebeacon;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
 
@@ -605,15 +606,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
-
         if (beacon.size()>=2) {
             wf.writeFile("NAP1:"+beacon.toString());
-            receivebeacon = beacon.get(1);
-
             // block the Lbeacon ID the navigator just received
-            if (!currentLBeaconID.equals(receivebeacon)) {
-
-
+            if (!currentLBeaconID.equals(beacon.get(3))) {
                 if(popupWindow != null)
                     popupWindow.dismiss();
 
@@ -633,8 +629,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 // Input waypoint name for debug mode
                 String nameOFWaypoint = waypointIDInput.getText().toString();
-
-                currentLBeaconID = receivebeacon;
+                receivebeacon = beacon;
+                currentLBeaconID = beacon.get(3);
 
 //                currentLBeaconID = CConvX.concat(CConvY);
                 synchronized (sync) {
@@ -763,17 +759,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
         }
         new DeviceParameter().setupDeviceParameter(this);
-//        Queue<String> tmp_path = new LinkedList<>();
-//        for (int i = 0; i<navigationPath.size(); i++) {
-//            tmp_path.offer(navigationPath.get(i).getID());
+//        List<Node> tmp_path = new ArrayList<>();
+//        for (Node i:navigationPath) {
+//            tmp_path.add(i);
 //        }
-//        LBD.setpath(tmp_path);
-
+        LBD.setpath(navigationPath);
         //Draw a navigation progress bar based on navigation path
         drawProgressBar(navigationPath);
     }
-
-
     // compute a shortest path with given starting point and destination
     public List<Node> computeDijkstraShortestPath(Node source, Node destination) {
         source.minDistance = 0.;
@@ -964,6 +957,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
     private void onclickevent(View v, int instruction){
+        dp.count_dis(receivebeacon.get(3),Integer.parseInt(receivebeacon.get(4)),0);
+        dp.count_dis(receivebeacon.get(5),Integer.parseInt(receivebeacon.get(6)),0);
         if(instruction== ARRIVED_NOTIFIER){
             Intent i = new Intent(v.getContext(), MainActivity.class);
             v.getContext().startActivity(i);
