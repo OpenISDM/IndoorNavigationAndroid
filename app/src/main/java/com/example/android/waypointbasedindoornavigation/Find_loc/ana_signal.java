@@ -49,10 +49,6 @@ public class ana_signal {
                     location_range.add(tmp_sdt.getUuid());
                     location_range.add(String.valueOf(tmp_sdt.countavg()));
                 }
-//                location_range.add(data_list.get(0).getUuid());
-//                location_range.add(String.valueOf(data_list.get(0).countavg()));
-//                location_range.add(data_list.get(1).getUuid());
-//                location_range.add(String.valueOf(data_list.get(1).countavg()));
             }
             else if (tmp_dif < 5) {
                 Log.i("def_range", "middle of " + data_list.get(0).getUuid()

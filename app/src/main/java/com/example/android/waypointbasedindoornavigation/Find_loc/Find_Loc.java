@@ -49,7 +49,7 @@ public class Find_Loc {
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
 //                Log.i("LBD_queue", String.valueOf(data_queue.size()));
-                    as.set_distance(GeoCalulation.getDistance(path_queue.get(0),path_queue.get(1)));
+//                    as.set_distance(GeoCalulation.getDistance(path_queue.get(0),path_queue.get(1)));
                     researchdata.addAll(as.ana_signal(data_queue,algo_num,1));
                     wf.writeFile("LBD:"+data_queue.toString() +"\t"
                             +String.valueOf(data_queue.size()));

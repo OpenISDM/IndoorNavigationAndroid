@@ -992,8 +992,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         popupButton1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                dp.Change_paramation(currentLBeaconID,-2);
-                Log.i("NAbutton",currentLBeaconID +"\t P:-2");
+                dp.Change_paramation(currentLBeaconID,2);
+                Log.i("NAbutton",currentLBeaconID +"\t P:+2");
                 onclickevent(v,instruction);
                 popupWindow.dismiss();
             }
@@ -1009,8 +1009,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         popupButton3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                dp.Change_paramation(currentLBeaconID,2);
-                Log.i("NAbutton",currentLBeaconID +"\t P:+2");
+                dp.Change_paramation(currentLBeaconID,-2);
+                Log.i("NAbutton",currentLBeaconID +"\t P:-2");
                 onclickevent(v,instruction);
                 popupWindow.dismiss();
             }
