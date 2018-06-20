@@ -9,6 +9,10 @@
         <node id='0x8193bd410x540df142' name='A06' region='region1' category='Category1'/>
         <node id='0x0e94bd410x4e0df142' name='A08' region='region1' category='Category1'/>
         <node id='0x2f94bd410x3c0df142' name='A20' region='region1' category='Category1'/>
+        <node id='0x5c93bd410x4f0df142' name='A02' region='region1' category='Category1'/>
+        <node id='0x0d93bd410x530df142' name='A14' region='region1' category='Category1'/>
+        <node id='0xfe92bd410x3e0df142' name='A15' region='region1' category='Category1'/>
+        <node id='0xa692bd410x430df142' name='A16' region='region1' category='Category1'/>
     </region>
     <!--<region name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='3'>-->
         <!--<location id='38' name='38' region='region1' category='Category1'/>-->
