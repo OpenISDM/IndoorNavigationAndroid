@@ -153,8 +153,6 @@ public class DataParser {
         } catch (IOException e) {
         } catch (XmlPullParserException e) {
         }
-
-
         return regionGraph;
         //return hashMapOfRegion;
     }
@@ -246,7 +244,7 @@ public class DataParser {
 
 
                             // put each Node object into a navigationSubgraph object
-                            navigationSubgraph.verticesInSubgraph.put(id, node);
+                            navigationSubgraph.nodesInSubgraph.put(id, node);
 
                         }
                     }
@@ -340,7 +338,4 @@ public class DataParser {
         }
         return false;
     }
-
-
-
 }

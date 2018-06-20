@@ -1,0 +1,14 @@
+
+\.idea/
+
+WaypointBasedIndoorNavigator\.iml
+
+*.properties
+
+build/
+
+app/app\.iml
+
+\.gradle/
+
+app/src/main/java/\.DS_Store

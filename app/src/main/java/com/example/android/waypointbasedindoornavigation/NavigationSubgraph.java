@@ -26,19 +26,19 @@ import java.util.Map.Entry;
 class NavigationSubgraph {
 
     // hash map for storing all waypoint data of a navigation subgraph
-    HashMap<String, Node> verticesInSubgraph;
+    HashMap<String, Node> nodesInSubgraph;
 
     // Constructor
     NavigationSubgraph(){
 
-        this.verticesInSubgraph = new HashMap<>();
+        this.nodesInSubgraph = new HashMap<>();
     }
 
     // all vertices are added with edge(s) to link their neighbors
     void addEdges() {
 
         //For-loop retrieves all Vertices from HashMap
-        for (Entry<String, Node> entry : verticesInSubgraph.entrySet()) {
+        for (Entry<String, Node> entry : nodesInSubgraph.entrySet()) {
 
             Node node = entry.getValue();
 
@@ -48,9 +48,9 @@ class NavigationSubgraph {
             for(int i = 0; i< node._adjacentWaypoints.size(); i++){
 
                 //Initialize an Edge object to represent a connection to a neighbor
-                Edge e = new Edge(verticesInSubgraph.get(node._adjacentWaypoints.get(i)),
+                Edge e = new Edge(nodesInSubgraph.get(node._adjacentWaypoints.get(i)),
                         GeoCalulation.getDistance(node,
-                                verticesInSubgraph.get(node._adjacentWaypoints.get(i))));
+                                nodesInSubgraph.get(node._adjacentWaypoints.get(i))));
 
                 listOfEdge.add(e);
             }

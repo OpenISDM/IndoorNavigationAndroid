@@ -23,7 +23,9 @@ Author:
 --*/
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -39,6 +41,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -55,6 +58,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.android.waypointbasedindoornavigation.Find_loc.DeviceParameter;
+import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
+import com.example.android.waypointbasedindoornavigation.Find_loc.ReadWrite_File;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -63,7 +71,10 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,6 +86,7 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import static com.example.android.waypointbasedindoornavigation.R.id.custom;
 import static com.example.android.waypointbasedindoornavigation.R.id.imageView;
 import static com.example.android.waypointbasedindoornavigation.Setting.getMobilityValue;
 
@@ -88,11 +100,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final int ARRIVED_NOTIFIER = 0;
     private static final int WRONGWAY_NOTIFIER = 1;
     private static final int MAKETURN_NOTIFIER = 2;
-
-
-    private static final int ONE_SECOND = 1000;
-    private static final int RSSI_THRESHOLD = -65;
-
 
     private static final String FRONT = "front";
     private static final String LEFT = "left";
@@ -247,9 +254,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     EditText waypointIDInput;
     Button waypointIDInputButton;
     int whichWaypointOnProgressBar = 0;
+
+    // Find_loc part
     private Find_Loc LBD = new Find_Loc();
-
-
+    private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
+    private ReadWrite_File wf  = new ReadWrite_File();
+    private DeviceParameter dp = new DeviceParameter();
+    String receivebeacon;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
 
@@ -275,7 +286,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         workingBitmap = Bitmap.createBitmap(myBitmap);
         mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
         canvas = new Canvas(mutableBitmap);
-
+        wf.setFile_name("Log"+df.format(Calendar.getInstance().getTime()));
+        dp.setupDeviceParameter(this);
 
         // voice engine setup
         tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -518,6 +530,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // set up Lbeacon manager
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void beaconManagerSetup(){
 
         //Beacon manager setup
@@ -593,28 +606,36 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
 
-        if (beacon.size()>2) {
-            LBD.wrtieFileOnInternalStorage("Log.txt","NAP1:"+beacon.toString());
-
-            String receivebeacon = beacon.get(1);
+        if (beacon.size()>=2) {
+            wf.writeFile("NAP1:"+beacon.toString());
+            receivebeacon = beacon.get(1);
 
             // block the Lbeacon ID the navigator just received
             if (!currentLBeaconID.equals(receivebeacon)) {
 
-                // draw a navigation progress bar
+
+                if(popupWindow != null)
+                    popupWindow.dismiss();
+
                 paint.setAntiAlias(true);
                 paint.setColor(Color.RED);
                 paint.setStyle(Style.FILL_AND_STROKE);
                 paint.setStrokeWidth(10);
 
-                canvas.drawCircle(200 + base * whichWaypointOnProgressBar, 250, 15, paint);
-                canvas.drawLine(200 + base * whichWaypointOnProgressBar, 250,
-                        200 + base * (whichWaypointOnProgressBar + 1), 250, paint);
+                canvas.drawCircle(paddingLeft+base*whichWaypointOnProgressBar,paddingBottom, 15,paint);
+
+                if(navigationPath.size()>1)
+                    canvas.drawLine(paddingLeft+base*whichWaypointOnProgressBar, paddingBottom,
+                            paddingLeft+base*(whichWaypointOnProgressBar+1),paddingBottom, paint);
+
 
                 whichWaypointOnProgressBar += 1;
 
-                // update the currentLbeaconID and go to handlerForLbeacon
+                // Input waypoint name for debug mode
+                String nameOFWaypoint = waypointIDInput.getText().toString();
+
                 currentLBeaconID = receivebeacon;
+
 //                currentLBeaconID = CConvX.concat(CConvY);
                 synchronized (sync) {
                     sync.notify();
@@ -648,8 +669,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         for(int i=0; i<regionPath.size(); i++)
             regionPathID.add(regionPath.get(i)._regionName);
-
-
         //Load waypoint data from the navigation subgraphs according to the regionPathID
         navigationGraph = DataParser.getWaypointDataFromNavigationGraph(this, regionPathID);
 
@@ -659,8 +678,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public void startNavigation() {
 
         // get the two Node objects that represent starting point and destination
-        Node startNode = navigationGraph.get(0).verticesInSubgraph.get(sourceID);
-        Node endNode = navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(destinationID);
+        Node startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
+        Node endNode = navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(destinationID);
 
         // temporary variable to record connectPointID
         int connectPointID;
@@ -683,7 +702,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Node destinationOfARegion = null;
 
                 // the source vertex becomes a normal waypoint
-                navigationGraph.get(i).verticesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
+                navigationGraph.get(i).nodesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
 
                 //If the elevation of the next region to travel is same as the current region
                 if(regionPath.get(i)._elevation == regionPath.get(i+1)._elevation){
@@ -691,7 +710,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     // compute a path to a transfer point of current region
                     // return the transfer point
                     destinationOfARegion = computePathToTraversePoint(
-                            navigationGraph.get(i).verticesInSubgraph.get(sourceID),true, i+1);
+                            navigationGraph.get(i).nodesInSubgraph.get(sourceID),true, i+1);
 
                     // sourceID is updated with the ID of transfer node for the next computation
                     // since the transfer node has the same ID in the same elevation
@@ -704,14 +723,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     // compute a path to a transfer point(elevator or stairwell) of current region
                     // return the transfer point
                     destinationOfARegion = computePathToTraversePoint(
-                            navigationGraph.get(i).verticesInSubgraph.get(sourceID),false, i+1);
+                            navigationGraph.get(i).nodesInSubgraph.get(sourceID),false, i+1);
 
                     // get the connectPointID of the transfer node
                     connectPointID = destinationOfARegion._transferPointID;
 
                     // find the transfer node with the same connectPointID in the next region
                     // where elevation is different from the current region
-                    for(Entry<String, Node> entry : navigationGraph.get(i+1).verticesInSubgraph.entrySet()){
+                    for(Entry<String, Node> entry : navigationGraph.get(i+1).nodesInSubgraph.entrySet()){
 
                         Node v = entry.getValue();
 
@@ -731,7 +750,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("bb", "sourceID: " + sourceID);
             //Compute navigation path in the last region
             List<Node> pathInLastRegion = computeDijkstraShortestPath(
-                    navigationGraph.get(navigationGraph.size()-1).verticesInSubgraph.get(sourceID),
+                    navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(sourceID),
                     endNode);
 
             // complete the navigation path
@@ -743,12 +762,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                      navigationPath.remove(i);
             }
         }
-
-
-        for (int i = 0; i<navigationPath.size(); i++)
-            tmp_path.offer(navigationPath.get(i).getID());
-        LBD.setpath(tmp_path);
-//        Log.i("NAP",tmp_path.toString());
+        new DeviceParameter().setupDeviceParameter(this);
+//        Queue<String> tmp_path = new LinkedList<>();
+//        for (int i = 0; i<navigationPath.size(); i++) {
+//            tmp_path.offer(navigationPath.get(i).getID());
+//        }
+//        LBD.setpath(tmp_path);
 
         //Draw a navigation progress bar based on navigation path
         drawProgressBar(navigationPath);
@@ -810,7 +829,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(sameElevation == true && v._nodeType == CONNECTPOINT){
 
                     // return v, only if the connect point is in the next region
-                    if(navigationGraph.get(indexOfNextRegion).verticesInSubgraph.get(v._waypointID) != null)
+                    if(navigationGraph.get(indexOfNextRegion).nodesInSubgraph.get(v._waypointID) != null)
                             return v;
 
                 }
@@ -819,7 +838,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 // find the nearest elevator or stairwell based on user's preference
                 else if(sameElevation == false && v._nodeType == getMobilityValue())
                             return v;
-
             }
         }
         return source;
@@ -839,25 +857,32 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // popup window for turn direction notification
+    @SuppressLint("WrongConstant")
     public void showPopupWindow(final int instruction){
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        Vibrator myVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
         View customView = inflater.inflate(R.layout.popup, null);
-
         popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-        final Button popupButton = (Button) customView.findViewById(R.id.popupButton);
+        final Button popupButton1 = (Button) customView.findViewById(R.id.popupButton1);
+        final Button popupButton2 = (Button) customView.findViewById(R.id.popupButton2);
+        final Button popupButton3 = (Button) customView.findViewById(R.id.popupButton3);
         TextView popupText = (TextView) customView.findViewById(R.id.popupText);
 
         if(instruction== ARRIVED_NOTIFIER){
             popupText.setText(YOU_HAVE_ARRIVE);
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-            popupButton.setText("OK");
+//            popupButton.setText("OK");
+            Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
+            myVibrator.vibrate(2000);
         }
         else if(instruction== WRONGWAY_NOTIFIER){
             popupText.setText(GET_LOST);
-            popupButton.setText("重新導航");
+//            popupButton.setText("重新導航");
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+            Toast.makeText(this,"重新導航", 500).show();
+            myVibrator.vibrate(1000);
         }
         else if(instruction== MAKETURN_NOTIFIER){
 
@@ -865,81 +890,106 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 case RIGHT:
                     popupText.setText(PLEASE_TURN_RIGHT);
+                    Toast.makeText(this,PLEASE_TURN_RIGHT, 500).show();
                     break;
                 case LEFT:
                     popupText.setText(PLEASE_TURN_LEFT);
+                    Toast.makeText(this,PLEASE_TURN_LEFT, 500).show();
                     break;
                 case FRONT_RIGHT:
                     popupText.setText(PLEASE_TURN__FRONT_RIGHT);
+                    Toast.makeText(this,PLEASE_TURN__FRONT_RIGHT, 500).show();
                     break;
                 case FRONT_LEFT:
                     popupText.setText(PLEASE_TURN_FRONT_LEFT);
+                    Toast.makeText(this,PLEASE_TURN_FRONT_LEFT, 500).show();
                     break;
                 case REAR_RIGHT:
                     popupText.setText(PLEASE_TURN__REAR_RIGHT);
+                    Toast.makeText(this,PLEASE_TURN__REAR_RIGHT, 500).show();
                     break;
                 case REAR_LEFT:
                     popupText.setText(PLEASE_TURN_REAR_LEFT);
+                    Toast.makeText(this,PLEASE_TURN_REAR_LEFT, 500).show();
                     break;
                 case FRONT:
                     popupText.setText(PLEASE_GO_STRAIGHT);
+                    Toast.makeText(this,PLEASE_GO_STRAIGHT, 500).show();
                     break;
                 case ELEVATOR:
                     popupText.setText(PLEASE_TAKE_ELEVATOR);
+                    Toast.makeText(this,PLEASE_TAKE_ELEVATOR, 500).show();
                     break;
                 case STAIR:
                     popupText.setText(PLEASE_WALK_UP_STAIR);
+                    Toast.makeText(this,PLEASE_WALK_UP_STAIR, 500).show();
                     break;
                 case ARRIVED:
                     popupText.setText(YOU_HAVE_ARRIVE);
+                    Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
                     break;
 
             }
-            popupButton.setText("OK");
-
+            myVibrator.vibrate(new long[]{50, 300, 50, 300, 50, 300}, -1);
+//            popupButton.setText("OK");
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
         }
 
-        popupButton.setOnClickListener(new View.OnClickListener(){
-
+        popupButton1.setOnClickListener(new View.OnClickListener(){
             @Override
-
-            public void onClick(View v){
-
-                //Navigation tour finished, back to home screen
-                if(instruction== ARRIVED_NOTIFIER){
-                    Intent i = new Intent(v.getContext(), MainActivity.class);;
-                    v.getContext().startActivity(i);
-                    ((Activity)v.getContext()).finish();
-                    popupWindow.dismiss();
-                }//User get wrong way, reload waypoint data and restart navigation
-                else if(instruction== WRONGWAY_NOTIFIER){
-                    navigationPath.clear();
-                    sourceID = currentLBeaconID;
-                    loadWaypointsData();
-                    startNavigation();
-                    whichWaypointOnProgressBar = 0;
-                    popupWindow.dismiss();
-
-                    /*
-                    // back to main screen
-                    Intent i = new Intent(v.getContext(), MainActivity.class);;
-                    v.getContext().startActivity(i);
-                    ((Activity)v.getContext()).finish();
-                    popupWindow.dismiss();*/
-                }//Check button for every turn instruction
-                else if(instruction== MAKETURN_NOTIFIER){
-                    tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() + nextTurnMovement.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-                    popupWindow.dismiss();
-                }
+            public void onClick(View v) {
+                dp.Change_paramation(currentLBeaconID,-2);
+                Log.i("NAbutton",currentLBeaconID +"\t P:-2");
+                onclickevent(v,instruction);
+                popupWindow.dismiss();
             }
         });
-
+        popupButton2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Log.i("NAbutton",currentLBeaconID +"\t P:0");
+                onclickevent(v,instruction);
+                popupWindow.dismiss();
+            }
+        });
+        popupButton3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                dp.Change_paramation(currentLBeaconID,2);
+                Log.i("NAbutton",currentLBeaconID +"\t P:+2");
+                onclickevent(v,instruction);
+                popupWindow.dismiss();
+            }
+        });
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
-
-
-
+    private void onclickevent(View v, int instruction){
+        if(instruction== ARRIVED_NOTIFIER){
+            Intent i = new Intent(v.getContext(), MainActivity.class);
+            v.getContext().startActivity(i);
+            ((Activity)v.getContext()).finish();
+//            popupWindow.dismiss();
+        }//User get wrong way, reload waypoint data and restart navigation
+        else if(instruction== WRONGWAY_NOTIFIER){
+            navigationPath.clear();
+            sourceID = currentLBeaconID;
+            loadWaypointsData();
+            startNavigation();
+            whichWaypointOnProgressBar = 0;
+//            popupWindow.dismiss();
+            /*
+            // back to main screen
+            Intent i = new Intent(v.getContext(), MainActivity.class);;
+            v.getContext().startActivity(i);
+            ((Activity)v.getContext()).finish();
+            popupWindow.dismiss();*/
+        }//Check button for every turn instruction
+        else if(instruction== MAKETURN_NOTIFIER){
+            tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() +
+                    nextTurnMovement.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+//            popupWindow.dismiss();
+        }
+    }
     //Create a thread to handle the currently received Lbeacon ID
     class NavigationTread implements Runnable {
 
@@ -1112,8 +1162,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // enter a waypoint ID to emulate the navigator receiving the corresponding Lbeacon ID (for demo)
     public void enterWaypointID(View view){
-
-
         if(popupWindow != null)
             popupWindow.dismiss();
 

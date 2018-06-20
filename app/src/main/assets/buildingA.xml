@@ -1,52 +1,60 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
 
-
-
-    <region id='1' name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='3'>
-        <node id='38' name='38' region='region1' category='Category1'/>
-        <node id='41' name='41' region='region1' category='Category1'/>
-        <node id='44' name='44' region='region1' category='Category1'/>
+    <region id='1' name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='3'>
+        <node id='0x0193bd410x780df142' name='A01' region='region1' category='Category1'/>
+        <node id='0xfb92bd410x680df142' name='A03' region='region1' category='Category1'/>
+        <node id='0x4993bd410x640df142' name='A04' region='region1' category='Category1'/>
+        <node id='0x6793bd410x5d0df142' name='A05' region='region1' category='Category1'/>
+        <node id='0x8193bd410x540df142' name='A06' region='region1' category='Category1'/>
+        <node id='0x0e94bd410x4e0df142' name='A08' region='region1' category='Category1'/>
+        <node id='0x2f94bd410x3c0df142' name='A20' region='region1' category='Category1'/>
     </region>
-
-    <region id='2' name='region2' neighbor1='region1' neighbor2='region3' neighbor3='' neighbor4='' elevation='2'>
-        <node id='30' name='30' region='region2' category='Category2'/>
-        <node id='33' name='33' region='region2' category='Category2'/>
-        <node id='36' name='36' region='region2' category='Category2'/>
-    </region>
-
+    <!--<region name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='3'>-->
+        <!--<location id='38' name='38' region='region1' category='Category1'/>-->
+        <!--<location id='41' name='41' region='region1' category='Category1'/>-->
+        <!--<location id='44' name='44' region='region1' category='Category1'/>-->
+    <!--</region>-->
 
 
-    <region id='3' name='region3' neighbor1='region1' neighbor2='region2' neighbor3='region4' neighbor4='' elevation='1'>
-        <node id='1' name='1' region='region3' category='Category3'/>
-        <node id='10' name='10' region='region3' category='Category3'/>
-        <node id='11' name='11' region='region3' category='Category3'/>
-    </region>
+
+    <!--<region name='region2' neighbor1='region1' neighbor2='region3' neighbor3='' neighbor4='' elevation='2'>-->
+        <!--<location id='30' name='30' region='region2' category='Category2'/>-->
+        <!--<location id='33' name='33' region='region2' category='Category2'/>-->
+        <!--<location id='36' name='36' region='region2' category='Category2'/>-->
+    <!--</region>-->
 
 
-    <region id='4' name='region4' neighbor1='region3' neighbor2='region5' neighbor3='' neighbor4='' elevation='1'>
-        <node id='12' name='12' region='region4' category='Category4'/>
-        <node id='21' name='21' region='region4' category='Category4'/>
 
-    </region>
+    <!--<region name='region3' neighbor1='region1' neighbor2='region2' neighbor3='region4' neighbor4='' elevation='1'>-->
+        <!--<location id='1' name='1' region='region3' category='Category3'/>-->
+        <!--<location id='10' name='10' region='region3' category='Category3'/>-->
+        <!--<location id='11' name='11' region='region3' category='Category3'/>-->
+    <!--</region>-->
 
-    <region id='5' name='region5' neighbor1='region4' neighbor2='region6' neighbor3='region7' neighbor4='' elevation='1'>
-        <node id='22' name='22' region='region5' category='Category5'/>
-        <node id='29' name='29' region='region5' category='Category5'/>
-    </region>
 
-    <region id='6' name='region6' neighbor1='region5' neighbor2='region7' neighbor3='' neighbor4='' elevation='2'>
-        <node id='46' name='46' region='region6' category='Category6'/>
-        <node id='47' name='47' region='region6' category='Category6'/>
-        <node id='50' name='50' region='region6' category='Category6'/>
+    <!--<region name='region4' neighbor1='region3' neighbor2='region5' neighbor3='' neighbor4='' elevation='1'>-->
+        <!--<location id='12' name='12' region='region4' category='Category4'/>-->
+        <!--<location id='21' name='21' region='region4' category='Category4'/>-->
 
-    </region>
+    <!--</region>-->
 
-    <region id='7' name='region7' neighbor1='region6' neighbor2='region5' neighbor3='' neighbor4='' elevation='3'>
-        <node id='54' name='54' region='region7' category='Category7'/>
-        <node id='55' name='55' region='region7' category='Category7'/>
-        <node id='58' name='58' region='region7' category='Category7'/>
-    </region>
+    <!--<region name='region5' neighbor1='region4' neighbor2='region6' neighbor3='region7' neighbor4='' elevation='1'>-->
+        <!--<location id='22' name='22' region='region5' category='Category5'/>-->
+        <!--<location id='29' name='29' region='region5' category='Category5'/>-->
+    <!--</region>-->
+
+    <!--<region name='region6' neighbor1='region5' neighbor2='region7' neighbor3='' neighbor4='' elevation='2'>-->
+        <!--<location id='46' name='46' region='region6' category='Category6'/>-->
+        <!--<location id='47' name='47' region='region6' category='Category6'/>-->
+        <!--<location id='50' name='50' region='region6' category='Category6'/>-->
+    <!--</region>-->
+
+    <!--<region name='region7' neighbor1='region6' neighbor2='region5' neighbor3='' neighbor4='' elevation='3'>-->
+        <!--<location id='54' name='54' region='region7' category='Category7'/>-->
+        <!--<location id='55' name='55' region='region7' category='Category7'/>-->
+        <!--<location id='58' name='58' region='region7' category='Category7'/>-->
+    <!--</region>-->
 
 
 </BuildingA>
