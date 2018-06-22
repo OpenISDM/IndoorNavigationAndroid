@@ -28,18 +28,18 @@ public class DeviceParameter {
         this.c = c;
         jarray = wf.ReadJsonFile();
         if (jarray == null) initdivice();
-        else{
-            try {
-                for (int i = 0; i < jarray.length(); i++) {
-                    JSONObject jsonObject = jarray.getJSONObject(i);
-                    String id = jsonObject.getString("id");
-                    String parameter = jsonObject.getString("parameter");
-                    Log.i("JSONPaser", "id:" + id + ", parameter:" + parameter);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        else{
+//            try {
+//                for (int i = 0; i < jarray.length(); i++) {
+//                    JSONObject jsonObject = jarray.getJSONObject(i);
+//                    String id = jsonObject.getString("id");
+//                    String parameter = jsonObject.getString("parameter");
+//                    Log.i("JSONPaser", "id:" + id + ", parameter:" + parameter);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
     public int get_Paramater(String s){
         for (int i=0; i < jarray.length(); i ++){
@@ -47,6 +47,19 @@ public class DeviceParameter {
                 JSONObject tmp_jobject = jarray.getJSONObject(i);
                 if(tmp_jobject.getString("id").equals(s)){
                     return Integer.parseInt(tmp_jobject.getString("parameter"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+    public float get_n(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString("id").equals(s)){
+                    return Integer.parseInt(tmp_jobject.getString("n"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -64,6 +77,8 @@ public class DeviceParameter {
                     tmp_jobject2.put("id",id);
                     tmp_jobject2.put("parameter",
                              tmp_jobject.getInt("parameter")+parameter);
+                    tmp_jobject2.put("R0",tmp_jobject.getInt("R0"));
+                    tmp_jobject2.put("n",tmp_jobject.getInt("n"));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -72,10 +87,9 @@ public class DeviceParameter {
             }
         }
         jarray = tmp_jarray;
-        Log.i("JSONCP", jarray.toString());
         wf.writejson(jarray.toString());
     }
-    public void count_dis(String id, int startrssi, int endrssi){
+    public void count_dis(String id, int R0, int n){
         JSONArray tmp_jarray = new JSONArray();
         for (int i=0; i < jarray.length(); i ++){
             try {
@@ -84,8 +98,8 @@ public class DeviceParameter {
                     JSONObject tmp_jobject2 = new JSONObject();
                     tmp_jobject2.put("id",id);
                     tmp_jobject2.put("parameter", tmp_jobject.getInt("parameter"));
-                    if (startrssi != 0)tmp_jobject2.put("startRSSI", startrssi);
-                    if (endrssi != 0)tmp_jobject2.put("endRSSI", endrssi);
+                    if (R0 != 0)tmp_jobject2.put("R0", R0);
+                    if (n != 0)tmp_jobject2.put("n", n);
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -121,8 +135,8 @@ public class DeviceParameter {
                                     jobject.put("id", pullParser.
                                             getAttributeValue(null, "id"));
                                     jobject.put("parameter", -65);
-                                    jobject.put("startRSSI", 0);
-                                    jobject.put("endRSSI", 0);
+                                    jobject.put("R0", 0);
+                                    jobject.put("n", 0);
                                     Log.i("JSONDP",jobject.toString());
                                     tmp_jarray.put(jobject);
                                 }

@@ -73,6 +73,7 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -265,6 +266,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private ReadWrite_File wf  = new ReadWrite_File();
     private DeviceParameter dp = new DeviceParameter();
     private List<String> receivebeacon;
+    private static int napcr = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
@@ -325,8 +327,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         //start navigation
         startNavigation();
-
-        //set text of destination
+        Node[] tmp_path_p = new Node[navigationPath.size()];
+        for(int i = 0 ; i < navigationPath.size(); i++){
+            tmp_path_p[i] = navigationPath.get(i);
+        }
+        LBD.setpath(tmp_path_p);
+        Log.i("NAP03", tmp_path_p.toString() + "\t" + navigationPath.toString());
         destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
 
 
@@ -664,6 +670,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
         if (beacon.size()>=2) {
+            Log.i("NAP02:", String.valueOf(navigationPath.size()));
             wf.writeFile("NAP1:"+beacon.toString());
             // block the Lbeacon ID the navigator just received
             if (!currentLBeaconID.equals(beacon.get(3))) {
@@ -824,7 +831,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 //        for (Node i:navigationPath) {
 //            tmp_path.add(i);
 //        }
-        LBD.setpath(navigationPath);
+
         //Draw a navigation progress bar based on navigation path
         //drawProgressBar(navigationPath);
     }
@@ -984,7 +991,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
 
             }
-            myVibrator.vibrate(new long[]{50, 300, 50, 300, 50, 300}, -1);
+            myVibrator.vibrate(new long[]{50, 200, 50, 200, 50, 200}, -1);
 //            popupButton.setText("OK");
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_ADD, null);
         }

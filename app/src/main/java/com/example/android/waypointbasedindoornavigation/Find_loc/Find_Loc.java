@@ -6,9 +6,7 @@ import android.util.Log;
 import com.example.android.waypointbasedindoornavigation.GeoCalulation;
 
 import org.altbeacon.beacon.Beacon;
-import org.w3c.dom.Node;
-
-import java.sql.Array;
+import com.example.android.waypointbasedindoornavigation.Node;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -21,12 +19,13 @@ public class Find_Loc {
     private ana_signal as = new ana_signal();
     private Queue<List<String>> data_queue = new LinkedList<>();
     private List<String> tmp_back = new ArrayList<>();
-    private List<com.example.android.waypointbasedindoornavigation.Node> path_queue = new ArrayList<>();
     private int algo_num = 3;
     private ReadWrite_File wf = new ReadWrite_File();
     private long startT = System.currentTimeMillis();
     private DeviceParameter dp = new DeviceParameter();
-    public void setpath(List<com.example.android.waypointbasedindoornavigation.Node> tmp_queue) { this.path_queue = tmp_queue;}
+    public void setpath(Node[] tmp_queue) {
+        as.set_path(tmp_queue);
+    }
     public List<String> Find_Loc(Beacon beacon, boolean ana_switch){
 //    public List<String> logBeaconData(Beacon beacon, boolean ana_switch){
         String[] beacondata = new String[]{
