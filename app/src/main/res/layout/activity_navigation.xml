@@ -118,9 +118,6 @@
 
     </RelativeLayout>
 
-
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,8 +128,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/inputID"
             android:textSize="20sp"
-            android:text="Enter a waypoint ID here"
             android:visibility="invisible"
+            android:text="Enter a waypoint ID here"
             android:onClick="clearEditText"/>
 
         <Button

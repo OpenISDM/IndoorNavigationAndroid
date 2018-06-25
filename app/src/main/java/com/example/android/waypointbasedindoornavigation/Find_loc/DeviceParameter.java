@@ -1,6 +1,7 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.app.Application;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -16,11 +17,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.DoubleToIntFunction;
 
 import static java.lang.Integer.numberOfLeadingZeros;
 import static java.lang.Integer.parseInt;
-
 public class DeviceParameter {
+    private static final String n_value = "n";
+    private static final String id = "id";
+    private static final String R0 = "R0";
+    private static final String parameter = "parameter";
+
     private static JSONArray jarray = new JSONArray();
     private ReadWrite_File wf= new ReadWrite_File();
     private static Context c;
@@ -41,12 +47,12 @@ public class DeviceParameter {
 //            }
 //        }
     }
-    public int get_Paramater(String s){
+    public int get_RSSI_threshold(String s){
         for (int i=0; i < jarray.length(); i ++){
             try {
                 JSONObject tmp_jobject = jarray.getJSONObject(i);
-                if(tmp_jobject.getString("id").equals(s)){
-                    return Integer.parseInt(tmp_jobject.getString("parameter"));
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return Integer.parseInt(tmp_jobject.getString(this.parameter));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -54,12 +60,12 @@ public class DeviceParameter {
         }
         return 0;
     }
-    public float get_n(String s){
+    public double get_R0(String s){
         for (int i=0; i < jarray.length(); i ++){
             try {
                 JSONObject tmp_jobject = jarray.getJSONObject(i);
-                if(tmp_jobject.getString("id").equals(s)){
-                    return Integer.parseInt(tmp_jobject.getString("n"));
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return tmp_jobject.getDouble(this.R0);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -67,18 +73,32 @@ public class DeviceParameter {
         }
         return 0;
     }
-    public void Change_paramation(String id, int  parameter){
+
+    public double get_n(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return tmp_jobject.getDouble(this.n_value);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+    public void Change_paramation(String id, int parameter){
         JSONArray tmp_jarray = new JSONArray();
         for (int i=0; i < jarray.length(); i ++){
             try {
                 JSONObject tmp_jobject = jarray.getJSONObject(i);
-                if(tmp_jobject.getString("id").equals(id)){
+                if(tmp_jobject.getString(this.id).equals(id)){
                     JSONObject tmp_jobject2 = new JSONObject();
-                    tmp_jobject2.put("id",id);
-                    tmp_jobject2.put("parameter",
-                             tmp_jobject.getInt("parameter")+parameter);
-                    tmp_jobject2.put("R0",tmp_jobject.getInt("R0"));
-                    tmp_jobject2.put("n",tmp_jobject.getInt("n"));
+                    tmp_jobject2.put(this.id,id);
+                    tmp_jobject2.put(this.parameter,
+                             tmp_jobject.getInt(this.parameter)+parameter);
+                    tmp_jobject2.put(this.R0,tmp_jobject.getInt(this.R0));
+                    tmp_jobject2.put(this.n_value,tmp_jobject.getInt(this.n_value));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -94,12 +114,12 @@ public class DeviceParameter {
         for (int i=0; i < jarray.length(); i ++){
             try {
                 JSONObject tmp_jobject = jarray.getJSONObject(i);
-                if(tmp_jobject.getString("id").equals(id)){
+                if(tmp_jobject.getString(this.id).equals(id)){
                     JSONObject tmp_jobject2 = new JSONObject();
-                    tmp_jobject2.put("id",id);
-                    tmp_jobject2.put("parameter", tmp_jobject.getInt("parameter"));
-                    if (R0 != 0)tmp_jobject2.put("R0", R0);
-                    if (n != 0)tmp_jobject2.put("n", n);
+                    tmp_jobject2.put(this.id,id);
+                    tmp_jobject2.put(this.parameter, tmp_jobject.getInt(this.parameter));
+                    if (R0 != 0)tmp_jobject2.put(this.R0, R0);
+                    if (n != 0)tmp_jobject2.put(this.n_value, n);
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -132,11 +152,11 @@ public class DeviceParameter {
                             if (eventType == XmlPullParser.START_TAG) {
                                 if(pullParser.getName().equals("node")){
                                     JSONObject jobject = new JSONObject();
-                                    jobject.put("id", pullParser.
-                                            getAttributeValue(null, "id"));
-                                    jobject.put("parameter", -65);
-                                    jobject.put("R0", 0);
-                                    jobject.put("n", 0);
+                                    jobject.put(this.id, pullParser.
+                                            getAttributeValue(null, this.id));
+                                    jobject.put(this.parameter, -65);
+                                    jobject.put(this.R0, 0);
+                                    jobject.put(this.n_value, 0);
                                     Log.i("JSONDP",jobject.toString());
                                     tmp_jarray.put(jobject);
                                 }

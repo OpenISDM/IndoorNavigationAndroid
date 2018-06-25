@@ -43,10 +43,10 @@ public class ana_signal {
             Log.i("tmp_path size2", String.valueOf(tmp_path.length)+"\t"+ String.valueOf(distance) );
             int tmp_dif = Math.abs(Math.round(data_list.get(0).countavg() - data_list.get(1).countavg()));
             if (tmp_dif > 10 && data_list.get(0).countavg() >
-                    dp.get_Paramater(data_list.get(0).getUuid())){
+                    dp.get_RSSI_threshold(data_list.get(0).getUuid())){
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
                 Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-                        dp.get_Paramater(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
+                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
                 location_range.add("close");
                 for (siganl_data_type tmp_sdt : data_list){
                     location_range.add(tmp_sdt.getUuid());
@@ -68,7 +68,7 @@ public class ana_signal {
         else {
             int tmp_dif = Math.round(data_list.get(0).countavg());
 
-            if (tmp_dif > dp.get_Paramater(data_list.get(0).getUuid())) {
+            if (tmp_dif > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
                 location_range.add("close");
@@ -88,14 +88,16 @@ public class ana_signal {
         }
         List<siganl_data_type> get_weight_data = new ArrayList<>(weight_queue);
         Collections.reverse(get_weight_data);
-        for (int i = 0; i < get_weight_data.size(); i++)
-            Log.i("SLWQ" + i, get_weight_data.get(i).getUuid() +
-                    "\t" + get_weight_data.get(i).getrssilist());
-        List<siganl_data_type> count_data_weight =
-                Positioning_Algorithm(get_weight_data, weight_list, algo_Type);
+//        for (int i = 0; i < get_weight_data.size(); i++)
+//            Log.i("SLWQ" + i, get_weight_data.get(i).getUuid() +
+//                    "\t" + get_weight_data.get(i).getrssilist());
+        List<siganl_data_type> count_data_weight = Positioning_Algorithm(get_weight_data, weight_list, algo_Type);
         List<String> tmp_return = new ArrayList<>();
         tmp_return.add(count_data_weight.get(0).getUuid());
         tmp_return.addAll(location_range);
+        if(data_list.size()>2){
+            Log.i("ASQ",ana_signal_4(get_weight_data, weight_list).toString());
+        }
         return tmp_return;
     }
 //    -------------------------------------------------------------------------------------
@@ -137,13 +139,16 @@ public class ana_signal {
                 return ana_signal_2(get_weight_data, weight_list);
             case 3:
                 return ana_signal_3(get_weight_data, weight_list);
-            case 4:
-                return ana_signal_4(get_weight_data, data_list ,weight_list);
             default:
                 return ana_signal_1(get_weight_data, weight_list);
         }
     }
 
+    private double count_distance(String s,double Rd){
+        double R0 = dp.get_R0(s);
+        double n_vlaue = dp.get_n(s);
+        return Math.pow(10,((Rd-R0)/(10*n_vlaue)));
+    }
     private List<siganl_data_type> ana_signal_1
             (List<siganl_data_type> get_weight_data, List<Integer> weight_list) {
         Log.i("def_algo", "algo1");
@@ -209,9 +214,8 @@ public class ana_signal {
         Collections.sort(count_data_weight);
         return count_data_weight;
     }
-    private List<siganl_data_type> ana_signal_4
+    private List<String> ana_signal_4
             (List<siganl_data_type> get_weight_data,
-             List<siganl_data_type> data_list,
              List<Integer> weight_list) {
         Log.i("def_algo", "algo4");
 //       計算距離
@@ -221,27 +225,25 @@ public class ana_signal {
             if (data_list.get(0).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[0] = tmp_path_P;
             if (data_list.get(1).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[1] = tmp_path_P;
         }
-        if(!tmp_dis_Node[1].equals(null) && !tmp_dis_Node[0].equals(null))
-            distance = GeoCalulation.getDistance(tmp_dis_Node[0],tmp_dis_Node[1]);
-        else distance = 0;
-
-        List<String> tmplistUUID = new ArrayList<>();
-        List<siganl_data_type> count_data_weight = new ArrayList<>();
-        for (int i = 0; i < get_weight_data.size(); i++) {
-            if (tmplistUUID.indexOf(get_weight_data.get(i).getUuid()) == -1) {
-                tmplistUUID.add(get_weight_data.get(i).getUuid());
-                count_data_weight.add(new siganl_data_type(get_weight_data.get(i).getUuid()
-                        , get_weight_data.get(i).getrssi()*weight_list.get(i)));
-            } else {
-                count_data_weight.get(
-                        tmplistUUID.indexOf(get_weight_data.get(i).getUuid())).
-                        setvalue(get_weight_data.get(i).getrssi()*weight_list.get(i));
+        if (data_list.size()>2) {
+            if (!tmp_dis_Node[1].equals(null) && !tmp_dis_Node[0].equals(null))
+                distance = GeoCalulation.getDistance(tmp_dis_Node[0], tmp_dis_Node[1]);
+            else distance = 0;
+            double[] tmp_disatnce = new double[2];
+            tmp_disatnce[0] = count_distance(data_list.get(0).getUuid(), data_list.get(0).countavg());
+            tmp_disatnce[1] = count_distance(data_list.get(1).getUuid(), data_list.get(1).countavg());
+            double tmp = tmp_disatnce[0] * distance / (tmp_disatnce[0] + tmp_disatnce[1]);
+            tmp_disatnce[1] = tmp_disatnce[1] * distance / (tmp_disatnce[0] + tmp_disatnce[1]);
+            tmp_disatnce[0] = tmp;
+            List<String> tmp_returen = new ArrayList<>();
+            for (int i = 0; i < 2; i++){
+                tmp_returen.add(data_list.get(i).getUuid());
+                tmp_returen.add(String.valueOf(tmp_disatnce[i]));
             }
+            return tmp_returen;
         }
-//        Log.i("SLW",count_data_weight.get(0).getrssilist());
-        tmplistUUID.clear();
+        else
+            return null;
 
-        Collections.sort(count_data_weight);
-        return count_data_weight;
     }
 }
