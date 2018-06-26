@@ -38,7 +38,7 @@ public class GeoCalulation {
     //Get the bearing which is the direction of travel as displayed
     // on a compass when moving from point A to point B
 
-    public static int getBearingOfTwoPoints(Node A, Node B){
+    static int getBearingOfTwoPoints(Node A, Node B){
 
         double latA = Math.toRadians(A._lat); //latitude for Node A
         double longA = Math.toRadians(A._lon); //longitude for Node A

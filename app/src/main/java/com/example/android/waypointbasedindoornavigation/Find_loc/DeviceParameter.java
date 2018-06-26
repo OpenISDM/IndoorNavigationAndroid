@@ -131,6 +131,28 @@ public class DeviceParameter {
         Log.i("JSONCP", jarray.toString());
         wf.writejson(jarray.toString());
     }
+
+    public void Direct_change_paramation(String id, int  parameter){
+        JSONArray tmp_jarray = new JSONArray();
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString("id").equals(id)){
+                    JSONObject tmp_jobject2 = new JSONObject();
+                    tmp_jobject2.put("id",id);
+                    tmp_jobject2.put("parameter", parameter);
+                    tmp_jarray.put(tmp_jobject2);
+                }
+                else tmp_jarray.put(tmp_jobject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        jarray = tmp_jarray;
+        Log.i("JSONCP", jarray.toString());
+        wf.writejson(jarray.toString());
+    }
+
     private void initdivice(){
         XmlPullParser pullParser = Xml.newPullParser();
         AssetManager assetManager = c.getAssets();

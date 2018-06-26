@@ -22,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -154,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
         popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-        Button popupButton1 = (Button) customView.findViewById(R.id.popupButton1);
+        /*Button popupButton1 = (Button) customView.findViewById(R.id.popupButton1);
         Button popupButton2 = (Button) customView.findViewById(R.id.popupButton2);
-        Button popupButton3 = (Button) customView.findViewById(R.id.popupButton3);
+        Button popupButton3 = (Button) customView.findViewById(R.id.popupButton3);*/
         TextView popupText = (TextView) customView.findViewById(R.id.popupText);
 
         popupText.setText("Empyt Starting Point or Destination!");
