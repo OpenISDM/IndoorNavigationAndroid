@@ -1,6 +1,5 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -14,11 +13,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.Integer.numberOfLeadingZeros;
-import static java.lang.Integer.parseInt;
 
 public class DeviceParameter {
     private static JSONArray jarray = new JSONArray();
@@ -75,6 +69,28 @@ public class DeviceParameter {
         Log.i("JSONCP", jarray.toString());
         wf.writejson(jarray.toString());
     }
+
+    public void Direct_change_paramation(String id, int  parameter){
+        JSONArray tmp_jarray = new JSONArray();
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString("id").equals(id)){
+                    JSONObject tmp_jobject2 = new JSONObject();
+                    tmp_jobject2.put("id",id);
+                    tmp_jobject2.put("parameter", parameter);
+                    tmp_jarray.put(tmp_jobject2);
+                }
+                else tmp_jarray.put(tmp_jobject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        jarray = tmp_jarray;
+        Log.i("JSONCP", jarray.toString());
+        wf.writejson(jarray.toString());
+    }
+
     private void initdivice(){
         XmlPullParser pullParser = Xml.newPullParser();
         AssetManager assetManager = c.getAssets();
