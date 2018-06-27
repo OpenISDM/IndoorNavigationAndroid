@@ -43,6 +43,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
+import android.renderscript.RenderScript;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -73,6 +74,7 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -267,7 +269,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
     private ReadWrite_File wf  = new ReadWrite_File();
     private DeviceParameter dp = new DeviceParameter();
-    String receivebeacon;
+    private List<String> receivebeacon;
+    private static int napcr = 0;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
 
@@ -329,8 +333,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         //start navigation
         startNavigation();
-
-        //set text of destination
+        Node[] tmp_path_p = new Node[navigationPath.size()];
+        for(int i = 0 ; i < navigationPath.size(); i++){
+            tmp_path_p[i] = navigationPath.get(i);
+        }
+        LBD.setpath(tmp_path_p);
+        Log.i("NAP03", tmp_path_p.toString() + "\t" + navigationPath.toString());
         destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
 
 
@@ -674,15 +682,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
-
         if (beacon.size()>=2) {
+            Log.i("NAP02:", String.valueOf(navigationPath.size()));
             wf.writeFile("NAP1:"+beacon.toString());
-            receivebeacon = beacon.get(1);
-
             // block the Lbeacon ID the navigator just received
-            if (!currentLBeaconID.equals(receivebeacon)) {
-
-
+            if (!currentLBeaconID.equals(beacon.get(3))) {
                 if(popupWindow != null)
                     popupWindow.dismiss();
 
@@ -702,8 +706,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 // Input waypoint name for debug mode
                 String nameOFWaypoint = waypointIDInput.getText().toString();
-
-                currentLBeaconID = receivebeacon;
+                receivebeacon = beacon;
+                currentLBeaconID = beacon.get(3);
 
 //                currentLBeaconID = CConvX.concat(CConvY);
                 synchronized (sync) {
@@ -838,17 +842,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     navigationPath.get(i)._waypointName);
 
         new DeviceParameter().setupDeviceParameter(this);
-//        Queue<String> tmp_path = new LinkedList<>();
-//        for (int i = 0; i<navigationPath.size(); i++) {
-//            tmp_path.offer(navigationPath.get(i).getID());
+//        List<Node> tmp_path = new ArrayList<>();
+//        for (Node i:navigationPath) {
+//            tmp_path.add(i);
 //        }
-//        LBD.setpath(tmp_path);
 
         //Draw a navigation progress bar based on navigation path
         //drawProgressBar(navigationPath);
     }
-
-
     // compute a shortest path with given starting point and destination
     public List<Node> computeDijkstraShortestPath(Node source, Node destination) {
         source.minDistance = 0.;
@@ -1067,8 +1068,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
             @Override
             public void onClick(View v) {
-                dp.Change_paramation(currentLBeaconID,2);
-                Log.i("NAbutton",currentLBeaconID +"\t P:+2");
+                dp.Change_paramation(currentLBeaconID,-2);
+                Log.i("NAbutton",currentLBeaconID +"\t P:-2");
                 onclickevent(v,instruction);
                 popupWindow.dismiss();
             }
@@ -1081,6 +1082,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
     private void onclickevent(View v, int instruction){
+//        dp.count_dis(receivebeacon.get(3),Integer.parseInt(receivebeacon.get(4)),0);
+////        dp.count_dis(receivebeacon.get(5),Integer.parseInt(receivebeacon.get(6)),0);
         if(instruction== ARRIVED_NOTIFIER){
             Intent i = new Intent(v.getContext(), MainActivity.class);
             v.getContext().startActivity(i);

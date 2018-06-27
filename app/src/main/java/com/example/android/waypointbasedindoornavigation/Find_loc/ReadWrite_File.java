@@ -18,6 +18,7 @@ import java.io.IOException;
 public class ReadWrite_File {
     private File file;
     private static String file_name = "Log";
+    private static boolean sb = false;
     private final File path  = new File(Environment.getExternalStorageDirectory() +
             File.separator +"WPBIN");
 //    設定固定檔案名稱
@@ -45,35 +46,33 @@ public class ReadWrite_File {
     }
 //    寫入含式
     private void writefunction(File file, String sBody, int T){
-        Log.i("Msg0", String.valueOf(file.exists()));
-        if(!file.exists()){
-            try
-            {
-                file.createNewFile();
-                file.setExecutable(true,false);
+        if(sb) {
+            Log.i("Msg0", String.valueOf(file.exists()));
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                    file.setExecutable(true, false);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
+            try {
+                if (T == 0) {
+                    BufferedWriter buf = new BufferedWriter(new FileWriter(file, false));
+                    buf.write(sBody);
+                    buf.close();
+                } else if (T == 1) {
+                    BufferedWriter buf = new BufferedWriter(new FileWriter(file, true));
+                    buf.append(sBody);
+                    buf.newLine();
+                    buf.close();
+                }
+                Log.i("Msg2", "success" + file.getAbsolutePath());
+            } catch (Exception e) {
+                Log.i("Msg3", "fail" + file.getAbsolutePath());
                 e.printStackTrace();
             }
-        }
-        try{
-            if (T == 0) {
-                BufferedWriter buf = new BufferedWriter(new FileWriter(file, false));
-                buf.write(sBody);
-                buf.close();
-            }
-            else if(T == 1){
-                BufferedWriter buf = new BufferedWriter(new FileWriter(file, true));
-                buf.append(sBody);
-                buf.newLine();
-                buf.close();
-            }
-            Log.i("Msg2", "success"+file.getAbsolutePath());
-        }catch (Exception e){
-            Log.i("Msg3", "fail"+file.getAbsolutePath());
-            e.printStackTrace();
         }
     }
     public JSONArray ReadJsonFile() {

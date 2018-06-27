@@ -18,7 +18,7 @@ Author:
 
 import java.util.List;
 
-class Node implements Comparable<Node> {
+public class Node implements Comparable<Node> {
 
     String _waypointID;
     String _waypointName;
