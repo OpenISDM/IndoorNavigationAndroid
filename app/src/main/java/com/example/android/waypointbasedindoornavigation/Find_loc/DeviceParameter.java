@@ -87,6 +87,19 @@ public class DeviceParameter {
         }
         return 0;
     }
+    public double get_Paramater(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return tmp_jobject.getDouble(this.parameter);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
     public void Change_paramation(String id, int parameter){
         JSONArray tmp_jarray = new JSONArray();
         for (int i=0; i < jarray.length(); i ++){
@@ -141,6 +154,8 @@ public class DeviceParameter {
                     JSONObject tmp_jobject2 = new JSONObject();
                     tmp_jobject2.put("id",id);
                     tmp_jobject2.put("parameter", parameter);
+                    tmp_jobject2.put(this.R0,tmp_jobject.getInt(this.R0));
+                    tmp_jobject2.put(this.n_value,tmp_jobject.getInt(this.n_value));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);

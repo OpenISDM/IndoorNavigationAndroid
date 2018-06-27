@@ -160,24 +160,24 @@ public class MainActivity extends AppCompatActivity {
 
         popupText.setText("Empyt Starting Point or Destination!");
 //        popupButton.setText("PK");
-        popupButton1.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                popupWindow.dismiss();
-            }
-        });
-        popupButton2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                popupWindow.dismiss();
-            }
-        });
-        popupButton3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                popupWindow.dismiss();
-            }
-        });
+//        popupButton1.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                popupWindow.dismiss();
+//            }
+//        });
+//        popupButton2.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                popupWindow.dismiss();
+//            }
+//        });
+//        popupButton3.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                popupWindow.dismiss();
+//            }
+//        });
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
 
