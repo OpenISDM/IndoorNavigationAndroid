@@ -22,17 +22,17 @@ import android.app.Application;
 
 public class Setting extends Application{
 
-    static int mobility = 1;
+    static int preferenceValue = 3;
     static String fileName = "buildingA.xml";
 
-    public static int getMobilityValue() {
+    public static int getPreferenceValue() {
 
-        return mobility;
+        return preferenceValue;
     }
 
-    public static void setMobilityValue(int m) {
+    public static void setPreferenceValue(int m) {
 
-        mobility = m;
+        preferenceValue = m;
     }
 
     public static String getFileName(){
