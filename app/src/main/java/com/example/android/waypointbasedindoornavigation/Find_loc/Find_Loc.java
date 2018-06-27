@@ -20,6 +20,7 @@ public class Find_Loc {
     private Queue<List<String>> data_queue = new LinkedList<>();
     private List<String> tmp_back = new ArrayList<>();
     private int algo_num = 3;
+    private int weight_type = 3;
     private ReadWrite_File wf = new ReadWrite_File();
     private long startT = System.currentTimeMillis();
     private DeviceParameter dp = new DeviceParameter();
@@ -49,7 +50,7 @@ public class Find_Loc {
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
 //                Log.i("LBD_queue", String.valueOf(data_queue.size()));
 //                    as.set_distance(GeoCalulation.getDistance(path_queue.get(0),path_queue.get(1)));
-                    researchdata.addAll(as.ana_signal(data_queue,algo_num,1));
+                    researchdata.addAll(as.ana_signal(data_queue,algo_num,weight_type));
                     wf.writeFile("LBD:"+data_queue.toString() +"\t"
                             +String.valueOf(data_queue.size()));
                     Log.i("LBD",researchdata.toString());

@@ -124,15 +124,16 @@ public class ana_signal {
                     else
                         weight_list.add(weight_list.get(i - 1) + weight_list.get(i - 2));
                 }
+                Log.i("weight1", weight_list.toString());
                 return weight_list;
             case 2:
                 for (int i = 0; i < weight_size + 2; i++)
                     weight_list.add((float) Math.pow(2, i));
                 return weight_list;
             case 3:
-                for (int i = 0; i < weight_size + 2; i++) {
-                    weight_list.add((float)(Math.pow(10,i)*10));
-                }
+                for (int i = 0; i < weight_size + 2; i++)
+                    weight_list.add((float)(Math.log10(i)*10));
+                Log.i("weight3", weight_list.toString());
                 return weight_list;
             default:
                 for (int i = 2; i < weight_size + 2; i++)
