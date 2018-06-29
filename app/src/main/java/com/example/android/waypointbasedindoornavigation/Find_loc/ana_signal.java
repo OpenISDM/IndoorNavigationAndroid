@@ -21,11 +21,16 @@ public class ana_signal {
     private static DeviceParameter dp = new DeviceParameter();
     private static int distance = 0;
     private static Node[] tmp_path;
-    public void set_path(Node[] tmp_path){ this.tmp_path = tmp_path; }
+    public void set_path(List<Node> tmp_path){
+        this.tmp_path = new Node[tmp_path.size()];
+        for (int i = 0; i < tmp_path.size(); i++)
+            this.tmp_path[i] = tmp_path.get(i);
+    }
     public List<String> ana_signal(Queue q, int algo_Type, int weight_type) {
         List lq = new ArrayList<String>(q);
         List<String> tmp_data_list = new ArrayList<>();
         data_list.clear();
+//        class the datalist to UUID,RSSIList
 //        List<siganl_data_type> data_list = new ArrayList<>();
         for (int i = 0; i < q.size(); i++){
             if (tmp_data_list.indexOf(((List<String>) lq.get(i)).get(0)) == -1) {
@@ -38,15 +43,15 @@ public class ana_signal {
                         setvalue(Integer.parseInt(((List<String>) lq.get(i)).get(1)));
             }
         }
+//        find difference between first and second higher RSSI of UUID
         List<String> location_range = new ArrayList<>();
         if (data_list.size() >1) {
             for (int i = 0; i <data_list.size(); i++)
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
-            Log.i("tmp_path size2", String.valueOf(tmp_path.length)+"\t"+ String.valueOf(distance) );
             float tmp_dif = Math.abs(data_list.get(0).countavg() - data_list.get(1).countavg());
-            float tmp_count_dif = ana_signal_5(data_list);
-
+            float tmp_count_dif = ana_signal_5(data_list,2);
+            Log.i("tmp_count_dif",String.valueOf(tmp_count_dif));
             if (tmp_dif > tmp_count_dif && data_list.get(0).countavg() >
                     dp.get_RSSI_threshold(data_list.get(0).getUuid())){
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
@@ -58,7 +63,7 @@ public class ana_signal {
                     location_range.add(String.valueOf(tmp_sdt.countavg()));
                 }
             }
-            else if (tmp_dif < 5) {
+            else if (tmp_dif < ana_signal_5(data_list,4)) {
                 Log.i("def_range", "middle of " + data_list.get(0).getUuid()
                         + " and " + data_list.get(1).getUuid());
                 location_range.add(data_list.get(0).getUuid());
@@ -228,7 +233,6 @@ public class ana_signal {
         Log.i("def_algo", "algo4");
 //       計算距離
         Node[] tmp_dis_Node = new Node[2];
-        Log.i("tmp_path size", String.valueOf(tmp_path.length));
         for (Node tmp_path_P:  tmp_path){
             if (data_list.get(0).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[0] = tmp_path_P;
             if (data_list.get(1).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[1] = tmp_path_P;
@@ -255,11 +259,10 @@ public class ana_signal {
 
     }
     private float ana_signal_5
-            (List<siganl_data_type> data_list) {
+            (List<siganl_data_type> data_list, int range) {
         Log.i("def_algo", "algo5");
 //       計算距離
         Node[] tmp_dis_Node = new Node[2];
-        Log.i("tmp_path size", String.valueOf(tmp_path.length));
         for (Node tmp_path_P:  tmp_path){
             if (data_list.get(0).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[0] = tmp_path_P;
             if (data_list.get(1).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[1] = tmp_path_P;
@@ -270,8 +273,8 @@ public class ana_signal {
             else distance = 0;
             Log.i("algo5", String.valueOf(distance));
             double[] tmp_disatnce = new double[2];
-            tmp_disatnce[0] = count_Rd(data_list.get(0).getUuid(), 2);
-            tmp_disatnce[1] = count_Rd(data_list.get(1).getUuid(), distance-2);
+            tmp_disatnce[0] = count_Rd(data_list.get(0).getUuid(), range);
+            tmp_disatnce[1] = count_Rd(data_list.get(1).getUuid(), distance-range);
             Log.i("algo5", String.valueOf(tmp_disatnce[0])+"\t"+String.valueOf(tmp_disatnce[1]));
             float tmp_returen = (float) (tmp_disatnce[0]-tmp_disatnce[1]);
             return tmp_returen;

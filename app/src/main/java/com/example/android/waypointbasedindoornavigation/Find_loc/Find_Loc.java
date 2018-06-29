@@ -24,7 +24,7 @@ public class Find_Loc {
     private ReadWrite_File wf = new ReadWrite_File();
     private long startT = System.currentTimeMillis();
     private DeviceParameter dp = new DeviceParameter();
-    public void setpath(Node[] tmp_queue) {
+    public void setpath(List<Node> tmp_queue) {
         as.set_path(tmp_queue);
     }
     public List<String> Find_Loc(Beacon beacon, boolean ana_switch){

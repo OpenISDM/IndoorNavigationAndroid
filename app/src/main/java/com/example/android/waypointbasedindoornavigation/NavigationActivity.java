@@ -914,7 +914,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 //        for (int i = 0; i<navigationPath.size(); i++) {
 //            tmp_path.offer(navigationPath.get(i).getID());
 //        }
-//        LBD.setpath(tmp_path);
+        LBD.setpath(navigationPath);
 
         //Draw a navigation progress bar based on navigation path
         //drawProgressBar(navigationPath);
