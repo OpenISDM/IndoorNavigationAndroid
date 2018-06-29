@@ -205,6 +205,14 @@ public class MainActivity extends AppCompatActivity {
                     Setting.setPreferenceValue(4);
                 break;
 
+            case R.id.p5:
+                if (checked)
+                    Setting.setTurnOnOK(false);
+                break;
+            case R.id.p6:
+                if (checked)
+                    Setting.setTurnOnOK(true);
+                break;
         }
     }
 
