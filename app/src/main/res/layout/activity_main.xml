@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Preference Setting"
-        android:textSize="25dp"/>
+        android:textSize="20dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -91,13 +91,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+            <!--
             <RadioButton android:id="@+id/p1"
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:text="Elevator"
                          android:paddingRight="40sp"
                          android:onClick="onPreferenceButtonClicked"
-                         android:textSize="20dp"/>
+                         android:textSize="15dp"/>
 
             <RadioButton android:id="@+id/p2"
                          android:layout_width="wrap_content"
@@ -105,7 +106,25 @@
                          android:text="Stair"
                          android:paddingRight="40sp"
                          android:onClick="onPreferenceButtonClicked"
-                         android:textSize="20dp"/>
+                         android:textSize="15dp"/>-->
+
+            <RadioButton android:id="@+id/p3"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="UserMode"
+                         android:paddingRight="40sp"
+                         android:onClick="onPreferenceButtonClicked"
+                         android:textSize="15dp"/>
+
+            <RadioButton android:id="@+id/p4"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="TesterMode"
+                         android:paddingRight="40sp"
+                         android:onClick="onPreferenceButtonClicked"
+                         android:textSize="15dp"/>
+
+
         </RadioGroup>
 
 

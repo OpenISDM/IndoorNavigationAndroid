@@ -188,14 +188,22 @@ public class MainActivity extends AppCompatActivity {
 
         // check which radio button is clicked
         switch(view.getId()) {
-            case R.id.p1:
+            /*case R.id.p1:
                 if (checked)
-                    Setting.setMobilityValue(ELEVATOR);
+                    Setting.setPreferenceValue(ELEVATOR);
                     break;
             case R.id.p2:
                 if (checked)
-                    Setting.setMobilityValue(STAIRWELL);
-                    break;
+                    Setting.setPreferenceValue(STAIRWELL);
+                    break;*/
+            case R.id.p3:
+                if (checked)
+                    Setting.setPreferenceValue(3);
+                break;
+            case R.id.p4:
+                if (checked)
+                    Setting.setPreferenceValue(4);
+                break;
 
         }
     }
