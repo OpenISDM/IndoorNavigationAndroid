@@ -26,11 +26,13 @@ public class DeviceParameter {
     private static final String id = "id";
     private static final String R0 = "R0";
     private static final String parameter = "parameter";
+    private static final String install_hight = "install_hight";
 
     private static JSONArray jarray = new JSONArray();
     private ReadWrite_File wf= new ReadWrite_File();
     private static Context c;
     public void setupDeviceParameter(Context c) {
+        Log.i("setupDeviceParameter","setupDeviceParameter");
         this.c = c;
         jarray = wf.ReadJsonFile();
         if (jarray == null) initdivice();
@@ -53,6 +55,19 @@ public class DeviceParameter {
                 JSONObject tmp_jobject = jarray.getJSONObject(i);
                 if(tmp_jobject.getString(this.id).equals(s)){
                     return Integer.parseInt(tmp_jobject.getString(this.parameter));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+    public double get_install_hight(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.install_hight).equals(s)){
+                    return tmp_jobject.getDouble(this.install_hight);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -112,6 +127,7 @@ public class DeviceParameter {
                              tmp_jobject.getInt(this.parameter)+parameter);
                     tmp_jobject2.put(this.R0,tmp_jobject.getInt(this.R0));
                     tmp_jobject2.put(this.n_value,tmp_jobject.getInt(this.n_value));
+                    tmp_jobject2.put(this.install_hight,tmp_jobject.getInt(this.install_hight));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -133,6 +149,7 @@ public class DeviceParameter {
                     tmp_jobject2.put(this.parameter, tmp_jobject.getInt(this.parameter));
                     if (R0 != 0)tmp_jobject2.put(this.R0, R0);
                     if (n != 0)tmp_jobject2.put(this.n_value, n);
+                    tmp_jobject2.put(this.install_hight,tmp_jobject.getInt(this.install_hight));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -156,6 +173,7 @@ public class DeviceParameter {
                     tmp_jobject2.put("parameter", parameter);
                     tmp_jobject2.put(this.R0,tmp_jobject.getInt(this.R0));
                     tmp_jobject2.put(this.n_value,tmp_jobject.getInt(this.n_value));
+                    tmp_jobject2.put(this.install_hight,tmp_jobject.getInt(this.install_hight));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
@@ -194,6 +212,7 @@ public class DeviceParameter {
                                     jobject.put(this.parameter, -65);
                                     jobject.put(this.R0, 0);
                                     jobject.put(this.n_value, 0);
+                                    jobject.put(this.install_hight, 1.5);
                                     Log.i("JSONDP",jobject.toString());
                                     tmp_jarray.put(jobject);
                                 }

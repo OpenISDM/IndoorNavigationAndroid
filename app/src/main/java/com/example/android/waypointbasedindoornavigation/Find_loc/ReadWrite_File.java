@@ -41,8 +41,10 @@ public class ReadWrite_File {
     }
     public void writejson(String j){
         file = new File(path,"DeviceParamation.json");
+        boolean tmp_sb = sb;
+        sb = true;
         writefunction(file,j,0);
-
+        sb = tmp_sb;
     }
 //    寫入含式
     private void writefunction(File file, String sBody, int T){

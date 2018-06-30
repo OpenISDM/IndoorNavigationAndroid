@@ -24,9 +24,7 @@ public class Find_Loc {
     private ReadWrite_File wf = new ReadWrite_File();
     private long startT = System.currentTimeMillis();
     private DeviceParameter dp = new DeviceParameter();
-    public void setpath(List<Node> tmp_queue) {
-        as.set_path(tmp_queue);
-    }
+    public void setpath(List<Node> tmp_queue) {as.set_path(tmp_queue);}
     public List<String> Find_Loc(Beacon beacon, boolean ana_switch){
 //    public List<String> logBeaconData(Beacon beacon, boolean ana_switch){
         String[] beacondata = new String[]{
@@ -44,7 +42,7 @@ public class Find_Loc {
         if (ana_switch){
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
-                if ((endT-startT)>1900){
+                if ((endT-startT)>1000){
                     startT = System.currentTimeMillis();
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
@@ -55,20 +53,21 @@ public class Find_Loc {
                             +String.valueOf(data_queue.size()));
                     Log.i("LBD",researchdata.toString());
                 data_queue.clear();
-                if(researchdata.get(2).equals("close")
-                        && researchdata.get(1).equals(researchdata.get(3))){
-//                    path_queue.remove(0);
-                    tmp_back.clear();
-                    tmp_back.addAll(researchdata);
-                    wf.writeFile("LBD2:"+researchdata.toString());
-                    Log.i("LBD2", researchdata.toString());
-                    return researchdata;
-                }
-                else {
-                    Log.i("LBD3", tmp_back.toString());
-                    wf.writeFile("LBD3:"+tmp_back.toString());
-                    return tmp_back;
-                }
+//                if(researchdata.get(2).equals("close")
+//                        && researchdata.get(1).equals(researchdata.get(3))){
+////                    path_queue.remove(0);
+//                    tmp_back.clear();
+//                    tmp_back.addAll(researchdata);
+//                    wf.writeFile("LBD2:"+researchdata.toString());
+//                    Log.i("LBD2", researchdata.toString());
+//                    return researchdata;
+//                }
+//                else {
+//                    Log.i("LBD3", tmp_back.toString());
+//                    wf.writeFile("LBD3:"+tmp_back.toString());
+//                    return tmp_back;
+//                }
+                return researchdata;
             }
         }
 //        Log.i("LBD2",researchdata.toString());
