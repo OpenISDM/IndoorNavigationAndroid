@@ -42,7 +42,7 @@ public class Find_Loc {
         if (ana_switch){
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
-                if ((endT-startT)>1000){
+                if ((endT-startT)>800){
                     startT = System.currentTimeMillis();
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
@@ -52,7 +52,7 @@ public class Find_Loc {
                     wf.writeFile("LBD:"+data_queue.toString() +"\t"
                             +String.valueOf(data_queue.size()));
                     Log.i("LBD",researchdata.toString());
-                data_queue.clear();
+                    data_queue.clear();
 //                if(researchdata.get(2).equals("close")
 //                        && researchdata.get(1).equals(researchdata.get(3))){
 ////                    path_queue.remove(0);

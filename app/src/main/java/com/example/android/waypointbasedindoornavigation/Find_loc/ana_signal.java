@@ -21,7 +21,8 @@ public class ana_signal {
     private static DeviceParameter dp = new DeviceParameter();
     private static ReadWrite_File wf = new ReadWrite_File();
     private static int distance = 0;
-    private static int range = 4;
+    private static final int close_range = 4;
+    private static final int near_range = 4;
     private static Node[] tmp_path;
     public void set_path(List<Node> tmp_path){
         this.tmp_path = new Node[tmp_path.size()];
@@ -52,13 +53,13 @@ public class ana_signal {
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
             float tmp_dif = Math.abs(data_list.get(0).countavg() - data_list.get(1).countavg());
-            float tmp_count_dif = ana_signal_5(data_list,2);
+            float tmp_count_dif = ana_signal_5(data_list,close_range);
             Log.i("tmp_count_dif",String.valueOf(tmp_count_dif));
             wf.writeFile("tmp_count_dif:"+String.valueOf(tmp_count_dif));
 //            if (tmp_dif > tmp_count_dif && data_list.get(0).countavg() >
 //                    dp.get_RSSI_threshold(data_list.get(0).getUuid())){
             if (tmp_dif > tmp_count_dif &&
-                    data_list.get(0).countavg() > count_Rd(data_list.get(0).getUuid(),range)){
+                    data_list.get(0).countavg() > count_Rd(data_list.get(0).getUuid(),close_range)){
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
                 Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
                         dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
@@ -68,7 +69,8 @@ public class ana_signal {
                     location_range.add(String.valueOf(tmp_sdt.countavg()));
                 }
             }
-            else if (tmp_dif < ana_signal_5(data_list,range)) {
+            else if (tmp_dif < ana_signal_5(data_list,near_range) &&
+                    data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
                 Log.i("def_range", "middle of " + data_list.get(0).getUuid()
                         + " and " + data_list.get(1).getUuid());
                 location_range.add(data_list.get(0).getUuid());
@@ -82,7 +84,6 @@ public class ana_signal {
         }
         else {
             int tmp_dif = Math.round(data_list.get(0).countavg());
-
             if (tmp_dif > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
