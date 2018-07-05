@@ -7,6 +7,8 @@ import android.content.res.AssetManager;
 import android.util.Log;
 import android.util.Xml;
 
+import com.example.android.waypointbasedindoornavigation.DataParser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

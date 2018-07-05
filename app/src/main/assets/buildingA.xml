@@ -1,23 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
 
-    <region id='1' name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='3'>
+    <region id='1' name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
         <node id='0x0193bd410x780df142' name='A01' region='region1' category='Category1'/>
+        <node id='0x5c93bd410x4f0df142' name='A02' region='region1' category='Category1'/>
         <node id='0xfb92bd410x680df142' name='A03' region='region1' category='Category1'/>
         <node id='0x4993bd410x640df142' name='A04' region='region1' category='Category1'/>
         <node id='0x6793bd410x5d0df142' name='A05' region='region1' category='Category1'/>
         <node id='0x8193bd410x540df142' name='A06' region='region1' category='Category1'/>
+        <node id='0xd856c8410x9739e942' name='A07' region='region1' category='Category1'/>
         <node id='0x0e94bd410x4e0df142' name='A08' region='region1' category='Category1'/>
-        <node id='0x2f94bd410x3c0df142' name='A20' region='region1' category='Category1'/>
-        <node id='0x5c93bd410x4f0df142' name='A02' region='region1' category='Category1'/>
         <node id='0x0d93bd410x530df142' name='A14' region='region1' category='Category1'/>
         <node id='0xfe92bd410x3e0df142' name='A15' region='region1' category='Category1'/>
         <node id='0xa692bd410x430df142' name='A16' region='region1' category='Category1'/>
+        <node id='0x2f94bd410x3c0df142' name='A20' region='region1' category='Category1'/>
+        <node id='0xbb3fc8410x0721f342' name='B05' region='region1' category='Category1'/>
     </region>
-    <!--<region name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='3'>-->
-        <!--<location id='38' name='38' region='region1' category='Category1'/>-->
-        <!--<location id='41' name='41' region='region1' category='Category1'/>-->
-        <!--<location id='44' name='44' region='region1' category='Category1'/>-->
+
+    <!--<region id='2' name='region2' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>-->
+        <!--<node id='0xde57c8410x0721f342' name='B07' region='region2' category='Category2'/>-->
+        <!--<node id='0x0200c8410x0721f342' name='B09' region='region2' category='Category2'/>-->
     <!--</region>-->
 
 

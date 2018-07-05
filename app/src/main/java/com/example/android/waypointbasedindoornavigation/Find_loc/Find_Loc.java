@@ -42,7 +42,7 @@ public class Find_Loc {
         if (ana_switch){
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
-                if ((endT-startT)>800){
+                if ((endT-startT)>500){
                     startT = System.currentTimeMillis();
 //                Log.i("LBD_time", String.valueOf(endT)+"\t"
 //                        +String.valueOf(startT)+"\t"+String.valueOf(endT-startT));
