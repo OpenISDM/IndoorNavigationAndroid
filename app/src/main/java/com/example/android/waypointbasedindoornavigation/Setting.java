@@ -22,7 +22,7 @@ import android.app.Application;
 
 public class Setting extends Application{
 
-    static int preferenceValue = 4;
+    static int preferenceValue = 3;
     static boolean turnOnOK = false;
     static String fileName = "buildingA.xml";
 

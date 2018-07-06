@@ -21,8 +21,8 @@ public class ana_signal {
     private static DeviceParameter dp = new DeviceParameter();
     private static ReadWrite_File wf = new ReadWrite_File();
     private static int distance = 0;
-    private static final int close_range = 2;
-    private static final int near_range = 4;
+    private static final int close_range = 3;
+    private static final int near_range = 6;
     private static Node[] tmp_path;
     public void set_path(List<Node> tmp_path){
         this.tmp_path = new Node[tmp_path.size()];
@@ -69,13 +69,13 @@ public class ana_signal {
                     location_range.add(String.valueOf(tmp_sdt.countavg()));
                 }
             }
-//            else if (tmp_dif < ana_signal_5(data_list,near_range) &&
-//                    data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
-//                Log.i("def_range", "middle of " + data_list.get(0).getUuid()
-//                        + " and " + data_list.get(1).getUuid());
-//                location_range.add(data_list.get(0).getUuid());
-//                location_range.add(data_list.get(1).getUuid());
-//            }
+            else if (tmp_dif < ana_signal_5(data_list,near_range) &&
+                    data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
+                Log.i("def_range", "middle of " + data_list.get(0).getUuid()
+                        + " and " + data_list.get(1).getUuid());
+                location_range.add(data_list.get(0).getUuid());
+                location_range.add(data_list.get(1).getUuid());
+            }
             else {
                 Log.i("def_range", "near " + data_list.get(0).getUuid());
                 location_range.add("near");
