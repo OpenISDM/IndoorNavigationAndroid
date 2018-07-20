@@ -18,7 +18,7 @@ import java.io.IOException;
 public class ReadWrite_File {
     private File file;
     private static String file_name = "Log";
-    private static boolean sb = false;
+    private static boolean sb = true;
     private final File path  = new File(Environment.getExternalStorageDirectory() +
             File.separator +"WPBIN");
 //    設定固定檔案名稱
@@ -41,8 +41,10 @@ public class ReadWrite_File {
     }
     public void writejson(String j){
         file = new File(path,"DeviceParamation.json");
+        boolean tmp_sb = sb;
+        sb = true;
         writefunction(file,j,0);
-
+        sb = tmp_sb;
     }
 //    寫入含式
     private void writefunction(File file, String sBody, int T){

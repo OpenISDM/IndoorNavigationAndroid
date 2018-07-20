@@ -767,18 +767,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
-
-        if (beacon.size()>=2) {
+        if (beacon.size() > 1) {
             wf.writeFile("NAP1:"+beacon.toString());
-            receivebeacon = beacon.get(1);
-
+            Log.i("NAP1",beacon.toString());
+            receivebeacon = null;
+            if(beacon.get(2).equals("close"))
+                receivebeacon = beacon.get(1);
             // block the Lbeacon ID the navigator just received
-            if (!currentLBeaconID.equals(receivebeacon)) {
-
-
+            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)) {
                 if(popupWindow != null)
                     popupWindow.dismiss();
-
                 paint.setAntiAlias(true);
                 paint.setColor(Color.RED);
                 paint.setStyle(Style.FILL_AND_STROKE);
@@ -935,7 +933,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 //        for (int i = 0; i<navigationPath.size(); i++) {
 //            tmp_path.offer(navigationPath.get(i).getID());
 //        }
-//        LBD.setpath(tmp_path);
+        LBD.setpath(navigationPath);
 
         //Draw a navigation progress bar based on navigation path
         //drawProgressBar(navigationPath);
