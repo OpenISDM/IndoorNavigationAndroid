@@ -28,6 +28,7 @@ public class Node implements Comparable<Node> {
     String _category;
     int _nodeType;
     int _transferPointID;
+    int _groupID;
 
     List<String> _adjacentWaypoints;
     Edge[] _edges;
@@ -37,7 +38,7 @@ public class Node implements Comparable<Node> {
 
     // constructor of Node object for route computation
     Node(String id, String name, double lat, double lon, List<String> adjacentNode,
-         String region, String category, int nodeType, int connectPointID) {
+         String region, String category, int nodeType, int connectPointID, int groupID) {
 
         this._waypointID = id;
         this._waypointName = name;
@@ -48,6 +49,7 @@ public class Node implements Comparable<Node> {
         this._category = category;
         this._nodeType = nodeType;
         this._transferPointID = connectPointID;
+        this._groupID = groupID;
 
     }
 
@@ -61,6 +63,11 @@ public class Node implements Comparable<Node> {
         this._regionID = region;
         this._category = category;
 
+    }
+
+    public List<String> getNeighborIDs(){
+
+        return this._adjacentWaypoints;
     }
 
 

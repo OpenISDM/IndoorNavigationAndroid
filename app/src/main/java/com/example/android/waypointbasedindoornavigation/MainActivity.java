@@ -16,6 +16,7 @@ Author:
 
 --*/
 
+import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,14 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
+
+import org.altbeacon.beacon.BeaconManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int SOURCE_SEARCH_BAR = 1;
@@ -36,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int UNDEFINED = -1;
     private static final int ELEVATOR = 1;
     private static final int STAIRWELL = 2;
+
+    RegionGraph regionGraph = new RegionGraph();
+    HashMap<String, Node> allWaypointData = new HashMap<>();
+    List<NavigationSubgraph> navigationGraphForAllWaypoint = new ArrayList<>();
 
     //Two search bars, one for source and one for destination
     EditText searchBarForSource, searchBarForDestination;
@@ -55,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
     //PopupWindow to notify user search bar can not be blank when start a navigation tour
     private PopupWindow popupWindow;
     private LinearLayout positionOfPopup;
+
+    private BeaconManager beaconManager;
+    private Find_Loc LBD = new Find_Loc();
+    private BluetoothManager bluetoothManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,10 +109,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //If switch time is greater or equals to 2, both search bars are set
-        if(switchTime >=2){
+        if(switchTime >=1){
             searchBarForSource.setText(sourceName);
             searchBarForDestination.setText(destinationName);
         }
+
+    }
+
+    public void searchForStartingPoint(View v){
+
+        regionGraph = DataParser.getRegionDataFromRegionGraph(this);
+        navigationGraphForAllWaypoint =
+                DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
+
+        for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
+            allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
+
+        Node source = allWaypointData.get("0x344dc8410x1421f342");
+
+        sourceID = source._waypointID;
+        sourceName = source._waypointName;
+        sourceRegion = source._regionID;
+        searchBarForSource.setText(sourceName);
+
 
     }
 
@@ -180,6 +217,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
+
+
 
     //Preference setting option
     public void onPreferenceButtonClicked(View view) {

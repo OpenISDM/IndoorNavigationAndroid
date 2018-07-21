@@ -192,6 +192,7 @@ public class DataParser {
                     String neighbor4 = null;
                     int nodeType = 0;
                     int connectPointID = 0;
+                    int groupID = 0;
                     int elevation = 0;
                     List<String> adjacentNodes = new ArrayList<>();
 
@@ -233,6 +234,10 @@ public class DataParser {
                                 connectPointID = parseInt(pullParser.getAttributeValue(null,
                                         "connectPointID"));
 
+                           if (!pullParser.getAttributeValue(null, "groupID").isEmpty())
+                               groupID = parseInt(pullParser.getAttributeValue(null,
+                                       "groupID"));
+
                             if (!pullParser.getAttributeValue(null, "elevation").isEmpty())
                                 elevation = parseInt(pullParser.getAttributeValue(null,
                                         "elevation"));
@@ -240,7 +245,7 @@ public class DataParser {
 
                             // create a Node object initialized with the retrieved data
                             Node node = new Node(id, name, lon, lat, adjacentNodes, region,
-                                    category, nodeType, connectPointID);
+                                    category, nodeType, connectPointID, groupID);
 
 
                             // put each Node object into a navigationSubgraph object

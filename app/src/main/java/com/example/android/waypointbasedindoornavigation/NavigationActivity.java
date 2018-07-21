@@ -33,9 +33,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -162,6 +160,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
 
+    int regionIndex = 0;
+    int passedGroupID = -1;
+    String passedRegionID;
+
     // ---------- variables used to record important values ------------ end
 
 
@@ -171,6 +173,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // a list of NavigationSubgraph object representing a Navigation Graph
     List<NavigationSubgraph> navigationGraph = new ArrayList<>();
+    List<NavigationSubgraph> navigationGraphForAllWaypoint = new ArrayList<>();
 
     // a list of Region object storing the information of regions that will be traveled through
     List<com.example.android.waypointbasedindoornavigation.Region> regionPath = new ArrayList<>();
@@ -185,6 +188,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     HashMap<String, String> navigationPath_ID_to_Name_Mapping = new HashMap<>();
 
     HashMap<String, String> mappingOfRegionNameAndID = new HashMap<>();
+    HashMap<String, Node> allWaypointData = new HashMap<>();
 
     // ---------- variables used to store routing data ---------- end
 
@@ -320,23 +324,24 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
 
-        // Lbeacon Manager setup
-        beaconManagerSetup();
-
         // receive value passed from MainActivity,
         //including IDs and Regions of source and destination
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-
-            Log.i("beaconManager","ID passed");
             sourceID = bundle.getString("sourceID");
             destinationID = bundle.getString("destinationID");
             sourceRegion = bundle.getString("sourceRegion");
             destinationRegion = bundle.getString("destinationRegion");
         }
 
+        passedRegionID = sourceRegion;
+        Log.i("abc", "Initial REgion ID:"+passedRegionID);
+
         //load all routing data
         loadWaypointsData();
+
+        // Lbeacon Manager setup
+        beaconManagerSetup();
 
         //start navigation
         startNavigation();
@@ -358,6 +363,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             @Override
             public void handleMessage(Message msg) {
 
+                // receive a turn direction message from threadForHandleLbeaconID
+                String turnDirection = (String) msg.obj;
+
+                Log.i("abc", ""+navigationPath.get(0)._groupID);
+                Log.i("abc", ""+navigationPath.get(0)._groupID);
+
+                if(navigationPath.get(0)._groupID==navigationPath.get(navigationPath.size()-1)._groupID
+                        && navigationPath.get(0)._groupID!=0)
+                    turnDirection = ARRIVED;
+
                 // distance to the next waypoint
                 int distance = 0;
 
@@ -365,8 +380,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(navigationPath.size()>=2)
                     distance = (int) GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1));
 
-                // receive a turn direction message from threadForHandleLbeaconID
-                String turnDirection = (String) msg.obj;
+
 
                 switch(turnDirection){
 
@@ -618,6 +632,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 //After the navigational instruction for current waypoint is properly given,
                 //the waypoint is removed from the top of the navigationPath
+
+                Log.i("abc", "RegionID0:" + navigationPath.get(0)._regionID);
+                if(!passedRegionID.equals(navigationPath.get(0)._regionID))
+                    regionIndex++;
+
+                passedRegionID = navigationPath.get(0)._regionID;
+                passedGroupID = navigationPath.get(0)._groupID;
                 navigationPath.remove(0);
 
             }
@@ -774,19 +795,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             if(beacon.get(2).equals("close"))
                 receivebeacon = beacon.get(1);
             // block the Lbeacon ID the navigator just received
-            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)) {
+            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
+                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID) {
                 if(popupWindow != null)
                     popupWindow.dismiss();
-                paint.setAntiAlias(true);
-                paint.setColor(Color.RED);
-                paint.setStyle(Style.FILL_AND_STROKE);
-                paint.setStrokeWidth(10);
-
-                canvas.drawCircle(paddingLeft+base*whichWaypointOnProgressBar,paddingBottom, 15,paint);
-
-                if(navigationPath.size()>1)
-                    canvas.drawLine(paddingLeft+base*whichWaypointOnProgressBar, paddingBottom,
-                            paddingLeft+base*(whichWaypointOnProgressBar+1),paddingBottom, paint);
 
 
                 whichWaypointOnProgressBar += 1;
@@ -831,6 +843,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             regionPathID.add(regionPath.get(i)._regionName);
         //Load waypoint data from the navigation subgraphs according to the regionPathID
         navigationGraph = DataParser.getWaypointDataFromNavigationGraph(this, regionPathID);
+
+        navigationGraphForAllWaypoint =
+                DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
+
+        for(int i=0; i<navigationGraph.size(); i++)
+            allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
 
 
     }
@@ -935,8 +953,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 //        }
         LBD.setpath(navigationPath);
 
-        //Draw a navigation progress bar based on navigation path
-        //drawProgressBar(navigationPath);
+
     }
 
 
@@ -1550,13 +1567,17 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
 
+
         String nameOFWaypoint = waypointIDInput.getText().toString();
 
         currentLBeaconID = mappingOfRegionNameAndID.get(nameOFWaypoint);
 
 
-        synchronized (sync) {
+        if(passedGroupID!=allWaypointData.get(currentLBeaconID)._groupID){
+
+            synchronized (sync) {
             sync.notify();
+            }
         }
     }
 
