@@ -7,6 +7,7 @@ import com.example.android.waypointbasedindoornavigation.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -24,10 +25,14 @@ public class ana_signal {
     private static final int close_range = 3;
     private static final int near_range = 6;
     private static Node[] tmp_path;
+    private static HashMap<String, Node> allWaypointData = new HashMap<>();
     public void set_path(List<Node> tmp_path){
         this.tmp_path = new Node[tmp_path.size()];
         for (int i = 0; i < tmp_path.size(); i++)
             this.tmp_path[i] = tmp_path.get(i);
+    }
+    public void set_allWaypointData(HashMap<String, Node> allWaypointData){
+        this.allWaypointData = allWaypointData;
     }
     public List<String> ana_signal(Queue q, int algo_Type, int weight_type) {
         List lq = new ArrayList<String>(q);
@@ -269,12 +274,19 @@ public class ana_signal {
         Log.i("algo5", String.valueOf(tmp_path.length));
 //       計算距離
         Node[] tmp_dis_Node = new Node[2];
-        for (Node tmp_path_P:  tmp_path){
-            Log.i("TDN",tmp_path_P.getID()+"\t"+data_list.get(0).getUuid()
-                    +"\t"+data_list.get(1).getUuid());
-            if (data_list.get(0).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[0] = tmp_path_P;
-            if (data_list.get(1).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[1] = tmp_path_P;
+        tmp_dis_Node[0] = allWaypointData.get(data_list.get(0).getUuid());
+        List<String> Neighbornodes = tmp_dis_Node[0].getNeighborIDs();
+        for (String tmp_Neighbornodes : Neighbornodes){
+            if (tmp_Neighbornodes.equals(data_list.get(1).getUuid()))
+                tmp_dis_Node[1] = allWaypointData.get(tmp_Neighbornodes);
         }
+//        for (Node tmp_path_P:  tmp_path){
+//            Log.i("TDN",tmp_path_P.getID()+"\t"+data_list.get(0).getUuid()
+//                    +"\t"+data_list.get(1).getUuid());
+//            if (data_list.get(0).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[0] = tmp_path_P;
+//
+//            if (data_list.get(1).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[1] = tmp_path_P;
+//        }
         try {
             if (data_list.size() > 1) {
                 if (tmp_dis_Node[1] != null && tmp_dis_Node[0]!=null)

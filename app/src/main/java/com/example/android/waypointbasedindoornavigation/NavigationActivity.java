@@ -797,6 +797,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // block the Lbeacon ID the navigator just received
             if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
                     && passedGroupID!=allWaypointData.get(receivebeacon)._groupID) {
+
                 if(popupWindow != null)
                     popupWindow.dismiss();
 
@@ -849,7 +850,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         for(int i=0; i<navigationGraph.size(); i++)
             allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
-
+        LBD.set_allWaypointData(allWaypointData);
 
     }
 

@@ -9,6 +9,7 @@ import org.altbeacon.beacon.Beacon;
 import com.example.android.waypointbasedindoornavigation.Node;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -25,6 +26,9 @@ public class Find_Loc {
     private long startT = System.currentTimeMillis();
     private DeviceParameter dp = new DeviceParameter();
     public void setpath(List<Node> tmp_queue) {as.set_path(tmp_queue);}
+    public void set_allWaypointData(HashMap<String, Node> allWaypointData){
+        as.set_allWaypointData(allWaypointData);
+    }
     public List<String> Find_Loc(Beacon beacon, boolean ana_switch){
 //    public List<String> logBeaconData(Beacon beacon, boolean ana_switch){
         String[] beacondata = new String[]{
