@@ -787,8 +787,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
-        if (beacon.size() > 1) {
-            wf.writeFile("NAP1:"+beacon.toString());
+        if (beacon.size() > 2) {
+//            wf.writeFile("NAP1:"+beacon.toString());
             receivebeacon = null;
             if(
                 beacon.get(2).equals("close1")

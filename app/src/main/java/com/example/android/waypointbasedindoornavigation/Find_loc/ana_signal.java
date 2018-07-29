@@ -54,50 +54,49 @@ public class ana_signal {
 //        find difference between first and second higher RSSI of UUID
         List<String> location_range = new ArrayList<>();
         if (data_list.size() >1) {
-            for (int i = 0; i <data_list.size(); i++)
+            for (int i = 0; i < data_list.size(); i++)
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
             float tmp_dif = Math.abs(data_list.get(0).countavg() - data_list.get(1).countavg());
-            Log.i("tmp_count_dif1",  data_list.get(0).getrssilist().toString() +" "+ String.valueOf(data_list.get(0).countavg()) +
-                    "\t"+ data_list.get(1).getrssilist().toString() +" "+ String.valueOf(data_list.get(1).countavg()) +"\t"+ String.valueOf(tmp_dif));
+            Log.i("tmp_count_dif1", data_list.get(0).getrssilist().toString() + " " + String.valueOf(data_list.get(0).countavg()) +
+                    "\t" + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
             List<Float> tmp_count_dif = ana_signal_6(data_list);
-            Log.i("tmp_count_dif2",tmp_count_dif.toString());
-            wf.writeFile("tmp_count_dif:"+String.valueOf(tmp_count_dif));
-            if (tmp_dif >  tmp_count_dif.get(0)
-                    && data_list.get(0).countavg() >= tmp_count_dif.get(1)){
+            if (tmp_count_dif!=null) {
+//            Log.i("tmp_count_dif2",tmp_count_dif.toString());
+//            wf.writeFile("tmp_count_dif:"+String.valueOf(tmp_count_dif));
+                if (tmp_dif > tmp_count_dif.get(0)
+                        && data_list.get(0).countavg() >= tmp_count_dif.get(1)) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
-                location_range.add("close1");
-                for (siganl_data_type tmp_sdt : data_list){
-                    location_range.add(tmp_sdt.getUuid());
-                    location_range.add(String.valueOf(tmp_sdt.countavg()));
-                }
-            }
-            else if (tmp_dif >=  tmp_count_dif.get(2) && tmp_dif < tmp_count_dif.get(0)
-                    && data_list.get(0).countavg() < tmp_count_dif.get(1)
-                    && data_list.get(0).countavg() >= tmp_count_dif.get(3)){
+                    location_range.add("close1");
+                    for (siganl_data_type tmp_sdt : data_list) {
+                        location_range.add(tmp_sdt.getUuid());
+                        location_range.add(String.valueOf(tmp_sdt.countavg()));
+                    }
+                } else if (tmp_dif >= tmp_count_dif.get(2) && tmp_dif < tmp_count_dif.get(0)
+                        && data_list.get(0).countavg() < tmp_count_dif.get(1)
+                        && data_list.get(0).countavg() >= tmp_count_dif.get(3)) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
-                location_range.add("close2");
-                for (siganl_data_type tmp_sdt : data_list){
-                    location_range.add(tmp_sdt.getUuid());
-                    location_range.add(String.valueOf(tmp_sdt.countavg()));
-                }
-            }
-            else if (tmp_dif >=  tmp_count_dif.get(4) && tmp_dif <  tmp_count_dif.get(2)
-                    && data_list.get(0).countavg() < tmp_count_dif.get(3)
-                    && data_list.get(0).countavg() >= tmp_count_dif.get(5)){
+                    location_range.add("close2");
+                    for (siganl_data_type tmp_sdt : data_list) {
+                        location_range.add(tmp_sdt.getUuid());
+                        location_range.add(String.valueOf(tmp_sdt.countavg()));
+                    }
+                } else if (tmp_dif >= tmp_count_dif.get(4) && tmp_dif < tmp_count_dif.get(2)
+                        && data_list.get(0).countavg() < tmp_count_dif.get(3)
+                        && data_list.get(0).countavg() >= tmp_count_dif.get(5)) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid());
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
-                location_range.add("close1");
-                for (siganl_data_type tmp_sdt : data_list){
-                    location_range.add(tmp_sdt.getUuid());
-                    location_range.add(String.valueOf(tmp_sdt.countavg()));
+                    location_range.add("close1");
+                    for (siganl_data_type tmp_sdt : data_list) {
+                        location_range.add(tmp_sdt.getUuid());
+                        location_range.add(String.valueOf(tmp_sdt.countavg()));
+                    }
                 }
-            }
 //            Log.i("tLog", String.valueOf(ana_signal_5(data_list,close_range))+"\t"
 //                    +count_Rd(data_list.get(0).getUuid(),close_range));
 //            if (tmp_dif < ana_signal_5(data_list,close_range) &&
@@ -114,18 +113,19 @@ public class ana_signal {
 //                location_range.add(data_list.get(0).getUuid());
 //                location_range.add(data_list.get(1).getUuid());
 //            }
-            else {
-                Log.i("def_range", "near " + data_list.get(0).getUuid());
-                location_range.add("near");
-                location_range.add(data_list.get(0).getUuid());
+                else {
+                    Log.i("def_range", "near " + data_list.get(0).getUuid());
+                    location_range.add("near");
+                    location_range.add(data_list.get(0).getUuid());
+                }
             }
         }
-        else {
+        /*else {
             int tmp_dif = Math.round(data_list.get(0).countavg());
             if (tmp_dif > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
-                location_range.add("close");
+                location_range.add("close1");
                 location_range.add(data_list.get(0).getUuid());
             }
             else {
@@ -134,6 +134,7 @@ public class ana_signal {
                 location_range.add(data_list.get(0).getUuid());
             }
         }
+        */
         List<Float> weight_list = weight_type(weight_type);
         weight_queue.add(new siganl_data_type(
                 data_list.get(0).getUuid(), Math.round(data_list.get(0).countavg())));
@@ -341,10 +342,14 @@ public class ana_signal {
     private List<Float> ana_signal_6
             (List<siganl_data_type> data_list) {
 //       計算距離
+        Log.i("algo6", "in algo6" + String.valueOf(data_list.size()));
         Node[] tmp_dis_Node = new Node[2];
         tmp_dis_Node[0] = allWaypointData.get(data_list.get(0).getUuid());
+        Log.i("algo6 tmp_dis_Node[0]", tmp_dis_Node[0].getID());
         List<String> Neighbornodes = tmp_dis_Node[0].getNeighborIDs();
+        Log.i("algo6 neig", Neighbornodes.toString());
         for (String tmp_Neighbornodes : Neighbornodes){
+            Log.i("algo6 neigpa", tmp_Neighbornodes + "***\t"+ data_list.get(1).getUuid() );
             if (tmp_Neighbornodes.equals(data_list.get(1).getUuid())) {
                 tmp_dis_Node[1] = allWaypointData.get(tmp_Neighbornodes);
                 break;
@@ -354,10 +359,12 @@ public class ana_signal {
         }
         try {
             if (data_list.size() > 1) {
+                Log.i("algo6","in try");
                 if (tmp_dis_Node[1] != null && tmp_dis_Node[0]!=null)
                     distance = GeoCalulation.getDistance(tmp_dis_Node[0], tmp_dis_Node[1]);
                 else {
 //                    distance = 0;
+                    Log.i("algo6TDN0","null error");
                     return null;
                 }
                 double[] dis_range = {1.5,2.2,3.3};
@@ -375,11 +382,13 @@ public class ana_signal {
                     tmp_returen.add((float) (tmp_difference[0]));
                 }
                 return tmp_returen;
-            } else
+            } else {
+                Log.i("algo6TDN1","null error");
                 return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i("TDN2","null error");
+            Log.i("algo6TDN2","null error");
             return null;
         }
     }
