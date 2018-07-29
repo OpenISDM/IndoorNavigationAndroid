@@ -746,7 +746,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         region = new Region("justGiveMeEverything", null, null, null);
         bluetoothManager = (BluetoothManager)
                 getSystemService(Context.BLUETOOTH_SERVICE);
-        ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
     }
 
     @Override
@@ -790,27 +789,31 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private void logBeaconData(List<String> beacon) {
         if (beacon.size() > 1) {
             wf.writeFile("NAP1:"+beacon.toString());
-            Log.i("NAP1",beacon.toString());
             receivebeacon = null;
-            if(beacon.get(2).equals("close"))
-                receivebeacon = beacon.get(1);
+            if(
+                beacon.get(2).equals("close1")
+//                ||beacon.get(2).equals("close2")
+//                ||beacon.get(2).equals("close3")
+                ) receivebeacon = beacon.get(1);
+            Log.i("NAP1",beacon.toString() + receivebeacon);
             // block the Lbeacon ID the navigator just received
-            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
-                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID) {
-
+//            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
+//                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID) {
+            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)){
+                Log.i("NAP2","in navigation");
                 if(popupWindow != null)
                     popupWindow.dismiss();
 
 
-                whichWaypointOnProgressBar += 1;
+                    whichWaypointOnProgressBar += 1;
 
-                // Input waypoint name for debug mode
-                String nameOFWaypoint = waypointIDInput.getText().toString();
+                    // Input waypoint name for debug mode
+                    String nameOFWaypoint = waypointIDInput.getText().toString();
 
-                currentLBeaconID = receivebeacon;
+                    currentLBeaconID = receivebeacon;
 
-//                currentLBeaconID = CConvX.concat(CConvY);
-                synchronized (sync) {
+    //                currentLBeaconID = CConvX.concat(CConvY);
+                    synchronized (sync) {
                     sync.notify();
                 }
             }
@@ -1448,7 +1451,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 // if the received ID matches the ID of the next waypoint in the navigation path
                 if (navigationPath.get(0)._waypointID.equals(currentLBeaconID)) {
-
                     // three message objects send messages to corresponding handlers
                     Message messageFromInstructionHandler = instructionHandler.obtainMessage();
                     Message messageFromCurrentPositionHandler = currentPositiontHandler.obtainMessage();

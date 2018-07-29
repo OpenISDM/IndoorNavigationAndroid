@@ -140,6 +140,19 @@ public class DeviceParameter {
         jarray = tmp_jarray;
         wf.writejson(jarray.toString());
     }
+    public Boolean our_Beacon(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
     public void count_dis(String id, int R0, int n){
         JSONArray tmp_jarray = new JSONArray();
         for (int i=0; i < jarray.length(); i ++){

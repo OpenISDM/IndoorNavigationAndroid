@@ -18,7 +18,7 @@ import java.io.IOException;
 public class ReadWrite_File {
     private File file;
     private static String file_name = "Log";
-    private static boolean sb = true;
+    private static boolean sb = false;
     private final File path  = new File(Environment.getExternalStorageDirectory() +
             File.separator +"WPBIN");
 //    設定固定檔案名稱
@@ -81,6 +81,8 @@ public class ReadWrite_File {
         file = new File(path, "DeviceParamation.json");
         JSONArray jarray = null;
         if(file.exists()) {
+
+
             try {
                 FileInputStream is = new FileInputStream(file);
                 int tmp_size = is.available();

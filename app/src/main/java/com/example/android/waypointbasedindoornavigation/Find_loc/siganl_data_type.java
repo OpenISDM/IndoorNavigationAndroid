@@ -1,6 +1,7 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +54,12 @@ public class siganl_data_type implements Comparable<siganl_data_type>{
         return count;
     }
     public float countavg(){
-        int count=0,num=0;
+        float count=0,num=0;
         for (int i:rssi){
            count += i;
            num ++;
         }
-        return (float)(count/num);
+        return (count/num);
     }
     public void set_sort_way(int sort_way){
         this.sort_ways = sort_way;
