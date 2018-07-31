@@ -746,6 +746,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         region = new Region("justGiveMeEverything", null, null, null);
         bluetoothManager = (BluetoothManager)
                 getSystemService(Context.BLUETOOTH_SERVICE);
+        ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
     }
 
     @Override
@@ -792,8 +793,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             receivebeacon = null;
             if(
                 beacon.get(2).equals("close1")
-//                ||beacon.get(2).equals("close2")
+                ||beacon.get(2).equals("close2")
 //                ||beacon.get(2).equals("close3")
+                ||beacon.get(2).equals("close")
                 ) receivebeacon = beacon.get(1);
             Log.i("NAP1",beacon.toString() + receivebeacon);
             // block the Lbeacon ID the navigator just received

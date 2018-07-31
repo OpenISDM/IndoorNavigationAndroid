@@ -120,12 +120,12 @@ public class ana_signal {
                 }
             }
         }
-        /*else {
+        else {
             int tmp_dif = Math.round(data_list.get(0).countavg());
             if (tmp_dif > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
-                location_range.add("close1");
+                location_range.add("close");
                 location_range.add(data_list.get(0).getUuid());
             }
             else {
@@ -134,7 +134,6 @@ public class ana_signal {
                 location_range.add(data_list.get(0).getUuid());
             }
         }
-        */
         List<Float> weight_list = weight_type(weight_type);
         weight_queue.add(new siganl_data_type(
                 data_list.get(0).getUuid(), Math.round(data_list.get(0).countavg())));
@@ -348,14 +347,15 @@ public class ana_signal {
         Log.i("algo6 tmp_dis_Node[0]", tmp_dis_Node[0].getID());
         List<String> Neighbornodes = tmp_dis_Node[0].getNeighborIDs();
         Log.i("algo6 neig", Neighbornodes.toString());
-        for (String tmp_Neighbornodes : Neighbornodes){
-            Log.i("algo6 neigpa", tmp_Neighbornodes + "***\t"+ data_list.get(1).getUuid() );
-            if (tmp_Neighbornodes.equals(data_list.get(1).getUuid())) {
-                tmp_dis_Node[1] = allWaypointData.get(tmp_Neighbornodes);
-                break;
+        for (int i= 1; i< data_list.size(); i++) {
+            for (String tmp_Neighbornodes : Neighbornodes) {
+                Log.i("algo6 neigpa", tmp_Neighbornodes + "***\t" + data_list.get(i).getUuid());
+                if (tmp_Neighbornodes.equals(data_list.get(i).getUuid())) {
+                    tmp_dis_Node[1] = allWaypointData.get(tmp_Neighbornodes);
+                    break;
+                }else
+                    tmp_dis_Node[1] = null;
             }
-            else
-                tmp_dis_Node[1] = null;
         }
         try {
             if (data_list.size() > 1) {
@@ -367,18 +367,18 @@ public class ana_signal {
                     Log.i("algo6TDN0","null error");
                     return null;
                 }
-                double[] dis_range = {1.5,2.2,3.3};
+                double[] dis_range = {1.7,2.2,3.3};
                 tmp_returen.clear();
                 distance = 5;
                 for (double range: dis_range) {
                     Log.i("algo6", String.valueOf(distance));
                     double[] tmp_difference = new double[2];
                     double t_range = count_real_Rd(data_list.get(0).getUuid(),range);
-                    tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), range);
+                    tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range);
                     t_range = count_real_Rd(data_list.get(1).getUuid(),distance - range);
-                    tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), distance -range);
+                    tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range);
                     Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
-                    tmp_returen.add((float) (tmp_difference[0] - tmp_difference[1]));
+                    tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
                     tmp_returen.add((float) (tmp_difference[0]));
                 }
                 return tmp_returen;
