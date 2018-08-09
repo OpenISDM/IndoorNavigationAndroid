@@ -7,6 +7,7 @@
         <node id='0x0500c8410x0721f342' name='B03' region='region1' category='Testing' />
         <node id='0x0200c8410x0721f342' name='B09' region='region1' category='Testing' />
         <node id='0xbd4cc8410x0721f342' name='B10' region='region1' category='Testing' />
+        <node id='0x111111110x11111111' name='B99' region='region1' category='Testing' />
     </region>
 
 

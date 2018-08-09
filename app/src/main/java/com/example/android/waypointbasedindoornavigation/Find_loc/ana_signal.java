@@ -34,7 +34,7 @@ public class ana_signal {
     public void set_allWaypointData(HashMap<String, Node> allWaypointData){
         this.allWaypointData = allWaypointData;
     }
-    public List<String> ana_signal(Queue q, int algo_Type, int weight_type) {
+    public List<String> ana_signal(Queue q, int algo_Type, int weight_type, float remind_range) {
         List lq = new ArrayList<String>(q);
         List<String> tmp_data_list = new ArrayList<>();
         data_list.clear();
@@ -62,57 +62,46 @@ public class ana_signal {
                     "\t" + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
             List<Float> tmp_count_dif = ana_signal_6(data_list);
             if (tmp_count_dif!=null) {
-//            Log.i("tmp_count_dif2",tmp_count_dif.toString());
-//            wf.writeFile("tmp_count_dif:"+String.valueOf(tmp_count_dif));
-                if (tmp_dif > tmp_count_dif.get(0)
-                        && data_list.get(0).countavg() >= tmp_count_dif.get(1)) {
-//                Log.i("def_range", "close " + data_list.get(0).getUuid());
-//                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-//                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
-                    location_range.add("close1");
-                    for (siganl_data_type tmp_sdt : data_list) {
-                        location_range.add(tmp_sdt.getUuid());
-                        location_range.add(String.valueOf(tmp_sdt.countavg()));
-                    }
-                } else if (tmp_dif >= tmp_count_dif.get(2) && tmp_dif < tmp_count_dif.get(0)
-                        && data_list.get(0).countavg() < tmp_count_dif.get(1)
-                        && data_list.get(0).countavg() >= tmp_count_dif.get(3)) {
-//                Log.i("def_range", "close " + data_list.get(0).getUuid());
-//                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-//                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
-                    location_range.add("close2");
-                    for (siganl_data_type tmp_sdt : data_list) {
-                        location_range.add(tmp_sdt.getUuid());
-                        location_range.add(String.valueOf(tmp_sdt.countavg()));
-                    }
-                } else if (tmp_dif >= tmp_count_dif.get(4) && tmp_dif < tmp_count_dif.get(2)
-                        && data_list.get(0).countavg() < tmp_count_dif.get(3)
-                        && data_list.get(0).countavg() >= tmp_count_dif.get(5)) {
-//                Log.i("def_range", "close " + data_list.get(0).getUuid());
-//                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-//                        dp.get_RSSI_threshold(data_list.get(0).getUuid())+"\t"+String.valueOf(tmp_dif));
-                    location_range.add("close1");
-                    for (siganl_data_type tmp_sdt : data_list) {
-                        location_range.add(tmp_sdt.getUuid());
-                        location_range.add(String.valueOf(tmp_sdt.countavg()));
-                    }
+//                if (tmp_dif > tmp_count_dif.get(0)
+//                        && data_list.get(0).countavg() >= tmp_count_dif.get(1)) {
+//                    location_range.add("close1");
+//                    for (siganl_data_type tmp_sdt : data_list) {
+//                        location_range.add(tmp_sdt.getUuid());
+//                        location_range.add(String.valueOf(tmp_sdt.countavg()));
+//                    }
+//                } else if (tmp_dif >= tmp_count_dif.get(2) && tmp_dif < tmp_count_dif.get(0)
+//                        && data_list.get(0).countavg() < tmp_count_dif.get(1)
+//                        && data_list.get(0).countavg() >= tmp_count_dif.get(3)) {
+//                    location_range.add("close2");
+//                    for (siganl_data_type tmp_sdt : data_list) {
+//                        location_range.add(tmp_sdt.getUuid());
+//                        location_range.add(String.valueOf(tmp_sdt.countavg()));
+//                    }
+//                } else if (tmp_dif >= tmp_count_dif.get(4) && tmp_dif < tmp_count_dif.get(2)
+//                        && data_list.get(0).countavg() < tmp_count_dif.get(3)
+//                        && data_list.get(0).countavg() >= tmp_count_dif.get(5)) {
+//                    location_range.add("close1");
+//                    for (siganl_data_type tmp_sdt : data_list) {
+//                        location_range.add(tmp_sdt.getUuid());
+//                        location_range.add(String.valueOf(tmp_sdt.countavg()));
+//                    }
+//                }
+                Log.i("tLog", String.valueOf(ana_signal_5(data_list,remind_range))+"\t"
+                        +count_Rd(data_list.get(0).getUuid(),close_range));
+                if (tmp_dif < ana_signal_5(data_list,remind_range) &&
+                        data_list.get(0).countavg() > count_Rd(data_list.get(0).getUuid(),close_range)) {
+
+                    Log.i("def_range", "close " + data_list.get(0).getUuid());
+                    location_range.add("close3");
+                    location_range.add(data_list.get(0).getUuid());
                 }
-//            Log.i("tLog", String.valueOf(ana_signal_5(data_list,close_range))+"\t"
-//                    +count_Rd(data_list.get(0).getUuid(),close_range));
-//            if (tmp_dif < ana_signal_5(data_list,close_range) &&
-//                    data_list.get(0).countavg() > count_Rd(data_list.get(0).getUuid(),close_range)) {
-//
-//                Log.i("def_range", "close " + data_list.get(0).getUuid());
-//                location_range.add("close3");
-//                location_range.add(data_list.get(0).getUuid());
-//            }
-//            else if (tmp_dif < ana_signal_5(data_list,near_range) &&
-//                    data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
-//                Log.i("def_range", "middle of " + data_list.get(0).getUuid()
-//                        + " and " + data_list.get(1).getUuid());
-//                location_range.add(data_list.get(0).getUuid());
-//                location_range.add(data_list.get(1).getUuid());
-//            }
+//                else if (tmp_dif < ana_signal_5(data_list,near_range) &&
+//                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
+//                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
+//                            + " and " + data_list.get(1).getUuid());
+//                    location_range.add(data_list.get(0).getUuid());
+//                    location_range.add(data_list.get(1).getUuid());
+//                }
                 else {
                     Log.i("def_range", "near " + data_list.get(0).getUuid());
                     location_range.add("near");
@@ -142,16 +131,10 @@ public class ana_signal {
         }
         List<siganl_data_type> get_weight_data = new ArrayList<>(weight_queue);
         Collections.reverse(get_weight_data);
-//        for (int i = 0; i < get_weight_data.size(); i++)
-//            Log.i("SLWQ" + i, get_weight_data.get(i).getUuid() +
-//                    "\t" + get_weight_data.get(i).getrssilist());
         List<siganl_data_type> count_data_weight = Positioning_Algorithm(get_weight_data, weight_list, algo_Type);
         List<String> tmp_return = new ArrayList<>();
         tmp_return.add(count_data_weight.get(0).getUuid());
         tmp_return.addAll(location_range);
-//        if(data_list.size()>2){
-//            Log.i("ASQ",ana_signal_4(data_list).toString());
-//        }
         return tmp_return;
     }
 //    -------------------------------------------------------------------------------------

@@ -737,7 +737,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //beaconManager.setForegroundBetweenScanPeriod(2*ONE_SECOND);
 
 
-        beaconManager.setForegroundScanPeriod(200);
+        beaconManager.setForegroundScanPeriod(10);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();
@@ -769,7 +769,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(LBD.Find_Loc(beacon,true));
+                        logBeaconData(LBD.Find_Loc(beacon,3));
                     }
                 }
             }
