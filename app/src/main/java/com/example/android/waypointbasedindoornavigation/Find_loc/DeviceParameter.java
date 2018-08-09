@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.example.android.waypointbasedindoornavigation.DataParser;
+import com.example.android.waypointbasedindoornavigation.Node;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +19,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.DoubleToIntFunction;
 
@@ -29,27 +32,52 @@ public class DeviceParameter {
     private static final String R0 = "R0";
     private static final String parameter = "parameter";
     private static final String install_hight = "install_hight";
-
+    private static HashMap<String, Node> allWaypointData = new HashMap<>();
     private static JSONArray jarray = new JSONArray();
     private ReadWrite_File wf= new ReadWrite_File();
     private static Context c;
+    public void set_allWaypointData(HashMap<String, Node> allWaypointData){
+        this.allWaypointData = allWaypointData;
+        Log.i("init", "set allWaypointData");
+    }
     public void setupDeviceParameter(Context c) {
         Log.i("setupDeviceParameter","setupDeviceParameter");
         this.c = c;
         jarray = wf.ReadJsonFile();
         if (jarray == null) initdivice();
-//        else{
-//            try {
-//                for (int i = 0; i < jarray.length(); i++) {
-//                    JSONObject jsonObject = jarray.getJSONObject(i);
-//                    String id = jsonObject.getString("id");
-//                    String parameter = jsonObject.getString("parameter");
-//                    Log.i("JSONPaser", "id:" + id + ", parameter:" + parameter);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+        else {
+            try {
+                List<String> con_dif0 = new ArrayList<>();
+                List<String> con_dif1 = new ArrayList<>();
+                for (Node tmp_node : allWaypointData.values()) {
+                    con_dif0.add(tmp_node.getID());
+                }
+                Log.i("JSONtag",String.valueOf(jarray.length()));
+                for (int i = 0; i < jarray.length(); i++) {
+                    JSONObject tmp_jobject = jarray.getJSONObject(i);
+                    Log.i("JSONtag",tmp_jobject.getString(this.id));
+                    con_dif1.add(tmp_jobject.getString(this.id));
+                }
+                Log.i("JSONtag0",con_dif0.toString());
+                Log.i("JSONtag1",con_dif1.toString());
+                con_dif0.removeAll(con_dif1);
+                Log.i("JSONtag1",con_dif0.toString());
+                if (!con_dif0.isEmpty()){
+                    for (String tmp_node: con_dif0){
+                        JSONObject tmp_add_jobject = new JSONObject();
+                        tmp_add_jobject.put(this.id, tmp_node);
+                        tmp_add_jobject.put(this.parameter, 0);
+                        tmp_add_jobject.put(this.R0, -45);
+                        tmp_add_jobject.put(this.n_value, -2.14);
+                        tmp_add_jobject.put(this.install_hight, 1.5);
+                        jarray.put(tmp_add_jobject);
+                        wf.writejson(jarray.toString());
+                    }
+                }
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public int get_RSSI_threshold(String s){
         for (int i=0; i < jarray.length(); i ++){
@@ -202,48 +230,20 @@ public class DeviceParameter {
     }
 
     private void initdivice(){
-        XmlPullParser pullParser = Xml.newPullParser();
-        AssetManager assetManager = c.getAssets();
-        JSONArray tmp_jarray = new JSONArray();
         try {
-            InputStream is = assetManager.open("buildingA.xml");
-            pullParser.setInput(is , "utf-8");
-            int eventType = pullParser.getEventType();
-            while(eventType != XmlPullParser.END_DOCUMENT)
-            {
-                String tag = null;
-                if (eventType == XmlPullParser.START_TAG) {
-                    tag = pullParser.getName();
-                    if(tag.equals("region")) {
-                        while(true) {
-                            if(eventType == XmlPullParser.END_TAG)
-                                if(pullParser.getName().equals("region"))
-                                    break;
-                            if (eventType == XmlPullParser.START_TAG) {
-                                if(pullParser.getName().equals("node")){
-                                    JSONObject jobject = new JSONObject();
-                                    jobject.put(this.id, pullParser.
-                                            getAttributeValue(null, this.id));
-                                    jobject.put(this.parameter, -65);
-                                    jobject.put(this.R0, 0);
-                                    jobject.put(this.n_value, 0);
-                                    jobject.put(this.install_hight, 1.5);
-                                    Log.i("JSONDP",jobject.toString());
-                                    tmp_jarray.put(jobject);
-                                }
-                            }
-                            eventType = pullParser.next();
-                        }
-                    }
-                }
-                eventType = pullParser.next();
+            JSONArray tmp_jarray = new JSONArray();
+            for (Node tmp_node : allWaypointData.values()) {
+                JSONObject tmp_add_jobject = new JSONObject();
+                tmp_add_jobject.put(this.id, tmp_node.getID());
+                tmp_add_jobject.put(this.parameter, 0);
+                tmp_add_jobject.put(this.R0, -45);
+                tmp_add_jobject.put(this.n_value, -2.14);
+                tmp_add_jobject.put(this.install_hight, 1.5);
+                tmp_jarray.put(tmp_add_jobject);
             }
-            wf.writejson(tmp_jarray.toString());
+            Log.i("inijson", tmp_jarray.toString());
             jarray = tmp_jarray;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            wf.writejson(tmp_jarray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
