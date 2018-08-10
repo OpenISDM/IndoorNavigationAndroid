@@ -737,7 +737,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //beaconManager.setForegroundBetweenScanPeriod(2*ONE_SECOND);
 
 
-        beaconManager.setForegroundScanPeriod(10);
+        beaconManager.setForegroundScanPeriod(100);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();

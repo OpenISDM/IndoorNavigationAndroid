@@ -23,14 +23,14 @@ public class ana_signal {
     private static DeviceParameter dp = new DeviceParameter();
     private static ReadWrite_File wf = new ReadWrite_File();
     private static float distance = 0;
-    private static final float close_range = 3;
-    private static final float near_range = 6;
     private static Node[] tmp_path;
     private static HashMap<String, Node> allWaypointData = new HashMap<>();
     public void set_path(List<Node> tmp_path){
         this.tmp_path = new Node[tmp_path.size()];
-        for (int i = 0; i < tmp_path.size(); i++)
+        for (int i = 0; i < tmp_path.size(); i++) {
             this.tmp_path[i] = tmp_path.get(i);
+            Log.i("path", tmp_path.get(i).getID());
+        }
     }
     public void set_allWaypointData(HashMap<String, Node> allWaypointData){
         this.allWaypointData = allWaypointData;
@@ -59,12 +59,12 @@ public class ana_signal {
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
             float tmp_dif = Math.abs(data_list.get(0).countavg() - data_list.get(1).countavg());
-            Log.i("tmp_count_dif1", data_list.get(0).getrssilist().toString() + " " + String.valueOf(data_list.get(0).countavg()) +
-                    "\t" + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
+            Log.i("tmp_count_dif1",  data_list.get(0).getUuid()+data_list.get(0).getrssilist().toString() + " " + String.valueOf(data_list.get(0).countavg()) +
+                    "\t" + data_list.get(1).getUuid() + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
             List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range);
 //            float tmp_count_dif = ana_signal_5(data_list, remind_range);
             if (tmp_count_dif != null) {
-                Log.i("tLog", String.valueOf(ana_signal_5(data_list,remind_range))+"\t"
+                Log.i("tLog", String.valueOf(ana_signal_6(data_list,remind_range))+"\t"
                         +count_Rd(data_list.get(0).getUuid(),remind_range));
                 List<Float> t_ana_signal_6 = ana_signal_6(data_list, remind_range);
                 if (tmp_dif < t_ana_signal_6.get(0) &&
@@ -74,12 +74,12 @@ public class ana_signal {
                     location_range.add(data_list.get(0).getUuid());
                 }
 //                else if (tmp_dif < ana_signal_5(data_list,near_range) &&
-////                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
-////                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
-////                            + " and " + data_list.get(1).getUuid());
-////                    location_range.add(data_list.get(0).getUuid());
-////                    location_range.add(data_list.get(1).getUuid());
-////                }
+//                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
+//                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
+//                            + " and " + data_list.get(1).getUuid());
+//                    location_range.add(data_list.get(0).getUuid());
+//                    location_range.add(data_list.get(1).getUuid());
+//                }
                 else {
                     Log.i("def_range", "near " + data_list.get(0).getUuid());
                     location_range.add("near");
@@ -341,12 +341,12 @@ public class ana_signal {
 //                0: dif, 1: Threshold
                 return tmp_returen;
             } else {
-                Log.i("algo6TDN1","null error");
+                Log.i("algo6TDN1","null error1");
                 return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i("algo6TDN2","null error");
+            Log.i("algo6TDN2","null error2");
             return null;
         }
     }
