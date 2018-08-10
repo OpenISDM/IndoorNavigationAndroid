@@ -2,23 +2,13 @@
 <TestBuilding>
 
 
-    <region id='1' name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
-        <node id='0x344dc8410x1421f342' name='A' region='region1' category='Testing' />
-        <node id='0x354dc8410x0e21f342' name='B' region='region1' category='Testing' />
-        <node id='0x1d4dc8410x0e21f342' name='C' region='region1' category='Testing' />
-        <node id='0x778ac8410x0e21f342' name='D' region='region1' category='Testing' />
-        <node id='0xed4cc8410x0e21f342' name='E' region='region1' category='Testing'/>
-        <node id='0xee4cc8410x0321f342' name='F' region='region1' category='Testing'/>
-        <node id='0xef4cc8410xfd20f342' name='G' region='region1' category='Testing'/>
-        <node id='0xd54cc8410x0e21f342' name='H' region='region1' category='Testing'/>
-        <node id='0xbb4cc8410x0e21f342' name='I' region='region1' category='Testing'/>
-        <node id='0xbd4cc8410x0721f342' name='J' region='region1' category='Testing'/>
-        <node id='0xbe4cc8410xfd20f342' name='K' region='region1' category='Testing'/>
-        <node id='0x354dc8410x1121f342' name='L' region='region1' category='Testing'/>
-        <node id='0x1d4dc8410x1121f342' name='M' region='region1' category='Testing'/>
-        <node id='0x064dc8410x1121f342' name='N' region='region1' category='Testing'/>
-        <node id='0xec4cc8410x1121f342' name='O' region='region1' category='Testing'/>
-        <node id='0xee4cc8410xff20f342' name='P' region='region1' category='Testing'/>
+    <region id='1' name='region1' neighbor1='region2' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
+        <node id='0x0400c8410x0721f342' name='B08' region='region1' category='Testing' />
+        <node id='0x0500c8410x0721f342' name='B03' region='region1' category='Testing' />
+    </region>
+    <region id='2' name='region2' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>
+        <node id='0x0200c8410x0721f342' name='B09' region='region2' category='Testing2' />
+        <node id='0xbd4cc8410x0721f342' name='B10' region='region2' category='Testing2' />
     </region>
 
 

@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Press "Start" button to start navigation
+
     public void startNavigation(View view){
 
         //Start NavigationActivity and pass IDs and Regions of source and destination to it
