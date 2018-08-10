@@ -8,7 +8,7 @@ Module Name:
 
 Abstract:
 
-    This module create an UI of home screen
+    This module create the UI of start screen
 
 Author:
 
@@ -16,10 +16,18 @@ Author:
 
 --*/
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,23 +40,27 @@ import android.widget.TextView;
 
 import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.RangeNotifier;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     private static final int SOURCE_SEARCH_BAR = 1;
     private static final int DESTINATION_SEARCH_BAR = 2;
     private static final int UNDEFINED = -1;
     private static final int ELEVATOR = 1;
     private static final int STAIRWELL = 2;
-
-    RegionGraph regionGraph = new RegionGraph();
-    HashMap<String, Node> allWaypointData = new HashMap<>();
-    List<NavigationSubgraph> navigationGraphForAllWaypoint = new ArrayList<>();
+    private static final int USER_MODE = 3;
+    private static final int TESTER_MODE = 4;
 
     //Two search bars, one for source and one for destination
     EditText searchBarForSource, searchBarForDestination;
@@ -69,14 +81,30 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
     private LinearLayout positionOfPopup;
 
+
+    // Variables used to store waypoint infomration of a building
+    List<NavigationSubgraph> navigationGraph = new ArrayList<>();
+    HashMap<String, Node> allWaypointData= new HashMap<>();
+    List<NavigationSubgraph> navigationGraphForAllWaypoint = new ArrayList<>();
+    RegionGraph regionGraph = new RegionGraph();
+
     private BeaconManager beaconManager;
     private Find_Loc LBD = new Find_Loc();
     private BluetoothManager bluetoothManager;
+    private BluetoothAdapter mBluetoothAdapter;
+    private org.altbeacon.beacon.Region region;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
         //Get the position of popupwindow (center of phone screen)
         positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
 
@@ -91,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         //Find UI objects by ID
         searchBarForSource = (EditText) findViewById(R.id.start);
         searchBarForDestination = (EditText) findViewById(R.id.destination);
+
+        loadWaypointInformation();
 
         //Decide which search bar to be set value
         if(whichSearchBar == SOURCE_SEARCH_BAR){
@@ -116,26 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void searchForStartingPoint(View v){
-
-        regionGraph = DataParser.getRegionDataFromRegionGraph(this);
-        navigationGraphForAllWaypoint =
-                DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
-
-        for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
-            allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
-
-        Node source = allWaypointData.get("0x344dc8410x1421f342");
-
-        sourceID = source._waypointID;
-        sourceName = source._waypointName;
-        sourceRegion = source._regionID;
-        searchBarForSource.setText(sourceName);
-
-
-    }
-
-    //Function called by clicking one of the two search bars
+    // Switch to ListView Activity when one of the search bars is clicked
     public void switchToListView(View v){
 
         //Create Intent variable to switch to ListViewActivity
@@ -153,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Press "Start" button to start navigation
-
     public void startNavigation(View view){
 
         //Start NavigationActivity and pass IDs and Regions of source and destination to it
@@ -219,32 +229,147 @@ public class MainActivity extends AppCompatActivity {
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
     }
 
+    // set up Lbeacon manager
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public void searchStartingPoint(View view){
+
+        Log.i("beaconManager","beaconManagerSetup");
+
+        beaconManager =  BeaconManager.getInstanceForApplication(this);
+        beaconManager.bind(this);
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-15,i:16-19,i:20-23,p:24-24"));
+
+        //setBeaconLayout("m:2-3=0215,i:4-19,i:20-23,i:24-27,p:28-28"));
+        // Detect the Eddystone main identifier (UID) frame:
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=00,p:3-3:-41,i:4-13,i:14-19"));
+
+        // Detect the Eddystone telemetry (TLM) frame:
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("x,s:0-1=feaa,m:2-2=20,d:3-3,d:4-5,d:6-7,d:8-11,d:12-15"));
+
+        // Detect the Eddystone URL frame:
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-20"));
+
+        //beaconManager.setForegroundScanPeriod(ONE_SECOND);
+        //beaconManager.setForegroundBetweenScanPeriod(2*ONE_SECOND);
 
 
-    //Preference setting option
+        beaconManager.setForegroundScanPeriod(200);
+        beaconManager.setForegroundBetweenScanPeriod(0);
+        beaconManager.removeAllMonitorNotifiers();
+        beaconManager.removeAllRangeNotifiers();
+
+        // Get the details for all the beacons we encounter.
+        region = new org.altbeacon.beacon.Region("justGiveMeEverything",
+                null, null, null);
+        bluetoothManager = (BluetoothManager)
+                getSystemService(Context.BLUETOOTH_SERVICE);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("beaconManager","onDestroy called");
+        super.onDestroy();
+
+        if(beaconManager != null)
+            beaconManager.unbind(this);
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+
+        //Start scanning for Lbeacon signal
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons,
+                                                org.altbeacon.beacon.Region region) {
+                Log.i("beaconManager","ranging");
+                if (beacons.size() > 0) {
+                    Iterator<Beacon> beaconIterator = beacons.iterator();
+                    while (beaconIterator.hasNext()) {
+                        Beacon beacon = beaconIterator.next();
+                        logBeaconData(beacon);
+                    }
+                }
+            }
+
+        });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(new org.altbeacon.beacon.Region(
+                    "myRangingUniqueId",null, null, null));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    // Load Lbeacon ID
+    private void logBeaconData(Beacon beacon) {
+
+        Node currentWaypoint;
+        String currentWaypointID;
+
+        // currently received Lbeacon ID
+        currentWaypointID = beacon.getId2().toString().concat(beacon.getId3().toString());
+
+        // use the reveived ID to retrieve the corresponding waypoint information
+        currentWaypoint = allWaypointData.get(currentWaypointID);
+
+        sourceID = currentWaypoint._waypointID;
+        sourceRegion = currentWaypoint._regionID;
+
+        searchBarForSource.setText(currentWaypoint._waypointName);
+
+        if(beaconManager != null)
+            beaconManager.unbind(this);
+
+    }
+
+    // Load waypoint information for comparing with the received waypoint ID
+    private void loadWaypointInformation(){
+
+        regionGraph = DataParser.getRegionDataFromRegionGraph(this);
+        navigationGraphForAllWaypoint =
+                DataParser.getWaypointDataFromNavigationGraph(this,
+                        regionGraph.getAllRegionNames());
+
+        for(int i=0; i<navigationGraph.size(); i++)
+            allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
+    }
+
+
+
+    // Set preference value
     public void onPreferenceButtonClicked(View view) {
 
         boolean checked = ((RadioButton) view).isChecked();
 
         // check which radio button is clicked
         switch(view.getId()) {
-            /*case R.id.p1:
+            case R.id.p1:
                 if (checked)
                     Setting.setPreferenceValue(ELEVATOR);
                     break;
             case R.id.p2:
                 if (checked)
                     Setting.setPreferenceValue(STAIRWELL);
-                    break;*/
+                    break;
             case R.id.p3:
                 if (checked)
-                    Setting.setPreferenceValue(3);
+                    Setting.setModeValue(USER_MODE);
                 break;
             case R.id.p4:
                 if (checked)
-                    Setting.setPreferenceValue(4);
+                    Setting.setModeValue(TESTER_MODE);
                 break;
 
+                /*
             case R.id.p5:
                 if (checked)
                     Setting.setTurnOnOK(false);
@@ -252,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.p6:
                 if (checked)
                     Setting.setTurnOnOK(true);
-                break;
+                break;*/
         }
     }
 

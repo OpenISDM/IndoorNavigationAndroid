@@ -23,6 +23,7 @@ import android.app.Application;
 public class Setting extends Application{
 
     static int preferenceValue = 2;
+    static int modeValue = 3;
     static boolean turnOnOK = false;
     static String fileName = "buildingA.xml";
 
@@ -31,9 +32,19 @@ public class Setting extends Application{
         return preferenceValue;
     }
 
-    public static void setPreferenceValue(int m) {
+    public static int getModeValue() {
 
-        preferenceValue = m;
+        return modeValue;
+    }
+
+    public static void setPreferenceValue(int p) {
+
+        preferenceValue = p;
+    }
+
+    public static void setModeValue(int m) {
+
+        modeValue = m;
     }
 
     public static boolean getTurnOnOK() {
