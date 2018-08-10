@@ -791,18 +791,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if (beacon.size() > 2) {
 //            wf.writeFile("NAP1:"+beacon.toString());
             receivebeacon = null;
-            if(
-                beacon.get(2).equals("close1")
-                ||beacon.get(2).equals("close2")
-//                ||beacon.get(2).equals("close3")
-                ||beacon.get(2).equals("close")
-                ) receivebeacon = beacon.get(1);
+            if(beacon.get(2).equals("close")) receivebeacon = beacon.get(1);
             Log.i("NAP1",beacon.toString() + receivebeacon);
             // block the Lbeacon ID the navigator just received
 //            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
 //                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID) {
             if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)){
-                Log.i("NAP2","in navigation");
                 if(popupWindow != null)
                     popupWindow.dismiss();
 

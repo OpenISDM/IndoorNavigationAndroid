@@ -1,6 +1,7 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.util.Log;
+import android.util.LongSparseArray;
 
 import com.example.android.waypointbasedindoornavigation.GeoCalulation;
 import com.example.android.waypointbasedindoornavigation.Node;
@@ -60,48 +61,25 @@ public class ana_signal {
             float tmp_dif = Math.abs(data_list.get(0).countavg() - data_list.get(1).countavg());
             Log.i("tmp_count_dif1", data_list.get(0).getrssilist().toString() + " " + String.valueOf(data_list.get(0).countavg()) +
                     "\t" + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
-            List<Float> tmp_count_dif = ana_signal_6(data_list);
-            if (tmp_count_dif!=null) {
-//                if (tmp_dif > tmp_count_dif.get(0)
-//                        && data_list.get(0).countavg() >= tmp_count_dif.get(1)) {
-//                    location_range.add("close1");
-//                    for (siganl_data_type tmp_sdt : data_list) {
-//                        location_range.add(tmp_sdt.getUuid());
-//                        location_range.add(String.valueOf(tmp_sdt.countavg()));
-//                    }
-//                } else if (tmp_dif >= tmp_count_dif.get(2) && tmp_dif < tmp_count_dif.get(0)
-//                        && data_list.get(0).countavg() < tmp_count_dif.get(1)
-//                        && data_list.get(0).countavg() >= tmp_count_dif.get(3)) {
-//                    location_range.add("close2");
-//                    for (siganl_data_type tmp_sdt : data_list) {
-//                        location_range.add(tmp_sdt.getUuid());
-//                        location_range.add(String.valueOf(tmp_sdt.countavg()));
-//                    }
-//                } else if (tmp_dif >= tmp_count_dif.get(4) && tmp_dif < tmp_count_dif.get(2)
-//                        && data_list.get(0).countavg() < tmp_count_dif.get(3)
-//                        && data_list.get(0).countavg() >= tmp_count_dif.get(5)) {
-//                    location_range.add("close1");
-//                    for (siganl_data_type tmp_sdt : data_list) {
-//                        location_range.add(tmp_sdt.getUuid());
-//                        location_range.add(String.valueOf(tmp_sdt.countavg()));
-//                    }
-//                }
+            List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range);
+//            float tmp_count_dif = ana_signal_5(data_list, remind_range);
+            if (tmp_count_dif != null) {
                 Log.i("tLog", String.valueOf(ana_signal_5(data_list,remind_range))+"\t"
-                        +count_Rd(data_list.get(0).getUuid(),close_range));
-                if (tmp_dif < ana_signal_5(data_list,remind_range) &&
-                        data_list.get(0).countavg() > count_Rd(data_list.get(0).getUuid(),close_range)) {
-
+                        +count_Rd(data_list.get(0).getUuid(),remind_range));
+                List<Float> t_ana_signal_6 = ana_signal_6(data_list, remind_range);
+                if (tmp_dif < t_ana_signal_6.get(0) &&
+                        data_list.get(0).countavg() > t_ana_signal_6.get(1)) {
                     Log.i("def_range", "close " + data_list.get(0).getUuid());
-                    location_range.add("close3");
+                    location_range.add("close");
                     location_range.add(data_list.get(0).getUuid());
                 }
 //                else if (tmp_dif < ana_signal_5(data_list,near_range) &&
-//                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
-//                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
-//                            + " and " + data_list.get(1).getUuid());
-//                    location_range.add(data_list.get(0).getUuid());
-//                    location_range.add(data_list.get(1).getUuid());
-//                }
+////                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
+////                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
+////                            + " and " + data_list.get(1).getUuid());
+////                    location_range.add(data_list.get(0).getUuid());
+////                    location_range.add(data_list.get(1).getUuid());
+////                }
                 else {
                     Log.i("def_range", "near " + data_list.get(0).getUuid());
                     location_range.add("near");
@@ -303,7 +281,7 @@ public class ana_signal {
                     distance = GeoCalulation.getDistance(tmp_dis_Node[0], tmp_dis_Node[1]);
                 else {
                     distance = 0;
-                    return 0;
+                    return 9999;
                 }
                 Log.i("algo5", String.valueOf(distance));
                 double[] tmp_difference = new double[2];
@@ -313,7 +291,7 @@ public class ana_signal {
                 float tmp_returen = (float) (tmp_difference[0] - tmp_difference[1]);
                 return tmp_returen;
             } else
-                return 0;
+                return 9999;
         } catch (Exception e) {
             e.printStackTrace();
             Log.i("TDN2","null error");
@@ -322,7 +300,7 @@ public class ana_signal {
     }
     List<Float> tmp_returen = new ArrayList<>();
     private List<Float> ana_signal_6
-            (List<siganl_data_type> data_list) {
+            (List<siganl_data_type> data_list, float remind_range) {
 //       計算距離
         Log.i("algo6", "in algo6" + String.valueOf(data_list.size()));
         Node[] tmp_dis_Node = new Node[2];
@@ -350,20 +328,17 @@ public class ana_signal {
                     Log.i("algo6TDN0","null error");
                     return null;
                 }
-                double[] dis_range = {1.7,2.2,3.3};
                 tmp_returen.clear();
-                distance = 5;
-                for (double range: dis_range) {
-                    Log.i("algo6", String.valueOf(distance));
-                    double[] tmp_difference = new double[2];
-                    double t_range = count_real_Rd(data_list.get(0).getUuid(),range);
-                    tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range);
-                    t_range = count_real_Rd(data_list.get(1).getUuid(),distance - range);
-                    tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range);
-                    Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
-                    tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
-                    tmp_returen.add((float) (tmp_difference[0]));
-                }
+                Log.i("algo6", String.valueOf(distance));
+                double[] tmp_difference = new double[2];
+                double t_range = count_real_Rd(data_list.get(0).getUuid(),remind_range);
+                tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range);
+                t_range = count_real_Rd(data_list.get(1).getUuid(),distance - remind_range);
+                tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range);
+                Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
+                tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
+                tmp_returen.add((float) (tmp_difference[0]));
+//                0: dif, 1: Threshold
                 return tmp_returen;
             } else {
                 Log.i("algo6TDN1","null error");
@@ -385,8 +360,8 @@ public class ana_signal {
     private double count_distance(String s,double Rd){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-//        return Math.pow(10,((Rd-R0)/(10*n_vlaue)))/dp.get_install_hight(s);
-        return Math.pow(10,((Rd-R0)/(10*n_vlaue))/1.3);
+        return Math.pow(10,((Rd-R0)/(10*n_vlaue)))/dp.get_install_hight(s);
+//        return Math.pow(10,((Rd-R0)/(10*n_vlaue))/1.3);
     }
     private double count_Rd(String s,double range){
         double R0 = dp.get_R0(s);
