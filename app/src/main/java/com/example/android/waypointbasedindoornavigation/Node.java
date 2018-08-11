@@ -27,7 +27,7 @@ public class Node implements Comparable<Node> {
     String _regionID;
     String _category;
     int _nodeType;
-    int _transferPointID;
+    int _connectPointID;
     int _groupID;
 
     List<String> _adjacentWaypoints;
@@ -48,7 +48,7 @@ public class Node implements Comparable<Node> {
         this._regionID = region;
         this._category = category;
         this._nodeType = nodeType;
-        this._transferPointID = connectPointID;
+        this._connectPointID = connectPointID;
         this._groupID = groupID;
 
     }

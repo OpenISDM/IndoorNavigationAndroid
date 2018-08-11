@@ -165,6 +165,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     int regionIndex = 0;
     int passedGroupID = -1;
     String passedRegionID;
+    String tmpDestinationID = null;
 
     // ---------- variables used to record important values ------------ end
 
@@ -176,6 +177,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // a list of NavigationSubgraph object representing a Navigation Graph
     List<NavigationSubgraph> navigationGraph = new ArrayList<>();
     List<NavigationSubgraph> navigationGraphForAllWaypoint = new ArrayList<>();
+
 
     // a list of Region object storing the information of regions that will be traveled through
     List<com.example.android.waypointbasedindoornavigation.Region> regionPath = new ArrayList<>();
@@ -341,8 +343,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         passedRegionID = sourceRegion;
         Log.i("abc", "Initial REgion ID:"+passedRegionID);
 
-        //load all routing data
-        loadWaypointsData();
+        //load navigation graph
+        loadNavigationGraph();
+
+        //load all waypoint data for precise positioning
+        loadAllWaypointData();
 
         // Lbeacon Manager setup
         beaconManagerSetup();
@@ -391,12 +396,36 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case LEFT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_LEFT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_LEFT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+                                nextTurnMovement.setText(THEN_TURN_LEFT);
+                                break;
+
+                        }
+                        /*
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
-                            nextTurnMovement.setText(THEN_TURN_LEFT);
+                            nextTurnMovement.setText(THEN_TURN_LEFT);*/
                         imageTurnIndicator.setImageResource(R.drawable.left_arrow);
 
                         if(turnNotificationForPopup !=null){
@@ -417,12 +446,37 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case FRONT_LEFT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+                                nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                                break;
+
+                        }
+                        /*
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
-                            nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                            nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);*/
+
                         imageTurnIndicator.setImageResource(R.drawable.frontleft_arrow);
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
@@ -440,12 +494,38 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case REAR_LEFT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+                                nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                                break;
+
+                        }
+
+                        /*
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
-                            nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                            nextTurnMovement.setText(THEN_TURN_REAR_LEFT);*/
+
                         imageTurnIndicator.setImageResource(R.drawable.rearleft_arrow);
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
@@ -464,12 +544,37 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case RIGHT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_RIGHT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN_RIGHT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+                                nextTurnMovement.setText(THEN_TURN_RIGHT);
+                                break;
+
+                        }
+                        /*
+
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
-                            nextTurnMovement.setText(THEN_TURN_RIGHT);
+                            nextTurnMovement.setText(THEN_TURN_RIGHT);*/
                         imageTurnIndicator.setImageResource(R.drawable.right_arrow);
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
@@ -488,12 +593,37 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case FRONT_RIGHT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+                                nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                                break;
+
+                        }
+                        /*
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
-                            nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                            nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);*/
+
                         imageTurnIndicator.setImageResource(R.drawable.frontright_arrow);
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
@@ -512,12 +642,38 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case REAR_RIGHT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+                                nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                                break;
+
+                        }
+
+                        /*
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
-                            nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                            nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);*/
+
                         imageTurnIndicator.setImageResource(R.drawable.rearright_arrow);
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
@@ -536,12 +692,46 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case FRONT:
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
+
+                        switch(navigationPath.get(1)._nodeType){
+
+                            case ELEVATOR_WAYPOINT:
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                else
+                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                break;
+
+                            case STAIRWELL_WAYPOINT:
+
+                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                else
+                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                break;
+
+                            case NORMAL_WAYPOINT:
+
+                                if(navigationPath.size()==2)
+                                    nextTurnMovement.setText("抵達目的地");
+                                else
+                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                break;
+
+                        }
+
+                        /*
                         if(navigationPath.get(1)._nodeType == 1)
                             nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                         else if(navigationPath.get(1)._nodeType == 2)
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                        else{
+                            if(navigationPath.size()==2)
+                                nextTurnMovement.setText("抵達目的地");
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                        }*/
+
                         imageTurnIndicator.setImageResource(R.drawable.up_arrow);
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
@@ -827,7 +1017,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
     // load waypoint data
-    public void loadWaypointsData(){
+    public void loadNavigationGraph(){
 
         // load region data from region graph
         regionGraph = DataParser.getRegionDataFromRegionGraph(this);
@@ -850,28 +1040,34 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         for(int i=0; i<regionPath.size(); i++)
             regionPathID.add(regionPath.get(i)._regionName);
 
-        Log.i("bbb", "region size"+regionGraph.regionData.size());
-
         //Load waypoint data from the navigation subgraphs according to the regionPathID
         navigationGraph = DataParser.getWaypointDataFromNavigationGraph(this, regionPathID);
 
+/*
         navigationGraphForAllWaypoint =
                 DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
 
-        Log.i("bbb", "navigation graph size"+ navigationGraph.size());
+
 
         for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
             allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
 
 
-        Log.i("bbb", "SIZE"+ allWaypointData.size());
+        LBD.set_allWaypointData(allWaypointData);*/
 
-/*
-        Log.i("bbb", "Data1"+ allWaypointData.get("0x0400c8410x0721f342")._waypointName);
-        Log.i("bbb", "Data2"+ allWaypointData.get("0x0500c8410x0721f342")._waypointName);
-        Log.i("bbb", "Data3"+ allWaypointData.get("0x0200c8410x0721f342")._waypointName);
-        Log.i("bbb", "Data4"+ allWaypointData.get("0xbd4cc8410x0721f342")._waypointName);
-*/
+
+    }
+
+    public void loadAllWaypointData(){
+
+        navigationGraphForAllWaypoint =
+                DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
+
+
+
+        for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
+            allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
+
 
         LBD.set_allWaypointData(allWaypointData);
 
@@ -884,6 +1080,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         // get the two Node objects that represent starting point and destination
         Node startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
         Node endNode = navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(destinationID);
+
+        int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
         int connectPointID;
@@ -926,24 +1124,48 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     // compute a path to a transfer point(elevator or stairwell) of current region
                     // return the transfer point
-                    destinationOfARegion = computePathToTraversePoint(
+
+                    //start point is a transfer point
+                    if(startNodeType == Setting.getPreferenceValue()){
+                        destinationOfARegion = startNode;
+
+                        // get the connectPointID of the transfer node
+                        connectPointID = destinationOfARegion._connectPointID;
+
+                        sourceID = find_SourceID_In_Next_Region(connectPointID, i+1);
+                    }
+                    else{
+
+                        String tmpSourceID = null;
+
+                        // loop until find the correct source id for the next region
+                        while(tmpSourceID == null){
+
+                            // if tmpDestinationID is not null, re-load navigation graph
+                            // and change the waypoint into normal waypoint
+                            if(tmpDestinationID!=null){
+
+                                loadNavigationGraph();
+                                navigationGraph.get(i).nodesInSubgraph.get(tmpDestinationID)._nodeType = NORMAL_WAYPOINT;
+                            }
+
+                            destinationOfARegion = computePathToTraversePoint(
                             navigationGraph.get(i).nodesInSubgraph.get(sourceID),false, i+1);
 
-                    // get the connectPointID of the transfer node
-                    connectPointID = destinationOfARegion._transferPointID;
+                            // get the connectPointID of the transfer node
+                            connectPointID = destinationOfARegion._connectPointID;
 
-                    // find the transfer node with the same connectPointID in the next region
-                    // where elevation is different from the current region
-                    for(Entry<String, Node> entry : navigationGraph.get(i+1).nodesInSubgraph.entrySet()){
+                            // find if the tmpDestination can connect to the next region
+                            // if so, tmpSourceID is not null
+                            // if not, tmpSourceID is null, then continue looping
+                            tmpSourceID = find_SourceID_In_Next_Region(connectPointID, i+1);
 
-                        Node v = entry.getValue();
-
-                        if(v._transferPointID == connectPointID){
-
-                            sourceID = v.getID();
-                            break;
                         }
+
+                        sourceID = tmpSourceID;
+
                     }
+
                 }
 
                 // add up all the navigation paths into one
@@ -966,6 +1188,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
         }
 
+        Log.i("bbb", "path size"+navigationPath.size());
+
         for(int i = 0; i<navigationPath.size(); i++)
             navigationPath_ID_to_Name_Mapping.put(navigationPath.get(i)._waypointID,
                     navigationPath.get(i)._waypointName);
@@ -978,6 +1202,23 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         LBD.setpath(navigationPath);
 
 
+    }
+
+    public String find_SourceID_In_Next_Region(int currentConnectID, int nextRegionIndex) {
+
+
+        for (Entry<String, Node> entry : navigationGraph.get(nextRegionIndex).nodesInSubgraph.entrySet()) {
+
+            Node v = entry.getValue();
+
+            if (v._connectPointID == currentConnectID) {
+
+                String id = v.getID();
+                return id;
+            }
+        }
+
+        return null;
     }
 
 
@@ -1043,8 +1284,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 // if the elevation of the next region to travel is different from current region
                 // find the nearest elevator or stairwell based on user's preference
-                else if(sameElevation == false && v._nodeType == getPreferenceValue())
+                else if(sameElevation == false && v._nodeType == getPreferenceValue()){
+                    tmpDestinationID = v._waypointID;
                     return v;
+                }
             }
         }
         return source;
@@ -1499,6 +1742,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         // if the current waypoint and the next waypoint are not in the same region
                         // transfer through elevator or stairwell
                         else if (!(navigationPath.get(0)._regionID.equals(navigationPath.get(1)._regionID))) {
+
                             if (navigationPath.get(0)._nodeType == ELEVATOR_WAYPOINT)
                                 messageFromInstructionHandler.obj = ELEVATOR;
                             else if(navigationPath.get(0)._nodeType == STAIRWELL_WAYPOINT)
@@ -1507,6 +1751,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 messageFromInstructionHandler.obj =
                                         GeoCalulation.getDirectionFromBearing(navigationPath.get(0),
                                                 navigationPath.get(1), navigationPath.get(2));
+                            else if(navigationPath.get(0)._nodeType == NORMAL_WAYPOINT){
+
+                                if(Setting.getPreferenceValue() == ELEVATOR_WAYPOINT)
+                                    messageFromInstructionHandler.obj = ELEVATOR;
+                                else if(Setting.getPreferenceValue() == STAIRWELL_WAYPOINT)
+                                    messageFromInstructionHandler.obj = STAIR;
+                            }
 
                         }
                     }

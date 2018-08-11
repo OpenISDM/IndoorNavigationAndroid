@@ -247,7 +247,6 @@ public class DataParser {
                             Node node = new Node(id, name, lon, lat, adjacentNodes, region,
                                     category, nodeType, connectPointID, groupID);
 
-
                             // put each Node object into a navigationSubgraph object
                             navigationSubgraph.nodesInSubgraph.put(id, node);
 
