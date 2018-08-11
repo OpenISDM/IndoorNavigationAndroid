@@ -849,14 +849,29 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         for(int i=0; i<regionPath.size(); i++)
             regionPathID.add(regionPath.get(i)._regionName);
+
+        Log.i("bbb", "region size"+regionGraph.regionData.size());
+
         //Load waypoint data from the navigation subgraphs according to the regionPathID
         navigationGraph = DataParser.getWaypointDataFromNavigationGraph(this, regionPathID);
 
         navigationGraphForAllWaypoint =
                 DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
 
-        for(int i=0; i<navigationGraph.size(); i++)
+        Log.i("bbb", "navigation graph size"+ navigationGraph.size());
+
+        for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
             allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
+
+
+        Log.i("bbb", "SIZE"+ allWaypointData.size());
+
+/*
+        Log.i("bbb", "Data1"+ allWaypointData.get("0x0400c8410x0721f342")._waypointName);
+        Log.i("bbb", "Data2"+ allWaypointData.get("0x0500c8410x0721f342")._waypointName);
+        Log.i("bbb", "Data3"+ allWaypointData.get("0x0200c8410x0721f342")._waypointName);
+        Log.i("bbb", "Data4"+ allWaypointData.get("0xbd4cc8410x0721f342")._waypointName);
+*/
 
         LBD.set_allWaypointData(allWaypointData);
 

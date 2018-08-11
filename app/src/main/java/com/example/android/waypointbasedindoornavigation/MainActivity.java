@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 DataParser.getWaypointDataFromNavigationGraph(this,
                         regionGraph.getAllRegionNames());
 
-        for(int i=0; i<navigationGraph.size(); i++)
+        for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
             allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
     }
 
