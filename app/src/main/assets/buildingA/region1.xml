@@ -1,23 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
-    <region1>
-        <node id='0x0400c8410x0721f342' name='B08' region='region1' lat='25.03747285372' lon='121.56442746386' neighbor1='0x0500c8410x0721f342' neighbor2='' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1'/>
-        <node id='0x0500c8410x0721f342' name='B03' region='region1' lat='25.03747285372' lon='121.56452538807' neighbor1='0x0400c8410x0721f342' neighbor2='' neighbor3='' neighbor4='' category='Testing' nodeType='2' connectPointID='1' groupID='' elevation='1'/>
-        <!--<node id='0x0200c8410x0721f342' name='B09' region='region1' lat='25.03747285372' lon='121.56462538807' neighbor1='0x0500c8410x0721f342' neighbor2='0xbd4cc8410x0721f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
-        <!--<node id='0xbd4cc8410x0721f342' name='B10' region='region1' lat='25.03747285372' lon='121.56472538807' neighbor1='0x0200c8410x0721f342' neighbor2='' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
-        <!--<node id='0xed4cc8410x0e21f342' name='E' region='region1' lat='25.03756155471' lon='121.564557551' neighbor1='0x778ac8410x0e21f342' neighbor2='0xee4cc8410x0321f342' neighbor3='0xd54cc8410x0e21f342' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='4' elevation='1'/>-->
-        <!--<node id='0xee4cc8410x0321f342' name='F' region='region1' lat='25.03756398487' lon='121.56447976694' neighbor1='0xed4cc8410x0e21f342' neighbor2='0xef4cc8410xfd20f342' neighbor3='0xec4cc8410x1121f342' neighbor4='0xee4cc8410xff20f342' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1' />-->
-        <!--<node id='0xef4cc8410xfd20f342' name='G' region='region1' lat='25.03756519995' lon='121.56443014607' neighbor1='0xee4cc8410x0321f342' neighbor2='0xbe4cc8410xfd20f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='5' elevation='1'/>-->
-        <!--<node id='0xd54cc8410x0e21f342' name='H' region='region1' lat='25.0375153816' lon='121.564557551' neighbor1='0xed4cc8410x0e21f342' neighbor2='0xbb4cc8410x0e21f342' neighbor3='0xec4cc8410x1121f342' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
-        <!--<node id='0xbb4cc8410x0e21f342' name='I' region='region1' lat='25.03746799339' lon='121.564557551' neighbor1='0xd54cc8410x0e21f342' neighbor2='0xbd4cc8410x0721f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1' />-->
-        <!--<node id='0xbd4cc8410x0721f342' name='J' region='region1' lat='25.03746920847' lon='121.56450658903' neighbor1='0xbb4cc8410x0e21f342' neighbor2='0xbe4cc8410xfd20f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
-        <!--<node id='0xbe4cc8410xfd20f342' name='K' region='region1' lat='25.03747285372' lon='121.56442746386' neighbor1='0xef4cc8410xfd20f342' neighbor2='0xbd4cc8410x0721f342' neighbor3='0xee4cc8410xff20f342' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
-        <!--<node id='0x354dc8410x1121f342' name='L' region='region1' lat='25.03769822712' lon='121.56458538807' neighbor1='0x344dc8410x1421f342' neighbor2='0x1d4dc8410x1121f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='1' elevation='1'/>-->
-        <!--<node id='0x1d4dc8410x1121f342' name='M' region='region1' lat='25.03765329243' lon='121.56458537992' neighbor1='0x354dc8410x1121f342' neighbor2='0x064dc8410x1121f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='2' elevation='1'/>-->
-        <!--<node id='0x064dc8410x1121f342' name='N' region='region1' lat='25.03760954951' lon='121.56458470937' neighbor1='0x1d4dc8410x1121f342' neighbor2='0xec4cc8410x1121f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='3' elevation='1'/>-->
-        <!--<node id='0xec4cc8410x1121f342' name='O' region='region1' lat='25.03756094626' lon='121.56458370354' neighbor1='0x064dc8410x1121f342' neighbor2='0xee4cc8410x0321f342' neighbor3='0xd54cc8410x0e21f342' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='4' elevation='1'/>-->
-        <!--<node id='0xee4cc8410xff20f342' name='P' region='region1' lat='25.03756481389' lon='121.56444591169' neighbor1='0xee4cc8410x0321f342' neighbor2='0xbe4cc8410xfd20f342' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='5' elevation='1'/>-->
 
+    <region1>
+        <node id='0x0500c8410x0721f342' name='B03' region='region1' lat='25.03747285372' lon='121.56452538807' neighbor1='0x0400c8410x0721f342' neighbor2='' neighbor3='' neighbor4='' category='Testing' nodeType='' connectPointID='' groupID='' elevation='2'/>
+        <node id='0x0400c8410x0721f342' name='B08' region='region1' lat='25.03747285372' lon='121.56442746386' neighbor1='0x0500c8410x0721f342' neighbor2='' neighbor3='' neighbor4='' category='Testing' nodeType='2' connectPointID='1' groupID='' elevation='2'/>
+        <!--<node id='0xfb92bd410x680df142' name='A03' region='region1' lat='23.698511470350034' lon='120.52725700409886' neighbor1='0x4993bd410x640df142' neighbor2='' neighbor3='' neighbor4='' category='Category1' nodeType='2' connectPointID='1' groupID='' elevation='1'/>-->
+        <!--<node id='0x4993bd410x640df142' name='A04' region='region1' lat='23.698376560350034' lon='120.52725700409886' neighbor1='0xfb92bd410x680df142' neighbor2='0x6793bd410x5d0df142' neighbor3='' neighbor4='' category='Category1' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
+        <!--<node id='0x6793bd410x5d0df142' name='A05' region='region1' lat='23.698265740350035' lon='120.52724215409886' neighbor1='0x4993bd410x640df142' neighbor2='0x8193bd410x540df142' neighbor3='' neighbor4='' category='Category1' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
+        <!--<node id='0x8193bd410x540df142' name='A06' region='region1' lat='23.698064113076764' lon='120.52721177325441' neighbor1='0x6793bd410x5d0df142' neighbor2='0xde57c8410x0721f342' neighbor3='' neighbor4='' category='Category1' nodeType='2' connectPointID='2' groupID='' elevation='1'/>-->
+        <!--<node id='0xde57c8410x0721f342' name='B07' region='region1' lat='23.697999323988256' lon='120.52723695902145' neighbor1='0x8193bd410x540df142' neighbor2='0x0e94bd410x4e0df142' neighbor3='' neighbor4='' category='Category1' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
+        <!--<node id='0x0e94bd410x4e0df142' name='A08' region='region1' lat='23.697935616644298' lon='120.52724706834823' neighbor1='0xde57c8410x0721f342' neighbor2='0x0d93bd410x530df142' neighbor3='' neighbor4='' category='Category1' nodeType='' connectPointID='' groupID='' elevation='1'/>-->
+        <!--<node id='0x0d93bd410x530df142' name='A14' region='region1' lat='23.697870894139058' lon='120.52726601389217' neighbor1='0x0e94bd410x4e0df142' neighbor2='' neighbor3='' neighbor4='' category='Category1' nodeType='2' connectPointID='3' groupID='' elevation='1'/>-->
     </region1>
+
+
 </BuildingA>
+
 

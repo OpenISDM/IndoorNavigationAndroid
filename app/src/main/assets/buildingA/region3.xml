@@ -2,6 +2,8 @@
 <BuildingA>
 
 
+
+
     <region3>
         <node id='0x0193bd410x780df142' name='A01' region='region3' lat='23.698511120350034' lon='120.52726000409886' neighbor1='0x5c93bd410x4f0df142' neighbor2='' neighbor3='' neighbor4='' category='Category3' nodeType='2' connectPointID='1' groupID='' elevation='0'/>
         <node id='0x5c93bd410x4f0df142' name='A02' region='region3' lat='23.698395010350037' lon='120.52726000409886' neighbor1='0x0193bd410x780df142' neighbor2='' neighbor3='' neighbor4='' category='Category3' nodeType='' connectPointID='' groupID='' elevation='0'/>
