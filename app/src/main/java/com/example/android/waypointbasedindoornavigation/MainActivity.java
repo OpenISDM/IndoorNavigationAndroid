@@ -28,6 +28,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.MonthDisplayHelper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -341,6 +342,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         for(int i=0; i<navigationGraph.size(); i++)
             allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
+
     }
 
 
