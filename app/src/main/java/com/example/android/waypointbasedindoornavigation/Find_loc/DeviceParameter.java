@@ -66,7 +66,7 @@ public class DeviceParameter {
                     for (String tmp_node: con_dif0){
                         JSONObject tmp_add_jobject = new JSONObject();
                         tmp_add_jobject.put(this.id, tmp_node);
-                        tmp_add_jobject.put(this.parameter, 0);
+                        tmp_add_jobject.put(this.parameter, -65);
                         tmp_add_jobject.put(this.R0, -45);
                         tmp_add_jobject.put(this.n_value, -2.14);
                         tmp_add_jobject.put(this.install_hight, 1.5);

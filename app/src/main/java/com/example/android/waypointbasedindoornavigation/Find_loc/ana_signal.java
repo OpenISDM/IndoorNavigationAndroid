@@ -62,13 +62,9 @@ public class ana_signal {
             Log.i("tmp_count_dif1",  data_list.get(0).getUuid()+data_list.get(0).getrssilist().toString() + " " + String.valueOf(data_list.get(0).countavg()) +
                     "\t" + data_list.get(1).getUuid() + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
             List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range);
-//            float tmp_count_dif = ana_signal_5(data_list, remind_range);
             if (tmp_count_dif != null) {
-                Log.i("tLog", String.valueOf(ana_signal_6(data_list,remind_range))+"\t"
-                        +count_Rd(data_list.get(0).getUuid(),remind_range));
-                List<Float> t_ana_signal_6 = ana_signal_6(data_list, remind_range);
-                if (tmp_dif < t_ana_signal_6.get(0) &&
-                        data_list.get(0).countavg() > t_ana_signal_6.get(1)) {
+                if (tmp_dif > tmp_count_dif.get(0) &&
+                        data_list.get(0).countavg() > tmp_count_dif.get(1)) {
                     Log.i("def_range", "close " + data_list.get(0).getUuid());
                     location_range.add("close");
                     location_range.add(data_list.get(0).getUuid());
@@ -80,6 +76,19 @@ public class ana_signal {
 //                    location_range.add(data_list.get(0).getUuid());
 //                    location_range.add(data_list.get(1).getUuid());
 //                }
+                else {
+                    Log.i("def_range", "near " + data_list.get(0).getUuid());
+                    location_range.add("near");
+                    location_range.add(data_list.get(0).getUuid());
+                }
+            }else {
+                int tmp_dif2 = Math.round(data_list.get(0).countavg());
+                if (tmp_dif2 > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
+//                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
+//                        dp.get_Paramater(data_list.get(0).getUuid()));
+                    location_range.add("close");
+                    location_range.add(data_list.get(0).getUuid());
+                }
                 else {
                     Log.i("def_range", "near " + data_list.get(0).getUuid());
                     location_range.add("near");

@@ -994,8 +994,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // block the Lbeacon ID the navigator just received
             if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
                     && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
-                    || allWaypointData.get(receivebeacon)._groupID==0
-                    && !currentLBeaconID.equals(receivebeacon)) {
+//                    || allWaypointData.get(receivebeacon)._groupID==0
+//                    && !currentLBeaconID.equals(receivebeacon)
+                    ) {
 
                 if(popupWindow != null)
                     popupWindow.dismiss();
