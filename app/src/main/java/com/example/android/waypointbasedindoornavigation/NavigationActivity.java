@@ -708,7 +708,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 if(navigationPath.size()==2)
                                     nextTurnMovement.setText("抵達目的地");
                                 else
-                                    nextTurnMovement.setText(WALKING_UP_STAIR);
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                                 break;
 
                             case NORMAL_WAYPOINT:
@@ -809,7 +809,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case WRONG:
                         Log.i("wrong", "Out");
                         walkedWaypoint = 0;
-                        sourceRegion = navigationPath.get(0)._regionID;
+                        sourceID = allWaypointData.get(currentLBeaconID)._waypointID;
+                        sourceRegion = allWaypointData.get(currentLBeaconID)._regionID;
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
                                 showPopupWindow(WRONGWAY_NOTIFIER);
@@ -993,10 +994,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("NAP1",beacon.toString() + receivebeacon);
 
             // block the Lbeacon ID the navigator just received
-            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
+
+            if((receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon))
                     && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
-                    || allWaypointData.get(receivebeacon)._groupID==0
-                    && !currentLBeaconID.equals(receivebeacon)) {
+                    || allWaypointData.get(receivebeacon)._groupID==0){
 
                 if(popupWindow != null)
                     popupWindow.dismiss();
