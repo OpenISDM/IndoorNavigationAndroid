@@ -165,7 +165,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     int regionIndex = 0;
     int passedGroupID = -1;
     String passedRegionID;
-    String tmpDestinationID = null;
+    List<String> tmpDestinationID = new ArrayList<>();
 
     // ---------- variables used to record important values ------------ end
 
@@ -693,21 +693,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
                         howFarToMove.setText(""+distance +" "+METERS);
 
+                        Log.i("bbb", navigationPath.get(1)._waypointName);
+
                         switch(navigationPath.get(1)._nodeType){
 
                             case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                if(navigationPath.size()==2)
+                                    nextTurnMovement.setText("抵達目的地");
                                 else
-                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
                                 break;
 
                             case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                if(navigationPath.size()==2)
+                                    nextTurnMovement.setText("抵達目的地");
                                 else
-                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                                 break;
 
                             case NORMAL_WAYPOINT:
@@ -807,7 +808,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     case WRONG:
                         Log.i("wrong", "Out");
-
+                        walkedWaypoint = 0;
+                        sourceID = allWaypointData.get(currentLBeaconID)._waypointID;
+                        sourceRegion = allWaypointData.get(currentLBeaconID)._regionID;
                         if(turnNotificationForPopup !=null){
                             if(Setting.getPreferenceValue()==4)
                                 showPopupWindow(WRONGWAY_NOTIFIER);
@@ -819,8 +822,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                     showPopupWindow_UserMode(WRONGWAY_NOTIFIER);
                             }
                         }
-                        walkedWaypoint = 0;
-                        sourceRegion = navigationPath.get(0)._regionID;
+
                         break;
                 }
 
@@ -992,7 +994,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("NAP1",beacon.toString() + receivebeacon);
 
             // block the Lbeacon ID the navigator just received
-            if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon)
+
+            if((receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon))
                     && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
 //                    || allWaypointData.get(receivebeacon)._groupID==0
 //                    && !currentLBeaconID.equals(receivebeacon)
@@ -1104,6 +1107,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 // a destination vertex for each region
                 Node destinationOfARegion = null;
 
+                tmpDestinationID.clear();
+
+                Log.i("bbb", "tmp Size: " + tmpDestinationID.size());
+
                 // the source vertex becomes a normal waypoint
                 navigationGraph.get(i).nodesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
 
@@ -1123,6 +1130,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 //If the elevation of the next region to travel is different from the current region
                 else if(regionPath.get(i)._elevation != regionPath.get(i+1)._elevation){
 
+                    Log.i("bbb", "region name "+ regionPath.get(i)._regionID);
                     // compute a path to a transfer point(elevator or stairwell) of current region
                     // return the transfer point
 
@@ -1144,10 +1152,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             // if tmpDestinationID is not null, re-load navigation graph
                             // and change the waypoint into normal waypoint
-                            if(tmpDestinationID!=null){
+                            if(tmpDestinationID.size()>=1){
 
                                 loadNavigationGraph();
-                                navigationGraph.get(i).nodesInSubgraph.get(tmpDestinationID)._nodeType = NORMAL_WAYPOINT;
+
+                                for(int count=0; count<tmpDestinationID.size(); count++){
+                                    navigationGraph.get(i).nodesInSubgraph.get(tmpDestinationID.get(count))._nodeType = NORMAL_WAYPOINT;
+                                }
+
                             }
 
                             destinationOfARegion = computePathToTraversePoint(
@@ -1161,9 +1173,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             // if not, tmpSourceID is null, then continue looping
                             tmpSourceID = find_SourceID_In_Next_Region(connectPointID, i+1);
 
+                            Log.i("bbb", "destination Of region "+ destinationOfARegion._waypointName);
+
                         }
 
                         sourceID = tmpSourceID;
+
+                        Log.i("bbb", "source ID in next region "+ sourceID);
 
                     }
 
@@ -1225,6 +1241,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // compute a shortest path with given starting point and destination
     public List<Node> computeDijkstraShortestPath(Node source, Node destination) {
+
         source.minDistance = 0.;
         PriorityQueue<Node> nodeQueue = new PriorityQueue<Node>();
         nodeQueue.add(source);
@@ -1252,6 +1269,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // compute a shortest path from a given starting point to a transfer node (e.g., elevator, stairwell)
     public Node computePathToTraversePoint(Node source, Boolean sameElevation, int indexOfNextRegion) {
 
+        Node backupTransferNode = null;
+        boolean entered = false;
         source.minDistance = 0.;
         PriorityQueue<Node> nodeQueue = new PriorityQueue<Node>();
         nodeQueue.add(source);
@@ -1286,12 +1305,21 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 // if the elevation of the next region to travel is different from current region
                 // find the nearest elevator or stairwell based on user's preference
                 else if(sameElevation == false && v._nodeType == getPreferenceValue()){
-                    tmpDestinationID = v._waypointID;
+                    tmpDestinationID.add(v._waypointID);
                     return v;
+                }
+                else if(sameElevation == false && v._nodeType != getPreferenceValue() && v._nodeType!= NORMAL_WAYPOINT && entered == false){
+
+                    backupTransferNode = v;
+                    entered = true;
                 }
             }
         }
-        return source;
+
+        if(backupTransferNode != null)
+            return backupTransferNode;
+        else
+            return source;
     }
 
 
