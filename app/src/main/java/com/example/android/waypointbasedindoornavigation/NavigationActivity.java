@@ -967,7 +967,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(LBD.Find_Loc(beacon,3));
+                        logBeaconData(LBD.Find_Loc(beacon,4));
                     }
                 }
             }
@@ -996,7 +996,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // block the Lbeacon ID the navigator just received
 
             if((receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon))
-                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
+//                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
 //                    || allWaypointData.get(receivebeacon)._groupID==0
 //                    && !currentLBeaconID.equals(receivebeacon)
                     ) {
