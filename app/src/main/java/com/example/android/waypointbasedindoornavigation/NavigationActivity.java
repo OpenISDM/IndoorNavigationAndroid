@@ -144,6 +144,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String PLEASE_TAKE_ELEVATOR = "請搭電梯";
     private static final String PLEASE_WALK_UP_STAIR = "請走樓梯";
 
+    private static final String toBasement = "至地下一樓";
+    private static final String toFirstFloor = "至一樓";
+    private static final String toSecondFloor = "至二樓";
+    private static final String toThirdFloor = "至三樓";
+
+
 
     private BluetoothManager bluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -158,6 +164,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // IDs and Regions of source and destination input by user on home screen
     String sourceID, destinationID, sourceRegion, destinationRegion;
     String currentLocationName;
+
+    Node startNode;
+    Node endNode;
 
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
@@ -401,7 +410,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case ELEVATOR_WAYPOINT:
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_LEFT);
                                 break;
@@ -409,7 +418,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case STAIRWELL_WAYPOINT:
 
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_LEFT);
                                 break;
@@ -451,7 +460,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case ELEVATOR_WAYPOINT:
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
                                 break;
@@ -459,7 +468,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case STAIRWELL_WAYPOINT:
 
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
                                 break;
@@ -499,7 +508,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case ELEVATOR_WAYPOINT:
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
                                 break;
@@ -507,7 +516,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case STAIRWELL_WAYPOINT:
 
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
                                 break;
@@ -549,7 +558,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case ELEVATOR_WAYPOINT:
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_RIGHT);
                                 break;
@@ -557,7 +566,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case STAIRWELL_WAYPOINT:
 
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN_RIGHT);
                                 break;
@@ -598,7 +607,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case ELEVATOR_WAYPOINT:
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
                                 break;
@@ -606,7 +615,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case STAIRWELL_WAYPOINT:
 
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
                                 break;
@@ -647,7 +656,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case ELEVATOR_WAYPOINT:
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
                                 break;
@@ -655,7 +664,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case STAIRWELL_WAYPOINT:
 
                                 if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 else
                                     nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
                                 break;
@@ -701,14 +710,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 if(navigationPath.size()==2)
                                     nextTurnMovement.setText("抵達目的地");
                                 else
-                                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
                                 break;
 
                             case STAIRWELL_WAYPOINT:
                                 if(navigationPath.size()==2)
                                     nextTurnMovement.setText("抵達目的地");
                                 else
-                                    nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                                 break;
 
                             case NORMAL_WAYPOINT:
@@ -905,6 +914,51 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     }
 
+    void elevationDisplay(int transferPointType, int elevation){
+
+        if(transferPointType == ELEVATOR_WAYPOINT){
+
+            switch(elevation){
+
+                case 0:
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toBasement);
+                    break;
+                case 1:
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toFirstFloor);
+                    break;
+                case 2:
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toSecondFloor);
+                    break;
+                case 3:
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toThirdFloor);
+                    break;
+            }
+
+        }
+        else if(transferPointType == STAIRWELL_WAYPOINT){
+
+            switch(elevation){
+
+                case 0:
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR+toBasement);
+                    break;
+                case 1:
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR+toFirstFloor);
+                    break;
+                case 2:
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR+toSecondFloor);
+                    break;
+                case 3:
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR+toThirdFloor);
+                    break;
+            }
+
+
+        }
+
+
+    }
+
 
     // set up Lbeacon manager
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -1045,6 +1099,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //Load waypoint data from the navigation subgraphs according to the regionPathID
         navigationGraph = DataParser.getWaypointDataFromNavigationGraph(this, regionPathID);
 
+        // get the two Node objects that represent starting point and destination
+        startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
+        endNode = navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(destinationID);
+
 /*
         navigationGraphForAllWaypoint =
                 DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
@@ -1079,10 +1137,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     public void startNavigation() {
 
-        // get the two Node objects that represent starting point and destination
-        Node startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
-        Node endNode = navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(destinationID);
-
         int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
@@ -1100,14 +1154,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // compute N-1 navigation paths for each region,
             // where N is the number of region to travel
 
+            Log.i("bbb", "Navigation Graph Size "+ navigationGraph.size());
             for(int i = 0; i< navigationGraph.size()-1; i++){
 
                 // a destination vertex for each region
                 Node destinationOfARegion = null;
 
                 tmpDestinationID.clear();
-
-                Log.i("bbb", "tmp Size: " + tmpDestinationID.size());
 
                 // the source vertex becomes a normal waypoint
                 navigationGraph.get(i).nodesInSubgraph.get(sourceID)._nodeType = NORMAL_WAYPOINT;
@@ -1133,7 +1186,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     // return the transfer point
 
                     //start point is a transfer point
-                    if(startNodeType == Setting.getPreferenceValue()){
+                    if(startNodeType == Setting.getPreferenceValue() &&
+                            find_SourceID_In_Next_Region(startNode._connectPointID, i+1)!=null){
                         destinationOfARegion = startNode;
 
                         // get the connectPointID of the transfer node
@@ -1193,6 +1247,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(sourceID),
                     endNode);
 
+            Log.i("bbb", "Path in last region "+ pathInLastRegion.size());
+
             // complete the navigation path
             navigationPath.addAll(pathInLastRegion);
 
@@ -1245,18 +1301,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         nodeQueue.add(source);
         while (!nodeQueue.isEmpty()) {
             Node v = nodeQueue.poll();
+
+            Log.i("bbb", "In dijsk node name "+ v._waypointName);
             //Stop searching when reach the destination node
             if (v._waypointID.equals(destination._waypointID))
                 break;
             // Visit each edge that is adjacent to v
             for (Edge e : v._edges) {
                 Node a = e.target;
+                Log.i("bbb", "node a "+a._waypointName);
                 double weight = e.weight;
                 double distanceThroughU = v.minDistance + weight;
                 if (distanceThroughU < a.minDistance) {
                     nodeQueue.remove(a);
                     a.minDistance = distanceThroughU;
                     a.previous = v;
+                    Log.i("bbb", "set previous");
                     nodeQueue.add(a);
                 }
             }
@@ -1324,8 +1384,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // get shortest path by traversing previous waypoint back to the source
     public List<Node> getShortestPathToDestination(Node destination) {
         List<Node> path = new ArrayList<Node>();
-        for (Node node = destination; node != null; node = node.previous)
+
+
+
+        for (Node node = destination; node != null; node = node.previous){
+            Log.i("bbb", "get path "+node._waypointName);
             path.add(node);
+        }
 
         // reverse path to get correct order
         Collections.reverse(path);
@@ -1513,9 +1578,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             myVibrator.vibrate(2000);
         }
         else if(instruction== WRONGWAY_NOTIFIER){
-            image.setImageResource(R.drawable.wrongway_image);
+            //image.setImageResource(R.drawable.wrongway_image);
             tts.speak(GET_LOST, TextToSpeech.QUEUE_ADD, null);
-            Toast.makeText(this,"重新導航", 500).show();
+            //Toast.makeText(this,"重新導航", 500).show();
             myVibrator.vibrate(1000);
         }
         else if(instruction== MAKETURN_NOTIFIER){
@@ -1632,7 +1697,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
         else if(instruction== WRONGWAY_NOTIFIER){
             turnDirection = GET_LOST;
-            image.setImageResource(R.drawable.wrongway_image);
+            //image.setImageResource(R.drawable.wrongway_image);
             myVibrator.vibrate(1000);
         }
         else if(instruction== MAKETURN_NOTIFIER) {
