@@ -23,7 +23,11 @@
         <node id='0x5c93bd410x4f0df142' name='A02' region='region3' category='Category3'/>
     </region>
 
-
+    <!--<region name='region3' neighbor1='region1' neighbor2='region2' neighbor3='region4' neighbor4='' elevation='1'>-->
+    <!--<location id='1' name='1' region='region3' category='Category3'/>-->
+    <!--<location id='10' name='10' region='region3' category='Category3'/>-->
+    <!--<location id='11' name='11' region='region3' category='Category3'/>-->
+    <!--</region>-->
 
     <!--<region name='region3' neighbor1='region1' neighbor2='region2' neighbor3='region4' neighbor4='' elevation='1'>-->
     <!--<location id='1' name='1' region='region3' category='Category3'/>-->
@@ -31,6 +35,7 @@
     <!--<location id='11' name='11' region='region3' category='Category3'/>-->
     <!--</region>-->
 
+    <!--</region>-->
 
     <!--<region name='region4' neighbor1='region3' neighbor2='region5' neighbor3='' neighbor4='' elevation='1'>-->
     <!--<location id='12' name='12' region='region4' category='Category4'/>-->

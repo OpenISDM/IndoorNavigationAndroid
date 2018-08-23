@@ -989,7 +989,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //beaconManager.setForegroundBetweenScanPeriod(2*ONE_SECOND);
 
 
-        beaconManager.setForegroundScanPeriod(100);
+        beaconManager.setForegroundScanPeriod(50);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();
@@ -1021,7 +1021,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(LBD.Find_Loc(beacon,3));
+                        logBeaconData(LBD.Find_Loc(beacon,4));
                     }
                 }
             }
@@ -1050,8 +1050,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // block the Lbeacon ID the navigator just received
 
             if((receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon))
-                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
-                    || allWaypointData.get(receivebeacon)._groupID==0){
+//                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
+//                    || allWaypointData.get(receivebeacon)._groupID==0
+//                    && !currentLBeaconID.equals(receivebeacon)
+                    ) {
 
                 if(popupWindow != null)
                     popupWindow.dismiss();

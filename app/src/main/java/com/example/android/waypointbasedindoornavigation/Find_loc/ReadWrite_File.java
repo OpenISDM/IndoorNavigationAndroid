@@ -18,7 +18,7 @@ import java.io.IOException;
 public class ReadWrite_File {
     private File file;
     private static String file_name = "Log";
-    private static boolean sb = true;
+    private static boolean sb = false;
     private final File path  = new File(Environment.getExternalStorageDirectory() +
             File.separator +"WPBIN");
 //    設定固定檔案名稱
