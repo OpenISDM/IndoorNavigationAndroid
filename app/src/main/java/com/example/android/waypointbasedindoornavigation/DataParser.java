@@ -190,6 +190,7 @@ public class DataParser {
                     String neighbor2 = null;
                     String neighbor3 = null;
                     String neighbor4 = null;
+                    String neighbor5 = null;
                     int nodeType = 0;
                     int connectPointID = 0;
                     int groupID = 0;
@@ -203,6 +204,9 @@ public class DataParser {
 
                        if (tag.equals("node")) {
 
+
+
+
                             id = pullParser.getAttributeValue(null, "id");
                             lon = Double.parseDouble(pullParser.getAttributeValue(null,
                                     "lat"));
@@ -211,11 +215,29 @@ public class DataParser {
                             name = pullParser.getAttributeValue(null, "name");
                             region = pullParser.getAttributeValue(null, "region");
                             category = pullParser.getAttributeValue(null, "category");
-                            neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
+                            /*neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
                             neighbor2 = pullParser.getAttributeValue(null, "neighbor2");
                             neighbor3 = pullParser.getAttributeValue(null, "neighbor3");
                             neighbor4 = pullParser.getAttributeValue(null, "neighbor4");
+                            //neighbor5 = pullParser.getAttributeValue(null, "neighbor5");*/
 
+                           for(int i=0; i<pullParser.getAttributeCount(); i++){
+
+                               String attributeName = pullParser.getAttributeName(i);
+
+                               if(attributeName.length()>=8){
+
+                                   if(attributeName.substring(0, 8).equals("neighbor")){
+
+                                       if(!pullParser.getAttributeValue(i).isEmpty())
+                                           adjacentNodes.add(pullParser.getAttributeValue(i));
+
+                                   }
+                               }
+
+                           }
+
+                           /*
                             if(!neighbor1.isEmpty())
                                 adjacentNodes.add(neighbor1);
                             if(!neighbor2.isEmpty())
@@ -223,7 +245,8 @@ public class DataParser {
                             if(!neighbor3.isEmpty())
                                 adjacentNodes.add(neighbor3);
                             if(!neighbor4.isEmpty())
-                                adjacentNodes.add(neighbor4);
+                                adjacentNodes.add(neighbor4);*/
+
 
 
                             if (!pullParser.getAttributeValue(null, "nodeType").isEmpty())
@@ -245,7 +268,7 @@ public class DataParser {
 
                             // create a Node object initialized with the retrieved data
                             Node node = new Node(id, name, lon, lat, adjacentNodes, region,
-                                    category, nodeType, connectPointID, groupID);
+                                    category, nodeType, connectPointID, groupID, elevation);
 
                             // put each Node object into a navigationSubgraph object
                             navigationSubgraph.nodesInSubgraph.put(id, node);
