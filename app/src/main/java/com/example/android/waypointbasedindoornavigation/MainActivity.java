@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private static final int USER_MODE = 3;
     private static final int TESTER_MODE = 4;
 
+    Node currentWaypoint;
+    String currentWaypointID;
+
     //Two search bars, one for source and one for destination
     EditText searchBarForSource, searchBarForDestination;
 
@@ -233,6 +236,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void searchStartingPoint(View view){
 
+
+
+
         Log.i("beaconManager","beaconManagerSetup");
 
         beaconManager =  BeaconManager.getInstanceForApplication(this);
@@ -312,8 +318,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     // Load Lbeacon ID
     private void logBeaconData(Beacon beacon) {
 
-        Node currentWaypoint;
-        String currentWaypointID;
 
         // currently received Lbeacon ID
         currentWaypointID = beacon.getId2().toString().concat(beacon.getId3().toString());
@@ -324,7 +328,16 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         sourceID = currentWaypoint._waypointID;
         sourceRegion = currentWaypoint._regionID;
 
-        searchBarForSource.setText(currentWaypoint._waypointName);
+
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+
+                searchBarForSource.setText(currentWaypoint._waypointName);
+
+            }
+
+        });
 
         if(beaconManager != null)
             beaconManager.unbind(this);

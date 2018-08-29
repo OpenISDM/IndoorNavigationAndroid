@@ -82,15 +82,17 @@ public class DataParser {
                         // get the information of each Region
                         regionID = pullParser.getAttributeValue(null, "id");
                         regionName = pullParser.getAttributeValue(null, "name");
-                        neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
-                        neighbor2 = pullParser.getAttributeValue(null, "neighbor2");
-                        neighbor3 = pullParser.getAttributeValue(null, "neighbor3");
-                        neighbor4 = pullParser.getAttributeValue(null, "neighbor4");
                         if (!pullParser.getAttributeValue(null,
                                 "elevation").isEmpty())
                             elevation = parseInt(pullParser.getAttributeValue(null,
                                     "elevation"));
 
+                        /*neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
+                        neighbor2 = pullParser.getAttributeValue(null, "neighbor2");
+                        neighbor3 = pullParser.getAttributeValue(null, "neighbor3");
+                        neighbor4 = pullParser.getAttributeValue(null, "neighbor4");*/
+
+                        /*
 
                         if(!neighbor1.isEmpty())
                             neighbors.add(neighbor1);
@@ -99,7 +101,23 @@ public class DataParser {
                         if(!neighbor3.isEmpty())
                             neighbors.add(neighbor3);
                         if(!neighbor4.isEmpty())
-                            neighbors.add(neighbor4);
+                            neighbors.add(neighbor4);*/
+
+                        for(int i=0; i<pullParser.getAttributeCount(); i++){
+
+                            String attributeName = pullParser.getAttributeName(i);
+
+                            if(attributeName.length()>=8){
+
+                                if(attributeName.substring(0, 8).equals("neighbor")){
+
+                                    if(!pullParser.getAttributeValue(i).isEmpty())
+                                        neighbors.add(pullParser.getAttributeValue(i));
+
+                                }
+                            }
+
+                        }
 
                         // get the location information of each Region
                         while(true) {

@@ -167,6 +167,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     Node startNode;
     Node endNode;
+    Node lastNode;
 
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
@@ -818,9 +819,34 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     case WRONG:
                         Log.i("wrong", "Out");
                         walkedWaypoint = 0;
-                        sourceID = allWaypointData.get(currentLBeaconID)._waypointID;
-                        sourceRegion = allWaypointData.get(currentLBeaconID)._regionID;
+                        Node wrongWaypoint = allWaypointData.get(currentLBeaconID);
+                        sourceID = wrongWaypoint._waypointID;
+                        sourceRegion = wrongWaypoint._regionID;
+                        currentLBeaconID = "EmptyString";
                         if(turnNotificationForPopup !=null){
+
+                            navigationPath.add(0, lastNode);
+                            navigationPath.add(0, wrongWaypoint);
+                            progressBar.setMax(navigationPath.size());
+                            progressStatus=0;
+                            firstMovement.setText("請往回轉向您走來的方向");
+                            howFarToMove.setText("並且等待指示繼續導航");
+                            nextTurnMovement.setText(" ");
+                            turnNotificationForPopup = "goback";
+                            imageTurnIndicator.setImageResource(R.drawable.turn_back);
+
+                            if(Setting.getPreferenceValue()==4)
+                                showPopupWindow(MAKETURN_NOTIFIER);
+                            else{
+
+                                if(Setting.getTurnOnOK()==false)
+                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                                else
+                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                            }
+                        }
+                        else{
+
                             if(Setting.getPreferenceValue()==4)
                                 showPopupWindow(WRONGWAY_NOTIFIER);
                             else{
@@ -830,6 +856,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 else
                                     showPopupWindow_UserMode(WRONGWAY_NOTIFIER);
                             }
+
                         }
 
                         break;
@@ -841,10 +868,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Log.i("abc", "RegionID0:" + navigationPath.get(0)._regionID);
                 if(!passedRegionID.equals(navigationPath.get(0)._regionID))
                     regionIndex++;
-
                 passedRegionID = navigationPath.get(0)._regionID;
                 passedGroupID = navigationPath.get(0)._groupID;
-                navigationPath.remove(0);
+                lastNode = navigationPath.get(0);
+
+                if(!turnDirection.equals(WRONG))
+                    navigationPath.remove(0);
+
 
             }
         };
@@ -871,7 +901,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(numberOfWaypointTraveled==1 && (navigationPath.size()>=2)){
 
                     if(Setting.getModeValue() == TESTER_MODE)
-                        turnNotificationForPopup = "start";
+                        turnNotificationForPopup = null;
                     else{
 
                         /*
@@ -1488,7 +1518,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 case "start":
                     popupText.setText("出發囉!");
-
+                    break;
             }
 
             popupText_waypointName.setText("現在位置 : " +
@@ -1625,6 +1655,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     turnDirection = PLEASE_WALK_UP_STAIR;
                     image.setImageResource(R.drawable.stair);
                     break;
+                case "goback":
+                    turnDirection = "請往回走";
+                    image.setImageResource(R.drawable.turn_back);
+                    break;
 
             }
             myVibrator.vibrate(new long[]{50, 300, 50, 300, 50, 300}, -1);
@@ -1687,7 +1721,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toast_layout));
         ImageView image = (ImageView) layout.findViewById(R.id.toast_image);
-        image.setImageResource(R.drawable.img_compass);
+        //image.setImageResource(R.drawable.img_compass);
         String turnDirection = null;
         Vibrator myVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
@@ -1742,10 +1776,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     turnDirection = PLEASE_WALK_UP_STAIR;
                     image.setImageResource(R.drawable.stair);
                     break;
+                case "goback":
+                    turnDirection = "請往回走";
+                    image.setImageResource(R.drawable.turn_back);
+                    break;
 
 
             }
         }
+
 
         Toast toast = new Toast(getApplicationContext());
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
@@ -1756,7 +1795,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() +
                     nextTurnMovement.getText().toString(), TextToSpeech.QUEUE_ADD, null);
-            toast.show();
+
+            if(turnNotificationForPopup != null)
+                toast.show();
+
+
+
             myVibrator.vibrate(new long[]{50, 300, 50, 300, 50, 300}, -1);
         }
         else if(instruction == ARRIVED_NOTIFIER){
