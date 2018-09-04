@@ -36,6 +36,9 @@ public class DeviceParameter {
     private static JSONArray jarray = new JSONArray();
     private ReadWrite_File wf= new ReadWrite_File();
     private static Context c;
+    public void DeviceParameter(){
+        Log.i("init", "DeviceParameter set");
+    }
     public void set_allWaypointData(HashMap<String, Node> allWaypointData){
         this.allWaypointData = allWaypointData;
         Log.i("init", "set allWaypointData");
@@ -63,6 +66,7 @@ public class DeviceParameter {
                 con_dif0.removeAll(con_dif1);
                 Log.i("JSONtag1",con_dif0.toString());
                 if (!con_dif0.isEmpty()){
+                    Log.i("JSONtag2",jarray.toString());
                     for (String tmp_node: con_dif0){
                         JSONObject tmp_add_jobject = new JSONObject();
                         tmp_add_jobject.put(this.id, tmp_node);
@@ -71,8 +75,9 @@ public class DeviceParameter {
                         tmp_add_jobject.put(this.n_value, -2.14);
                         tmp_add_jobject.put(this.install_hight, 1.5);
                         jarray.put(tmp_add_jobject);
-                        wf.writejson(jarray.toString());
                     }
+                    Log.i("JSONtag3",jarray.toString());
+                    wf.writejson(jarray.toString());
                 }
             }catch (JSONException e) {
                 e.printStackTrace();

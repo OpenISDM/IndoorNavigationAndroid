@@ -81,8 +81,6 @@ public class ReadWrite_File {
         file = new File(path, "DeviceParamation.json");
         JSONArray jarray = null;
         if(file.exists()) {
-
-
             try {
                 FileInputStream is = new FileInputStream(file);
                 int tmp_size = is.available();

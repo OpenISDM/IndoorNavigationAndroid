@@ -284,10 +284,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private Find_Loc LBD = new Find_Loc();
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
     private ReadWrite_File wf  = new ReadWrite_File();
-    private DeviceParameter dp = new DeviceParameter();
+    private DeviceParameter dp;
     String receivebeacon;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -314,6 +313,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
         canvas = new Canvas(mutableBitmap);
         wf.setFile_name("Log"+df.format(Calendar.getInstance().getTime()));
+        dp = new DeviceParameter();
         dp.setupDeviceParameter(this);
 
         // voice engine setup
@@ -326,7 +326,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }
         });
-
 
         if(Setting.getModeValue()==USER_MODE){
             waypointIDInput.setVisibility(View.INVISIBLE);
@@ -1040,7 +1039,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @Override
     public void onBeaconServiceConnect() {
-
         //Start scanning for Lbeacon signal
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
@@ -1057,7 +1055,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
 
         });
-
         try {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId",
                     null, null, null));
@@ -1066,7 +1063,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
     }
-
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
@@ -1607,13 +1603,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             image.setImageResource(R.drawable.arrived_image);
             tts.speak(YOU_HAVE_ARRIVE, TextToSpeech.QUEUE_ADD, null);
             Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
-            myVibrator.vibrate(2000);
+            myVibrator.vibrate(800);
         }
         else if(instruction== WRONGWAY_NOTIFIER){
             //image.setImageResource(R.drawable.wrongway_image);
             tts.speak(GET_LOST, TextToSpeech.QUEUE_ADD, null);
             //Toast.makeText(this,"重新導航", 500).show();
-            myVibrator.vibrate(1000);
+            myVibrator.vibrate(800);
         }
         else if(instruction== MAKETURN_NOTIFIER){
 
@@ -1799,14 +1795,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             if(turnNotificationForPopup != null)
                 toast.show();
 
-
-
-            myVibrator.vibrate(new long[]{50, 300, 50, 300, 50, 300}, -1);
+            myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
         else if(instruction == ARRIVED_NOTIFIER){
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             toast.show();
-            myVibrator.vibrate(2000);
+            myVibrator.vibrate(800);
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
