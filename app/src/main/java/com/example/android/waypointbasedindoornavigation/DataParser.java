@@ -21,11 +21,14 @@ Author:
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,8 +43,14 @@ public class DataParser {
     // a list of String to store a list of category for UI display
     static List<String> categoryList = new ArrayList<>();
 
+    public static File file;
+    public static File path  = new File(Environment.getExternalStorageDirectory() +
+            File.separator +"WPBIN");
+
     //Parse data from Region Graph
     public static RegionGraph getRegionDataFromRegionGraph(Context context) {
+
+        file = new File(path, "buildingA.xml");
 
         // a hashmap of Region, the key is the name of the Region object
         RegionGraph regionGraph = new RegionGraph();
@@ -51,10 +60,11 @@ public class DataParser {
 
         //get XML file from asset folder
         AssetManager assetManager = context.getAssets();
-        InputStream is;
+
         try
         {
-            is = assetManager.open("buildingA.xml"); //read the XML file
+            InputStream is = new FileInputStream(file);
+            //is = assetManager.open("buildingA.xml"); //read the XML file
             pullParser.setInput(is , "utf-8");
             int eventType = pullParser.getEventType();
             while(eventType != XmlPullParser.END_DOCUMENT)
@@ -171,12 +181,14 @@ public class DataParser {
         } catch (IOException e) {
         } catch (XmlPullParserException e) {
         }
+
         return regionGraph;
         //return hashMapOfRegion;
     }
 
     // Parse data from Navigation Graph
     public static List<NavigationSubgraph> getWaypointDataFromNavigationGraph(Context context, List<String> regionsToBeLoaded) {
+
 
         // create a list of navigation subgraph used as routing data
         List<NavigationSubgraph> routingData = new ArrayList<>();
@@ -189,10 +201,13 @@ public class DataParser {
 
             XmlPullParser pullParser = Xml.newPullParser();
             AssetManager assetManager = context.getAssets();
-            InputStream is;
+
+            file =  new File(path, "buildingA_"+s+".xml");
+
             try {
                 //is = assetManager.open(Setting.getFileName());
-                is = assetManager.open("buildingA/"+s+".xml");
+                //is = assetManager.open("buildingA/"+s+".xml");
+                InputStream is = new FileInputStream(file);
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -323,10 +338,12 @@ public class DataParser {
 
             XmlPullParser pullParser = Xml.newPullParser();
             AssetManager assetManager = context.getAssets();
-            InputStream is;
+
+            file = new File(path, "buildingA_"+s+".xml");
             try {
                 //is = assetManager.open(Setting.getFileName());
-                is = assetManager.open("buildingA/"+s+".xml");
+                //is = assetManager.open("buildingA/"+s+".xml");
+                InputStream is = new FileInputStream(file);
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
