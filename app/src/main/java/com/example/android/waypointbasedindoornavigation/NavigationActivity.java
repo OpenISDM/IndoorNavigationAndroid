@@ -710,15 +710,23 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             case ELEVATOR_WAYPOINT:
                                 if(navigationPath.size()==2)
                                     nextTurnMovement.setText("抵達目的地");
-                                else
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                                else{
+                                    if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                        elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                                    else
+                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                }
                                 break;
 
                             case STAIRWELL_WAYPOINT:
                                 if(navigationPath.size()==2)
                                     nextTurnMovement.setText("抵達目的地");
-                                else
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                                else{
+                                    if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                        elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                                    else
+                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                }
                                 break;
 
                             case NORMAL_WAYPOINT:
