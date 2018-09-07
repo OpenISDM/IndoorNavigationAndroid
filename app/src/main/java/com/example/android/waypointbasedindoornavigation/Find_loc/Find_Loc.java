@@ -1,18 +1,16 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.example.android.waypointbasedindoornavigation.GeoCalulation;
+import com.example.android.waypointbasedindoornavigation.Node;
 
 import org.altbeacon.beacon.Beacon;
-import com.example.android.waypointbasedindoornavigation.Node;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Find_Loc {

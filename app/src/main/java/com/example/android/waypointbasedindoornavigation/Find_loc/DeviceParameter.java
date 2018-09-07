@@ -1,31 +1,17 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
-import android.app.Application;
-import android.app.ListFragment;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.util.Log;
-import android.util.Xml;
 
-import com.example.android.waypointbasedindoornavigation.DataParser;
 import com.example.android.waypointbasedindoornavigation.Node;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.DoubleToIntFunction;
-
-import static java.lang.Integer.numberOfLeadingZeros;
-import static java.lang.Integer.parseInt;
 public class DeviceParameter {
     private static final String n_value = "n";
     private static final String id = "id";

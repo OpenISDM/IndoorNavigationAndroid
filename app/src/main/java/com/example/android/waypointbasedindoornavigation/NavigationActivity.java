@@ -172,6 +172,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
 
+    int pathLength = 0;
+
     int regionIndex = 0;
     int passedGroupID = -1;
     String passedRegionID;
@@ -363,7 +365,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManagerSetup();
 
         //start navigation
-        startNavigation();
+        navigationPath = startNavigation();
 
         //set text of destination
         destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
@@ -385,9 +387,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 // receive a turn direction message from threadForHandleLbeaconID
                 String turnDirection = (String) msg.obj;
 
-                Log.i("abc", ""+navigationPath.get(0)._groupID);
-                Log.i("abc", ""+navigationPath.get(0)._groupID);
-
                 if(navigationPath.get(0)._groupID==navigationPath.get(navigationPath.size()-1)._groupID
                         && navigationPath.get(0)._groupID!=0)
                     turnDirection = ARRIVED;
@@ -399,490 +398,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(navigationPath.size()>=2)
                     distance = (int) GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1));
 
-
-
-                switch(turnDirection){
-
-                    case LEFT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_LEFT);
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_LEFT);
-                                break;
-
-                            case NORMAL_WAYPOINT:
-                                nextTurnMovement.setText(THEN_TURN_LEFT);
-                                break;
-
-                        }
-                        /*
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_TURN_LEFT);*/
-                        imageTurnIndicator.setImageResource(R.drawable.left_arrow);
-
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                            //showHintAtWaypoint();}
-                        turnNotificationForPopup = LEFT;
-                        break;
-
-                    case FRONT_LEFT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
-                                break;
-
-                            case NORMAL_WAYPOINT:
-                                nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
-                                break;
-
-                        }
-                        /*
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);*/
-
-                        imageTurnIndicator.setImageResource(R.drawable.frontleft_arrow);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        turnNotificationForPopup = FRONT_LEFT;
-                        break;
-                    case REAR_LEFT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                break;
-
-                            case NORMAL_WAYPOINT:
-                                nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                break;
-
-                        }
-
-                        /*
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_TURN_REAR_LEFT);*/
-
-                        imageTurnIndicator.setImageResource(R.drawable.rearleft_arrow);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        turnNotificationForPopup = REAR_LEFT;
-                        break;
-
-                    case RIGHT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_RIGHT);
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN_RIGHT);
-                                break;
-
-                            case NORMAL_WAYPOINT:
-                                nextTurnMovement.setText(THEN_TURN_RIGHT);
-                                break;
-
-                        }
-                        /*
-
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_TURN_RIGHT);*/
-                        imageTurnIndicator.setImageResource(R.drawable.right_arrow);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        turnNotificationForPopup = RIGHT;
-                        break;
-
-                    case FRONT_RIGHT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
-                                break;
-
-                            case NORMAL_WAYPOINT:
-                                nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
-                                break;
-
-                        }
-                        /*
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);*/
-
-                        imageTurnIndicator.setImageResource(R.drawable.frontright_arrow);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        turnNotificationForPopup = FRONT_RIGHT;
-                        break;
-
-                    case REAR_RIGHT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-
-                                if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                    elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
-                                else
-                                    nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                break;
-
-                            case NORMAL_WAYPOINT:
-                                nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                break;
-
-                        }
-
-                        /*
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else
-                            nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);*/
-
-                        imageTurnIndicator.setImageResource(R.drawable.rearright_arrow);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        turnNotificationForPopup = REAR_RIGHT;
-                        break;
-
-                    case FRONT:
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText(""+distance +" "+METERS);
-
-                        Log.i("bbb", navigationPath.get(1)._waypointName);
-
-                        switch(navigationPath.get(1)._nodeType){
-
-                            case ELEVATOR_WAYPOINT:
-                                if(navigationPath.size()==2)
-                                    nextTurnMovement.setText("抵達目的地");
-                                else{
-                                    if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                        elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                    else
-                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                }
-                                break;
-
-                            case STAIRWELL_WAYPOINT:
-                                if(navigationPath.size()==2)
-                                    nextTurnMovement.setText("抵達目的地");
-                                else{
-                                    if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                        elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
-                                    else
-                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                }
-                                break;
-
-                            case NORMAL_WAYPOINT:
-
-                                if(navigationPath.size()==2)
-                                    nextTurnMovement.setText("抵達目的地");
-                                else
-                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                break;
-
-                        }
-
-                        /*
-                        if(navigationPath.get(1)._nodeType == 1)
-                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
-                        else if(navigationPath.get(1)._nodeType == 2)
-                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
-                        else{
-                            if(navigationPath.size()==2)
-                                nextTurnMovement.setText("抵達目的地");
-                            else
-                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                        }*/
-
-                        imageTurnIndicator.setImageResource(R.drawable.up_arrow);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        turnNotificationForPopup = FRONT;
-                        break;
-
-                    case STAIR:
-                        turnNotificationForPopup = STAIR;
-                        firstMovement.setText(WALKING_UP_STAIR);
-                        howFarToMove.setText("");
-                        nextTurnMovement.setText("");
-                        imageTurnIndicator.setImageResource(R.drawable.stair);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-
-                        walkedWaypoint = 0;
-                        sourceID = navigationPath.get(1)._waypointID;
-                        break;
-
-                    case ELEVATOR:
-                        turnNotificationForPopup = ELEVATOR;
-                        firstMovement.setText(WAIT_FOR_ELEVATOR);
-                        howFarToMove.setText("");
-                        nextTurnMovement.setText("");
-                        imageTurnIndicator.setImageResource(R.drawable.elevator);
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-
-                        walkedWaypoint = 0;
-                        break;
-
-                    case ARRIVED:
-                        if(turnNotificationForPopup !=null){
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(ARRIVED_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(ARRIVED_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(ARRIVED_NOTIFIER);
-                            }
-                        }
-                        walkedWaypoint = 0;
-                        break;
-
-                    case WRONG:
-                        Log.i("wrong", "Out");
-                        walkedWaypoint = 0;
-                        Node wrongWaypoint = allWaypointData.get(currentLBeaconID);
-                        sourceID = wrongWaypoint._waypointID;
-                        sourceRegion = wrongWaypoint._regionID;
-                        currentLBeaconID = "EmptyString";
-                        if(turnNotificationForPopup !=null){
-
-                            navigationPath.add(0, lastNode);
-                            navigationPath.add(0, wrongWaypoint);
-                            progressBar.setMax(navigationPath.size());
-                            progressStatus=0;
-                            firstMovement.setText("請往回轉向您走來的方向");
-                            howFarToMove.setText("並且等待指示繼續導航");
-                            nextTurnMovement.setText(" ");
-                            turnNotificationForPopup = "goback";
-                            imageTurnIndicator.setImageResource(R.drawable.turn_back);
-
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(MAKETURN_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(MAKETURN_NOTIFIER);
-                            }
-                        }
-                        else{
-
-                            if(Setting.getPreferenceValue()==4)
-                                showPopupWindow(WRONGWAY_NOTIFIER);
-                            else{
-
-                                if(Setting.getTurnOnOK()==false)
-                                    showHintAtWaypoint(WRONGWAY_NOTIFIER);
-                                else
-                                    showPopupWindow_UserMode(WRONGWAY_NOTIFIER);
-                            }
-
-                        }
-
-                        break;
-                }
-
-                //After the navigational instruction for current waypoint is properly given,
-                //the waypoint is removed from the top of the navigationPath
-
-                Log.i("abc", "RegionID0:" + navigationPath.get(0)._regionID);
-                if(!passedRegionID.equals(navigationPath.get(0)._regionID))
-                    regionIndex++;
-                passedRegionID = navigationPath.get(0)._regionID;
-                passedGroupID = navigationPath.get(0)._groupID;
-                lastNode = navigationPath.get(0);
-
-                if(!turnDirection.equals(WRONG))
-                    navigationPath.remove(0);
-
+                navigationInstructionDisplay(turnDirection, distance);
 
             }
         };
@@ -923,6 +439,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                         //showPopupWindow(MAKETURN_NOTIFIER);
                         turnNotificationForPopup = null;
+
                     }
 
                 }
@@ -951,6 +468,569 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         };
 
     }
+
+    void navigationInstructionDisplay(String turnDirection, int distance){
+
+        switch(turnDirection){
+
+            case LEFT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_LEFT);
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_LEFT);
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        nextTurnMovement.setText(THEN_TURN_LEFT);
+                        break;
+
+                }
+                        /*
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_LEFT);*/
+                imageTurnIndicator.setImageResource(R.drawable.left_arrow);
+
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                //showHintAtWaypoint();}
+                turnNotificationForPopup = LEFT;
+                break;
+
+            case FRONT_LEFT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                        break;
+
+                }
+                        /*
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);*/
+
+                imageTurnIndicator.setImageResource(R.drawable.frontleft_arrow);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                turnNotificationForPopup = FRONT_LEFT;
+                break;
+            case REAR_LEFT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                        break;
+
+                }
+
+                        /*
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_REAR_LEFT);*/
+
+                imageTurnIndicator.setImageResource(R.drawable.rearleft_arrow);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                turnNotificationForPopup = REAR_LEFT;
+                break;
+
+            case RIGHT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_RIGHT);
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_RIGHT);
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        nextTurnMovement.setText(THEN_TURN_RIGHT);
+                        break;
+
+                }
+                        /*
+
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else
+                            nextTurnMovement.setText(THEN_TURN_RIGHT);*/
+                imageTurnIndicator.setImageResource(R.drawable.right_arrow);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                turnNotificationForPopup = RIGHT;
+                break;
+
+            case FRONT_RIGHT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                        break;
+
+                }
+                        /*
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else
+                            nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);*/
+
+                imageTurnIndicator.setImageResource(R.drawable.frontright_arrow);
+                if(turnNotificationForPopup !=null){
+
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                turnNotificationForPopup = FRONT_RIGHT;
+                break;
+
+            case REAR_RIGHT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+
+                        if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                            elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
+                        else
+                            nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                        break;
+
+                }
+
+                        /*
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else
+                            nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);*/
+
+                imageTurnIndicator.setImageResource(R.drawable.rearright_arrow);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                turnNotificationForPopup = REAR_RIGHT;
+                break;
+
+            case FRONT:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                howFarToMove.setText(""+distance +" "+METERS);
+
+                Log.i("bbb", navigationPath.get(1)._waypointName);
+
+                switch(navigationPath.get(1)._nodeType){
+
+                    case ELEVATOR_WAYPOINT:
+                        if(navigationPath.size()==2)
+                            nextTurnMovement.setText("抵達目的地");
+                        else{
+                            if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                        }
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+                        if(navigationPath.size()==2)
+                            nextTurnMovement.setText("抵達目的地");
+                        else{
+                            if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                        }
+                        break;
+
+                    case NORMAL_WAYPOINT:
+
+                        if(navigationPath.size()==2)
+                            nextTurnMovement.setText("抵達目的地");
+                        else
+                            nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                        break;
+
+                }
+
+                        /*
+                        if(navigationPath.get(1)._nodeType == 1)
+                            nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                        else if(navigationPath.get(1)._nodeType == 2)
+                            nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                        else{
+                            if(navigationPath.size()==2)
+                                nextTurnMovement.setText("抵達目的地");
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                        }*/
+
+                imageTurnIndicator.setImageResource(R.drawable.up_arrow);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                turnNotificationForPopup = FRONT;
+                break;
+
+            case STAIR:
+                turnNotificationForPopup = STAIR;
+                firstMovement.setText(WALKING_UP_STAIR);
+                howFarToMove.setText("");
+                nextTurnMovement.setText("");
+                imageTurnIndicator.setImageResource(R.drawable.stair);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+
+                walkedWaypoint = 0;
+                sourceID = navigationPath.get(1)._waypointID;
+                break;
+
+            case ELEVATOR:
+                turnNotificationForPopup = ELEVATOR;
+                firstMovement.setText(WAIT_FOR_ELEVATOR);
+                howFarToMove.setText("");
+                nextTurnMovement.setText("");
+                imageTurnIndicator.setImageResource(R.drawable.elevator);
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+
+                walkedWaypoint = 0;
+                break;
+
+            case ARRIVED:
+                if(turnNotificationForPopup !=null){
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(ARRIVED_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(ARRIVED_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(ARRIVED_NOTIFIER);
+                    }
+                }
+                walkedWaypoint = 0;
+                break;
+
+            case WRONG:
+                Log.i("wrong", "Out");
+                List<Node> newPath = new ArrayList<>();
+                //walkedWaypoint = 0;
+                Node wrongWaypoint = allWaypointData.get(currentLBeaconID);
+                sourceID = wrongWaypoint._waypointID;
+                sourceRegion = wrongWaypoint._regionID;
+
+                loadNavigationGraph();
+                newPath = startNavigation();
+
+                Log.i("renavigate", "renavigate");
+
+                for(int i=0; i<newPath.size(); i++)
+                    Log.i("renavigate", "path node "+newPath.get(i)._waypointName);
+
+
+                //Log.i("renavigate", "newPath next "+newPath.get(1)._waypointName);
+                //Log.i("renavigate", "lastWaypoint "+lastNode._waypointName);
+
+
+                if(newPath.get(1)._waypointName.equals(lastNode._waypointName)){
+
+                    currentLBeaconID = "EmptyString";
+                    //navigationPath.add(0, lastNode);
+                    //navigationPath.add(0, wrongWaypoint);
+
+                    navigationPath = newPath;
+                    progressBar.setMax(navigationPath.size());
+                    progressStatus=0;
+                    firstMovement.setText("請往回轉向您走來的方向");
+                    howFarToMove.setText("並且等待指示繼續導航");
+                    nextTurnMovement.setText(" ");
+                    turnNotificationForPopup = "goback";
+                    imageTurnIndicator.setImageResource(R.drawable.turn_back);
+
+                    if(Setting.getPreferenceValue()==4)
+                        showPopupWindow(MAKETURN_NOTIFIER);
+                    else{
+
+                        if(Setting.getTurnOnOK()==false)
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        else
+                            showPopupWindow_UserMode(MAKETURN_NOTIFIER);
+                    }
+                }
+                else{
+
+
+                    navigationPath = newPath;
+                    progressBar.setMax(navigationPath.size());
+                    progressStatus=1;
+
+                    turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
+                            (lastNode, navigationPath.get(0), navigationPath.get(1));
+
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+
+                    firstMovement.setText(GO_STRAIGHT_ABOUT);
+                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
+
+                    if(navigationPath.size()>=3){
+
+                        turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
+                                (navigationPath.get(0), navigationPath.get(1), navigationPath.get(2));
+
+                        switch (turnNotificationForPopup) {
+
+                            case RIGHT:
+                                nextTurnMovement.setText(THEN_TURN_RIGHT);
+                                imageTurnIndicator.setImageResource(R.drawable.right_arrow);
+                                break;
+                            case LEFT:
+                                nextTurnMovement.setText(THEN_TURN_LEFT);
+                                imageTurnIndicator.setImageResource(R.drawable.left_arrow);
+                                break;
+                            case FRONT_RIGHT:
+                                nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                                imageTurnIndicator.setImageResource(R.drawable.frontright_arrow);
+                                break;
+                            case FRONT_LEFT:
+                                nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                                imageTurnIndicator.setImageResource(R.drawable.frontleft_arrow);
+                                break;
+                            case REAR_RIGHT:
+                                nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                                imageTurnIndicator.setImageResource(R.drawable.rearright_arrow);
+                                break;
+                            case REAR_LEFT:
+                                nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                                imageTurnIndicator.setImageResource(R.drawable.rearleft_arrow);
+                                break;
+                            case FRONT:
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                imageTurnIndicator.setImageResource(R.drawable.up_arrow);
+                                break;
+                            case ELEVATOR:
+                                nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
+                                imageTurnIndicator.setImageResource(R.drawable.elevator);
+                                break;
+                            case STAIR:
+                                nextTurnMovement.setText(THEN_WALK_UP_STAIR);
+                                imageTurnIndicator.setImageResource(R.drawable.stair);
+                                break;
+
+                        }
+
+                    }
+                    else{
+
+                        nextTurnMovement.setText("然後抵達目的地");
+                    }
+
+
+                    navigationPath.remove(0);
+                }
+
+                break;
+        }
+
+        //After the navigational instruction for current waypoint is properly given,
+        //the waypoint is removed from the top of the navigationPath
+
+        Log.i("abc", "RegionID0:" + navigationPath.get(0)._regionID);
+        if(!passedRegionID.equals(navigationPath.get(0)._regionID))
+            regionIndex++;
+        passedRegionID = navigationPath.get(0)._regionID;
+        passedGroupID = navigationPath.get(0)._groupID;
+        lastNode = navigationPath.get(0);
+
+        if(!turnDirection.equals(WRONG))
+            navigationPath.remove(0);
+
+    }
+
+
 
     void elevationDisplay(int transferPointType, int elevation){
 
@@ -1079,19 +1159,38 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
         if (beacon.size() > 2) {
+
+            Node receiveNode;
+            Boolean pass = false;
+
             wf.writeFile("NAP1:"+beacon.toString());
             Log.i("NAP1",beacon.toString());
             receivebeacon = null;
             if(beacon.get(2).equals("close")) receivebeacon = beacon.get(1);
             Log.i("NAP1",beacon.toString() + receivebeacon);
 
+            receiveNode = allWaypointData.get(receivebeacon);
+
+
+            if(!receivebeacon.equals(currentLBeaconID)){
+
+                if(receiveNode._groupID == navigationPath.get(0)._groupID &&
+                        receiveNode._groupID!=0 )
+                    currentLBeaconID = navigationPath.get(0)._waypointID;
+                else
+                    currentLBeaconID = receivebeacon;
+
+                pass = true;
+            }
+            else{
+
+                pass = false;
+
+            }
+
             // block the Lbeacon ID the navigator just received
 
-            if((receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon))
-//                    && passedGroupID!=allWaypointData.get(receivebeacon)._groupID
-//                    || allWaypointData.get(receivebeacon)._groupID==0
-//                    && !currentLBeaconID.equals(receivebeacon)
-                    ) {
+            if(pass){
 
                 if(popupWindow != null)
                     popupWindow.dismiss();
@@ -1099,9 +1198,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 whichWaypointOnProgressBar += 1;
 
                 // Input waypoint name for debug mode
-                String nameOFWaypoint = waypointIDInput.getText().toString();
+                //String nameOFWaypoint = waypointIDInput.getText().toString();
 
-                currentLBeaconID = receivebeacon;
+                //currentLBeaconID = receivebeacon;
 
 //                currentLBeaconID = CConvX.concat(CConvY);
                 synchronized (sync) {
@@ -1175,7 +1274,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
 
-    public void startNavigation() {
+    public List<Node> startNavigation() {
+
+        List<Node> path = new ArrayList<>();
 
         int startNodeType = startNode._nodeType;
 
@@ -1186,7 +1287,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if(navigationGraph.size()==1)
 
             // preform typical dijkstra's algorithm with two given Node objects
-            navigationPath = computeDijkstraShortestPath(startNode, endNode);
+            //navigationPath = computeDijkstraShortestPath(startNode, endNode);
+            path = computeDijkstraShortestPath(startNode, endNode);
 
             // navigation between several regions
         else{
@@ -1278,7 +1380,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
 
                 // add up all the navigation paths into one
-                navigationPath.addAll(getShortestPathToDestination(destinationOfARegion));
+                //navigationPath.addAll(getShortestPathToDestination(destinationOfARegion));
+                path.addAll(getShortestPathToDestination(destinationOfARegion));
 
             }
 
@@ -1290,28 +1393,34 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("bbb", "Path in last region "+ pathInLastRegion.size());
 
             // complete the navigation path
-            navigationPath.addAll(pathInLastRegion);
+            //navigationPath.addAll(pathInLastRegion);
+            path.addAll(pathInLastRegion);
 
             // remove duplicated waypoints which are used as connecting points in the same elevation
-            for(int i = 1; i<navigationPath.size(); i++){
-                if(navigationPath.get(i)._waypointID.equals(navigationPath.get(i-1)._waypointID))
-                    navigationPath.remove(i);
+            for(int i = 1; i<path.size(); i++){
+                if(path.get(i)._waypointID.equals(path.get(i-1)._waypointID))
+                    path.remove(i);
             }
         }
 
-        Log.i("bbb", "path size"+navigationPath.size());
+        //Log.i("bbb", "path size"+navigationPath.size());
 
-        for(int i = 0; i<navigationPath.size(); i++)
-            navigationPath_ID_to_Name_Mapping.put(navigationPath.get(i)._waypointID,
-                    navigationPath.get(i)._waypointName);
+        for(int i = 0; i<path.size(); i++)
+            navigationPath_ID_to_Name_Mapping.put(path.get(i)._waypointID,
+                    path.get(i)._waypointName);
 
         new DeviceParameter().setupDeviceParameter(this);
 //        Queue<String> tmp_path = new LinkedList<>();
 //        for (int i = 0; i<navigationPath.size(); i++) {
 //            tmp_path.offer(navigationPath.get(i).getID());
 //        }
-        LBD.setpath(navigationPath);
+        LBD.setpath(path);
 
+        pathLength = GeoCalulation.getPathLength(path);
+
+        Log.i("pathLength", "pathLength: "+pathLength);
+
+        return path;
 
     }
 
@@ -1804,8 +1913,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() +
                     nextTurnMovement.getText().toString(), TextToSpeech.QUEUE_ADD, null);
 
-            if(turnNotificationForPopup != null)
+            Log.i("showHint", "showHint");
+            if(turnNotificationForPopup != null){
                 toast.show();
+                Log.i("showHint", "show");
+
+            }
+
 
 
 
@@ -1966,17 +2080,35 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             popupWindow.dismiss();
 
         String nameOFWaypoint = waypointIDInput.getText().toString();
+        String receiveID = null;
+        Node receiveNode;
+        Boolean pass = false;
 
-        currentLBeaconID = mappingOfRegionNameAndID.get(nameOFWaypoint);
+        receiveID = mappingOfRegionNameAndID.get(nameOFWaypoint);
+        receiveNode = allWaypointData.get(receiveID);
 
+        if(!receiveID.equals(currentLBeaconID)){
 
-        if(passedGroupID!=allWaypointData.get(currentLBeaconID)._groupID
-                || allWaypointData.get(currentLBeaconID)._groupID==0){
+            if(receiveNode._groupID == navigationPath.get(0)._groupID &&
+                    receiveNode._groupID!=0 )
+                currentLBeaconID = navigationPath.get(0)._waypointID;
+            else
+                currentLBeaconID = receiveID;
 
+            pass = true;
+        }
+        else{
+
+            pass = false;
+
+        }
+
+        if(pass){
             synchronized (sync) {
             sync.notify();
             }
         }
+
     }
 
     public void clearEditText(View v){

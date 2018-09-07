@@ -19,6 +19,8 @@ Author:
 --*/
 
 
+import java.util.List;
+
 public class GeoCalulation {
 
     private static final int RADIUS_OF_EARTH = 6371;
@@ -122,5 +124,15 @@ public class GeoCalulation {
 
         //round the value of distance to integer
         return (int) Math.rint(distance);
+    }
+
+    public static int getPathLength(List<Node> navigationPath){
+
+        int length = 0;
+
+        for(int i=0; i<navigationPath.size()-1; i++)
+            length += getDistance(navigationPath.get(i), navigationPath.get(i+1));
+
+        return length;
     }
 }

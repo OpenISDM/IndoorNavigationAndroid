@@ -1,7 +1,6 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
