@@ -16,6 +16,7 @@ public class DeviceParameter {
     private static final String n_value = "n";
     private static final String id = "id";
     private static final String R0 = "R0";
+    private static final String name = "name";
     private static final String parameter = "parameter";
     private static final String install_hight = "install_hight";
     private static HashMap<String, Node> allWaypointData = new HashMap<>();
@@ -41,10 +42,8 @@ public class DeviceParameter {
                 for (Node tmp_node : allWaypointData.values()) {
                     con_dif0.add(tmp_node.getID());
                 }
-                Log.i("JSONtag",String.valueOf(jarray.length()));
                 for (int i = 0; i < jarray.length(); i++) {
                     JSONObject tmp_jobject = jarray.getJSONObject(i);
-                    Log.i("JSONtag",tmp_jobject.getString(this.id));
                     con_dif1.add(tmp_jobject.getString(this.id));
                 }
                 Log.i("JSONtag0",con_dif0.toString());
@@ -53,14 +52,20 @@ public class DeviceParameter {
                 Log.i("JSONtag1",con_dif0.toString());
                 if (!con_dif0.isEmpty()){
                     Log.i("JSONtag2",jarray.toString());
-                    for (String tmp_node: con_dif0){
-                        JSONObject tmp_add_jobject = new JSONObject();
-                        tmp_add_jobject.put(this.id, tmp_node);
-                        tmp_add_jobject.put(this.parameter, -65);
-                        tmp_add_jobject.put(this.R0, -45);
-                        tmp_add_jobject.put(this.n_value, -2.14);
-                        tmp_add_jobject.put(this.install_hight, 1.5);
-                        jarray.put(tmp_add_jobject);
+                    for (String tmp_arraylist: con_dif0){
+                        for (Node tmp_node : allWaypointData.values()) {
+                            if(tmp_node.getID().equals(tmp_arraylist)) {
+                                JSONObject tmp_add_jobject = new JSONObject();
+                                tmp_add_jobject.put(this.id, tmp_arraylist);
+                                tmp_add_jobject.put(this.name, tmp_node.getName());
+                                tmp_add_jobject.put(this.parameter, -65);
+                                tmp_add_jobject.put(this.R0, -45);
+                                tmp_add_jobject.put(this.n_value, -2.14);
+                                tmp_add_jobject.put(this.install_hight, 1.5);
+                                jarray.put(tmp_add_jobject);
+                                break;
+                            }
+                        }
                     }
                     Log.i("JSONtag3",jarray.toString());
                     wf.writejson(jarray.toString());
@@ -69,6 +74,7 @@ public class DeviceParameter {
                 e.printStackTrace();
             }
         }
+//        Change_paramation_format();
     }
     public int get_RSSI_threshold(String s){
         for (int i=0; i < jarray.length(); i ++){
@@ -149,12 +155,38 @@ public class DeviceParameter {
                     tmp_jobject2.put(this.R0,tmp_jobject.getInt(this.R0));
                     tmp_jobject2.put(this.n_value,tmp_jobject.getInt(this.n_value));
                     tmp_jobject2.put(this.install_hight,tmp_jobject.getInt(this.install_hight));
+                    tmp_jobject2.put(this.name,tmp_jobject.getInt(this.name));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        jarray = tmp_jarray;
+        wf.writejson(jarray.toString());
+    }
+    public void Change_paramation_format(){
+        JSONArray tmp_jarray = new JSONArray();
+        try {
+            for (int i=0; i < jarray.length(); i ++){
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                for (Node tmp_nade : allWaypointData.values()) {
+                    if(tmp_nade.getID().equals(tmp_jobject.get(this.id))) {
+                        JSONObject tmp_jobject2 = new JSONObject();
+                        tmp_jobject2.put(this.id, tmp_nade.getID());
+                        tmp_jobject2.put(this.name, tmp_nade.getName());
+                        tmp_jobject2.put(this.parameter, 0);
+                        tmp_jobject2.put(this.R0, tmp_jobject.get(this.R0));
+                        tmp_jobject2.put(this.n_value, tmp_jobject.get(this.n_value));
+                        tmp_jobject2.put(this.install_hight, tmp_jobject.get(this.install_hight));
+                        tmp_jarray.put(tmp_jobject2);
+                        break;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         jarray = tmp_jarray;
         wf.writejson(jarray.toString());

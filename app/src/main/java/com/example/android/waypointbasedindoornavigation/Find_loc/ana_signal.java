@@ -281,7 +281,6 @@ public class ana_signal {
             Log.i("TDN",tmp_path_P.getID()+"\t"+data_list.get(0).getUuid()
                     +"\t"+data_list.get(1).getUuid());
             if (data_list.get(0).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[0] = tmp_path_P;
-
             if (data_list.get(1).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[1] = tmp_path_P;
         }
         try {
@@ -361,9 +360,12 @@ public class ana_signal {
     }
     private double count_real_Rd(String s,double range){
         double r_return = 0;
+//        r_return = Math.sqrt(
+//                (Math.pow(dp.get_install_hight(s),2)
+//                        +Math.pow(range,2)));
         r_return = Math.sqrt(
                 (Math.pow(dp.get_install_hight(s),2)
-                        +Math.pow(range,2)));
+                        +Math.pow(range+dp.get_Paramater(s),2)));
         return r_return;
     }
     private double count_distance(String s,double Rd){

@@ -316,7 +316,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         canvas = new Canvas(mutableBitmap);
         wf.setFile_name("Log"+df.format(Calendar.getInstance().getTime()));
         dp = new DeviceParameter();
-        dp.setupDeviceParameter(this);
 
         // voice engine setup
         tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -1137,7 +1136,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(LBD.Find_Loc(beacon,4));
+                        logBeaconData(LBD.Find_Loc(beacon,3));
                     }
                 }
             }
@@ -1404,7 +1403,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         for(int i = 0; i<path.size(); i++)
             navigationPath_ID_to_Name_Mapping.put(path.get(i)._waypointID,
                     path.get(i)._waypointName);
-
         new DeviceParameter().setupDeviceParameter(this);
 //        Queue<String> tmp_path = new LinkedList<>();
 //        for (int i = 0; i<navigationPath.size(); i++) {
