@@ -1,14 +1,10 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.os.Environment;
-import android.util.JsonReader;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONStringer;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;

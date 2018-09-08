@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         sourceID = currentWaypoint._waypointID;
         sourceRegion = currentWaypoint._regionID;
-
+        sourceName = currentWaypoint._waypointName;
 
         runOnUiThread(new Runnable(){
             @Override
