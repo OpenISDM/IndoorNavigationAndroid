@@ -19,6 +19,8 @@ Author:
 --*/
 
 
+import android.util.Log;
+
 import java.util.List;
 
 public class GeoCalulation {
@@ -78,6 +80,9 @@ public class GeoCalulation {
         // get the difference of two bearings
         int delta = bearingFromBToC - bearingFromAToB;
 
+        Log.i("direction", "Delta A to B "+ bearingFromAToB);
+        Log.i("direction", "Delta B to C"+ bearingFromBToC);
+        Log.i("direction", "Delta "+ delta);
         // Make delta a positive number
         if(delta < 0)
             delta += 360;
