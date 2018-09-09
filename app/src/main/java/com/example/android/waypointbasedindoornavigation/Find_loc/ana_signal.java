@@ -58,11 +58,17 @@ public class ana_signal {
             for (int i = 0; i < data_list.size(); i++)
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
-            float tmp_dif = Math.abs(data_list.get(0).countavg() - data_list.get(1).countavg());
-            Log.i("tmp_count_dif1",  data_list.get(0).getUuid()+data_list.get(0).getrssilist().toString() + " " + String.valueOf(data_list.get(0).countavg()) +
-                    "\t" + data_list.get(1).getUuid() + data_list.get(1).getrssilist().toString() + " " + String.valueOf(data_list.get(1).countavg()) + "\t" + String.valueOf(tmp_dif));
             List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range);
-            if (tmp_count_dif != null) {
+            if (tmp_count_dif != null)
+            if (tmp_count_dif.size() > 2) {
+                float tmp_dif = Math.abs(data_list.get(0).countavg()
+                        - data_list.get(Math.round(tmp_count_dif.get(2))).countavg());
+                Log.i("tmp_count_dif1",  data_list.get(0).getUuid()+
+                        data_list.get(0).getrssilist().toString() + " " +
+                        String.valueOf(data_list.get(0).countavg()) + "\t" +
+                        data_list.get(Math.round(tmp_count_dif.get(2))).getUuid() +
+                        data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " " +
+                        String.valueOf(data_list.get(1).countavg()));
                 if (tmp_dif > tmp_count_dif.get(0) &&
                         data_list.get(0).countavg() > tmp_count_dif.get(1)) {
                     Log.i("def_range", "close " + data_list.get(0).getUuid());
@@ -316,15 +322,20 @@ public class ana_signal {
         Log.i("algo6 tmp_dis_Node[0]", tmp_dis_Node[0].getID());
         List<String> Neighbornodes = tmp_dis_Node[0].getNeighborIDs();
         Log.i("algo6 neig", Neighbornodes.toString());
+        boolean tmp_br = false;
+        int tmp_compare = 99999;
         for (int i= 1; i< data_list.size(); i++) {
             for (String tmp_Neighbornodes : Neighbornodes) {
                 Log.i("algo6 neigpa", tmp_Neighbornodes + "***\t" + data_list.get(i).getUuid());
                 if (tmp_Neighbornodes.equals(data_list.get(i).getUuid())) {
                     tmp_dis_Node[1] = allWaypointData.get(tmp_Neighbornodes);
+                    tmp_compare = i;
+                    tmp_br = true;
                     break;
                 }else
                     tmp_dis_Node[1] = null;
             }
+            if (tmp_br) break;
         }
         try {
             if (data_list.size() > 1) {
@@ -346,7 +357,9 @@ public class ana_signal {
                 Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
                 tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
                 tmp_returen.add((float) (tmp_difference[0]));
+                tmp_returen.add((float) tmp_compare);
 //                0: dif, 1: Threshold
+                Log.i("algo6 return", tmp_returen.toString());
                 return tmp_returen;
             } else {
                 Log.i("algo6TDN1","null error1");

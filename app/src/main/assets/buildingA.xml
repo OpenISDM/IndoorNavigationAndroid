@@ -9,7 +9,7 @@
         <node id='0xfa53bd410xff54f142' name='C05' region='region1'  category='Category1'/>
         <node id='0xfb53bd410xff54f142' name='C06' region='region1'  category='Category1'/>
         <node id='0xcf90b8410x3424f042' name='C07' region='region1' category='Category1'/>
-        <node id='0x2ebab8410x8c2ef042' name='C09' region='region1'  category='Category1'/>
+        <node id='0x2ebab8410x8c2ef042' name='C09' region='region1' category='Category1'/>
         <node id='0xdeceb8410xb833f042' name='C10' region='region1' category='Category1'/>
         <node id='0xfe53bd410xff54f142' name='C11' region='region1' category='Category1'/>
         <node id='0x3ef8b8410x0f3ef042' name='C12' region='region1' category='Category1'/>

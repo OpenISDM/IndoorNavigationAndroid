@@ -1170,8 +1170,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             receiveNode = allWaypointData.get(receivebeacon);
 
 
-            if(!receivebeacon.equals(currentLBeaconID)){
-
+            if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
                 if(receiveNode._groupID == navigationPath.get(0)._groupID &&
                         receiveNode._groupID!=0 )
                     currentLBeaconID = navigationPath.get(0)._waypointID;
