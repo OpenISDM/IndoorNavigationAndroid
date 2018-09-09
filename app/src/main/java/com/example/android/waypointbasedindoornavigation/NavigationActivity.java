@@ -938,6 +938,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         else
                             showPopupWindow_UserMode(MAKETURN_NOTIFIER);
                     }
+
+                    turnNotificationForPopup = null;
+
                 }
                 else{
 
@@ -1006,7 +1009,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         nextTurnMovement.setText("然後抵達目的地");
                     }
 
-
+                    passedGroupID = navigationPath.get(0)._groupID;
                     navigationPath.remove(0);
                 }
 
@@ -2079,15 +2082,27 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         receiveID = mappingOfRegionNameAndID.get(nameOFWaypoint);
         receiveNode = allWaypointData.get(receiveID);
 
-        if(!receiveID.equals(currentLBeaconID)){
+        if(!receiveID.equals(currentLBeaconID) ){
 
             if(receiveNode._groupID == navigationPath.get(0)._groupID &&
-                    receiveNode._groupID!=0 )
-                currentLBeaconID = navigationPath.get(0)._waypointID;
-            else
-                currentLBeaconID = receiveID;
+                    receiveNode._groupID!=0 ){
 
-            pass = true;
+                Log.i("enter", "1");
+                currentLBeaconID = navigationPath.get(0)._waypointID;
+                pass = true;
+            }
+            else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
+
+                pass = false;
+            }
+            else{
+
+                Log.i("enter", "2");
+                currentLBeaconID = receiveID;
+                pass = true;
+            }
+
+
         }
         else{
 
