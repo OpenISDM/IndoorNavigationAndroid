@@ -1172,21 +1172,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
                 if(receiveNode._groupID == navigationPath.get(0)._groupID &&
-                        receiveNode._groupID!=0 )
+                        receiveNode._groupID!=0) {
+                    Log.i("NAP2-1", receiveNode.getName());
                     currentLBeaconID = navigationPath.get(0)._waypointID;
-                else
+                    pass = true;
+                }
+                else {
+                    Log.i("NAP2-2", receiveNode.getName());
                     currentLBeaconID = receivebeacon;
-
-                pass = true;
+                }
             }
             else{
-
                 pass = false;
-
             }
-
             // block the Lbeacon ID the navigator just received
-
             if(pass){
 
                 if(popupWindow != null)
