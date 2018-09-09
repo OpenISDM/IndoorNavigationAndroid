@@ -1171,15 +1171,21 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
             if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
+
                 if(receiveNode._groupID == navigationPath.get(0)._groupID &&
                         receiveNode._groupID!=0) {
                     Log.i("NAP2-1", receiveNode.getName());
                     currentLBeaconID = navigationPath.get(0)._waypointID;
                     pass = true;
                 }
+                else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
+
+                    pass = false;
+                }
                 else {
                     Log.i("NAP2-2", receiveNode.getName());
                     currentLBeaconID = receivebeacon;
+                    pass = true;
                 }
             }
             else{
