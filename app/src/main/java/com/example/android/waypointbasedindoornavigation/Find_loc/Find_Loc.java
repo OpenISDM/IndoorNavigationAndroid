@@ -39,9 +39,9 @@ public class Find_Loc {
                 String.valueOf(beacon.getIdentifiers())
         };
         researchdata.clear();
-        researchdata.add(beacondata[0].concat(beacondata[2]));
-        List<String> data_list = Arrays.asList(beacondata[0],beacondata[3]);
-        if(dp.our_Beacon(beacondata[0])){
+        researchdata.add(beacondata[1].concat(beacondata[2]));
+        List<String> data_list = Arrays.asList((beacondata[1].concat(beacondata[2])),beacondata[3]);
+        if(dp.our_Beacon(beacondata[1].concat(beacondata[2]))){
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
                 if ((endT-startT)>500){
