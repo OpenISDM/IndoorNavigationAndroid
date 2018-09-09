@@ -286,10 +286,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private Find_Loc LBD = new Find_Loc();
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
     private ReadWrite_File wf  = new ReadWrite_File();
-    private DeviceParameter dp = new DeviceParameter();
+    private DeviceParameter dp;
     String receivebeacon;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -316,7 +315,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         mutableBitmap = workingBitmap.copy(Bitmap.Config.ARGB_8888, true);
         canvas = new Canvas(mutableBitmap);
         wf.setFile_name("Log"+df.format(Calendar.getInstance().getTime()));
-        dp.setupDeviceParameter(this);
+        dp = new DeviceParameter();
 
         // voice engine setup
         tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -328,7 +327,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }
         });
-
 
         if(Setting.getModeValue()==USER_MODE){
             waypointIDInput.setVisibility(View.INVISIBLE);
@@ -1131,7 +1129,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @Override
     public void onBeaconServiceConnect() {
-
         //Start scanning for Lbeacon signal
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
@@ -1142,13 +1139,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(LBD.Find_Loc(beacon,4));
+                        logBeaconData(LBD.Find_Loc(beacon,3));
                     }
                 }
             }
 
         });
-
         try {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId",
                     null, null, null));
@@ -1157,7 +1153,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
     }
-
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
@@ -1175,24 +1170,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             receiveNode = allWaypointData.get(receivebeacon);
 
 
-            if(!receivebeacon.equals(currentLBeaconID)){
-
+            if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
                 if(receiveNode._groupID == navigationPath.get(0)._groupID &&
-                        receiveNode._groupID!=0 )
+                        receiveNode._groupID!=0) {
+                    Log.i("NAP2-1", receiveNode.getName());
                     currentLBeaconID = navigationPath.get(0)._waypointID;
-                else
+                    pass = true;
+                }
+                else {
+                    Log.i("NAP2-2", receiveNode.getName());
                     currentLBeaconID = receivebeacon;
-
-                pass = true;
+                }
             }
             else{
-
                 pass = false;
-
             }
-
             // block the Lbeacon ID the navigator just received
-
             if(pass){
 
                 if(popupWindow != null)
@@ -1411,7 +1404,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         for(int i = 0; i<path.size(); i++)
             navigationPath_ID_to_Name_Mapping.put(path.get(i)._waypointID,
                     path.get(i)._waypointName);
-
         new DeviceParameter().setupDeviceParameter(this);
 //        Queue<String> tmp_path = new LinkedList<>();
 //        for (int i = 0; i<navigationPath.size(); i++) {
@@ -1727,13 +1719,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             image.setImageResource(R.drawable.arrived_image);
             tts.speak(YOU_HAVE_ARRIVE, TextToSpeech.QUEUE_ADD, null);
             Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
-            myVibrator.vibrate(2000);
+            myVibrator.vibrate(800);
         }
         else if(instruction== WRONGWAY_NOTIFIER){
             //image.setImageResource(R.drawable.wrongway_image);
             tts.speak(GET_LOST, TextToSpeech.QUEUE_ADD, null);
             //Toast.makeText(this,"重新導航", 500).show();
-            myVibrator.vibrate(1000);
+            myVibrator.vibrate(800);
         }
         else if(instruction== MAKETURN_NOTIFIER){
 
@@ -1924,14 +1916,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
 
 
-
-
-            myVibrator.vibrate(new long[]{50, 300, 50, 300, 50, 300}, -1);
+            myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
         else if(instruction == ARRIVED_NOTIFIER){
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             toast.show();
-            myVibrator.vibrate(2000);
+            myVibrator.vibrate(800);
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
