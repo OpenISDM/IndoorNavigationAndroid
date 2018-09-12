@@ -319,8 +319,23 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private void logBeaconData(Beacon beacon) {
 
 
+        String hexString = beacon.getId1().toString().concat(beacon.getId2().toString());
+
+        hexString = hexString.substring(2, 26).concat(hexString.substring(28, 36));
+
+        String uuid = hexString.toUpperCase();
+
+        uuid = uuid.substring(0, 8) + "-"
+                + uuid.substring(8, 12) + "-"
+                + uuid.substring(12, 16) + "-"
+                + uuid.substring(16, 20) + "-"
+                + uuid.substring(20, 32);
+
+
         // currently received Lbeacon ID
-        currentWaypointID = beacon.getId2().toString().concat(beacon.getId3().toString());
+        currentWaypointID = uuid;
+
+        Log.i("beacon", currentWaypointID);
 
         // use the reveived ID to retrieve the corresponding waypoint information
         currentWaypoint = allWaypointData.get(currentWaypointID);

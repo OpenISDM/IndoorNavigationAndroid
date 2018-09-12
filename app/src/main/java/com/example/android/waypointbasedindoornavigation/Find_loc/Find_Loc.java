@@ -38,10 +38,26 @@ public class Find_Loc {
                 String.valueOf(beacon.getBeaconTypeCode()),
                 String.valueOf(beacon.getIdentifiers())
         };
+
+        String hexString = beacondata[0].concat(beacondata[1]);
+
+        hexString = hexString.substring(2, 26).concat(hexString.substring(28, 36));
+
+        String uuid = hexString.toUpperCase();
+
+        uuid = uuid.substring(0, 8) + "-"
+                + uuid.substring(8, 12) + "-"
+                + uuid.substring(12, 16) + "-"
+                + uuid.substring(16, 20) + "-"
+                + uuid.substring(20, 32);
+
+
         researchdata.clear();
-        researchdata.add(beacondata[1].concat(beacondata[2]));
+
+        researchdata.add(uuid);
         List<String> data_list = Arrays.asList((beacondata[1].concat(beacondata[2])),beacondata[3]);
-        if(dp.our_Beacon(beacondata[1].concat(beacondata[2]))){
+
+        if(dp.our_Beacon(uuid)){
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
                 if ((endT-startT)>500){
