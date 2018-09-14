@@ -52,10 +52,11 @@ public class Find_Loc {
                 + uuid.substring(20, 32);
 
 
+        Log.i("beaconManager", "UUID: "+uuid);
         researchdata.clear();
 
         researchdata.add(uuid);
-        List<String> data_list = Arrays.asList((beacondata[1].concat(beacondata[2])),beacondata[3]);
+        List<String> data_list = Arrays.asList(uuid,beacondata[3]);
 
         if(dp.our_Beacon(uuid)){
                 data_queue.add(data_list);

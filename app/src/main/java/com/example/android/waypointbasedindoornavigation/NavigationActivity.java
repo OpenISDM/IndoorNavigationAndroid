@@ -324,6 +324,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 if(status != TextToSpeech.ERROR) {
                     tts.setLanguage(Locale.CHINESE);
+                    Log.i("tts", "ttsSetUp");
                 }
             }
         });
@@ -1111,7 +1112,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.setForegroundScanPeriod(50);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.removeAllMonitorNotifiers();
-        beaconManager.removeAllRangeNotifiers();
+        //beaconManager.removeAllRangeNotifiers();
 
         // Get the details for all the beacons we encounter.
         region = new Region("justGiveMeEverything", null, null, null);
@@ -1168,6 +1169,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("NAP1",beacon.toString() + receivebeacon);
 
             receiveNode = allWaypointData.get(receivebeacon);
+
+            Log.i("beaconManager", "receiveID: "+ receivebeacon);
 
 
             if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
