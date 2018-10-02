@@ -44,11 +44,16 @@ public class DataParser {
     static List<String> categoryList = new ArrayList<>();
 
     public static File file;
-    public static File path  = new File(Environment.getExternalStorageDirectory() +
-            File.separator +"WPBIN");
+    //public static File path  = new File(Environment.getExternalStorageDirectory() +
+            //File.separator +"WPBIN");
+
 
     //Parse data from Region Graph
     public static RegionGraph getRegionDataFromRegionGraph(Context context) {
+
+        String graphName = Setting.getGraphName();
+        File path = Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS+File.separator+graphName);
 
         file = new File(path, "buildingA.xml");
 
@@ -190,6 +195,10 @@ public class DataParser {
     public static List<NavigationSubgraph> getWaypointDataFromNavigationGraph(Context context, List<String> regionsToBeLoaded) {
 
 
+        String graphName = Setting.getGraphName();
+        File path = Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS+File.separator+graphName);
+
         // create a list of navigation subgraph used as routing data
         List<NavigationSubgraph> routingData = new ArrayList<>();
 
@@ -328,6 +337,10 @@ public class DataParser {
 
     // Parse data from Navigation Graph
     public static HashMap<String, String> waypointNameAndIDMappings(Context context, List<String> regionsToBeLoaded) {
+
+        String graphName = Setting.getGraphName();
+        File path = Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS+File.separator+graphName);
 
         HashMap<String, String> mappingOFIDAndName = new HashMap<>();
 

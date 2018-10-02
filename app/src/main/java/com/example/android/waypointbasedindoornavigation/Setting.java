@@ -26,6 +26,7 @@ public class Setting extends Application{
     static int modeValue = 3;
     static boolean turnOnOK = false;
     static String fileName = "buildingA.xml";
+    static String graphName = null;
 
     public static int getPreferenceValue() {
 
@@ -65,6 +66,17 @@ public class Setting extends Application{
     public static void setFileName(String f){
 
         fileName = f;
+
+    }
+
+    public static String getGraphName(){
+
+        return graphName;
+    }
+
+    public static void setGraphName(String f){
+
+        graphName = f;
 
     }
 

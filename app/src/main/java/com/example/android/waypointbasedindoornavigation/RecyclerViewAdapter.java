@@ -37,14 +37,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     private LayoutInflater inflater;
 
     List<Node> data = Collections.emptyList();
+    List<String> graphs = Collections.emptyList();
+
+    boolean isGraph;
 
     Context context;
 
     public RecyclerViewAdapter(Context context, List<Node> data){
 
         inflater = LayoutInflater.from(context);
+        this.isGraph = false;
         this.data = data;
         this.context = context;
+    }
+
+    public RecyclerViewAdapter(Context context, List<String> graphs, int num){
+
+        inflater = LayoutInflater.from(context);
+        this.isGraph = true;
+        this.graphs = graphs;
+        this.context = context;
+
     }
     @Override
 
@@ -59,6 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
+        if(!isGraph){
         final Node current = data.get(position);
 
         // determine which of location information to be displayed on UI
@@ -80,12 +94,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
                 ((Activity)context).finish();
             }
         });
+        }
+        else{
+
+            final String graphName = graphs.get(position);
+            holder.title.setText(graphName);
+
+            holder.title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Setting.setGraphName(graphName);
+
+                    // send Name, ID and Region of the selected location
+                    //to MainActivity
+                    Intent i = new Intent(context, MainActivity.class);
+                    context.startActivity(i);
+                    ((Activity)context).finish();
+                }
+            });
+
+        }
+
+
+
     }
 
     @Override
     public int getItemCount() {
 
-        return data.size();
+        if(!isGraph)
+            return data.size();
+        else
+            return graphs.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
