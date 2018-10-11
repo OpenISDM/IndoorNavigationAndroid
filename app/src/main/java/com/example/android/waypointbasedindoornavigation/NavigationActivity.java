@@ -1168,15 +1168,27 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
+
+
         if (beacon.size() > 2) {
 
+
+            Log.i("beacon", "beacon 0: "+beacon.get(0));
+
+            Log.i("beacon", "beacon 1: "+beacon.get(1));
+
+            Log.i("beacon", "beacon 2: "+beacon.get(2));
             Node receiveNode;
             Boolean pass = false;
 
             wf.writeFile("NAP1:"+beacon.toString());
             Log.i("NAP1",beacon.toString());
             receivebeacon = null;
-            if(beacon.get(2).equals("close")) receivebeacon = beacon.get(1);
+
+
+            if(beacon.get(2).equals("close")){
+
+            receivebeacon = beacon.get(1);
             Log.i("NAP1",beacon.toString() + receivebeacon);
 
             receiveNode = allWaypointData.get(receivebeacon);
@@ -1235,6 +1247,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     sync.notify();
                 }
             }
+          }
         }
     }
 
@@ -1291,7 +1304,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
         LBD.set_allWaypointData(allWaypointData);
-
+        new DeviceParameter().setupDeviceParameter(this);
 
     }
 
@@ -1430,7 +1443,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         for(int i = 0; i<path.size(); i++)
             navigationPath_ID_to_Name_Mapping.put(path.get(i)._waypointID,
                     path.get(i)._waypointName);
-        new DeviceParameter().setupDeviceParameter(this);
+        //new DeviceParameter().setupDeviceParameter(this);
 //        Queue<String> tmp_path = new LinkedList<>();
 //        for (int i = 0; i<navigationPath.size(); i++) {
 //            tmp_path.offer(navigationPath.get(i).getID());
