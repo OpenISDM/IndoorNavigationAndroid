@@ -11,48 +11,14 @@
     tools:context="com.example.android.waypointbasedindoornavigation.MainActivity">
 
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Starting Point"
-        android:textSize="40dp"
-        android:textColor="@android:color/white"
-        android:paddingTop="40sp"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            android:onClick="searchStartingPoint"/>
-
-        <EditText
-            android:id="@+id/start"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:textSize="30sp"
-            android:ems="10"
-            android:onClick="switchToListView"
-            android:background="@drawable/edittext"
-            android:gravity="center_horizontal"
-            android:hint="choose a starting point"/>
-
-    </LinearLayout>
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Destination"
         android:textSize="40dp"
         android:textColor="@android:color/white"
-        android:paddingTop="40sp"/>
+        android:paddingTop="40sp"
+        android:gravity="center_horizontal"/>
 
     <EditText
         android:id="@+id/destination"
@@ -101,49 +67,49 @@
         android:orientation="horizontal">
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <RadioButton android:id="@+id/p3"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="UserMode"
-                         android:paddingRight="40sp"
-                         android:onClick="onPreferenceButtonClicked"
-                         android:textSize="15dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UserMode"
+                android:paddingRight="40sp"
+                android:onClick="onPreferenceButtonClicked"
+                android:textSize="15dp"/>
 
             <RadioButton android:id="@+id/p4"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="TesterMode"
-                         android:paddingRight="40sp"
-                         android:onClick="onPreferenceButtonClicked"
-                         android:textSize="15dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TesterMode"
+                android:paddingRight="40sp"
+                android:onClick="onPreferenceButtonClicked"
+                android:textSize="15dp"/>
 
 
         </RadioGroup>
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
             <RadioButton android:id="@+id/p1"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="Elevator"
-                         android:paddingRight="40sp"
-                         android:onClick="onPreferenceButtonClicked"
-                         android:textSize="15dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Elevator"
+                android:paddingRight="40sp"
+                android:onClick="onPreferenceButtonClicked"
+                android:textSize="15dp"/>
 
             <RadioButton android:id="@+id/p2"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:text="Stair"
-                         android:paddingRight="40sp"
-                         android:onClick="onPreferenceButtonClicked"
-                         android:textSize="15dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stair"
+                android:paddingRight="40sp"
+                android:onClick="onPreferenceButtonClicked"
+                android:textSize="15dp"/>
 
 
         </RadioGroup>
@@ -153,6 +119,15 @@
 
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/download_navigation_graoh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startDownload"
+        android:text="Download Navigation Graph"
+        android:textSize="20dp"/>
+
 
 
 

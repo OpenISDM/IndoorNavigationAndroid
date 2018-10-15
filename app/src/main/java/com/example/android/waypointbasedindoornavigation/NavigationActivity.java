@@ -165,8 +165,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     String sourceID, destinationID, sourceRegion, destinationRegion;
     String currentLocationName;
 
+    boolean isFirstBeacon = true;
+
     Node startNode;
     Node endNode;
+    Node tmpendNode;
     Node lastNode;
 
     // integer to record how many waypoints have been traveled
@@ -343,19 +346,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //including IDs and Regions of source and destination
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            sourceID = bundle.getString("sourceID");
             destinationID = bundle.getString("destinationID");
-            sourceRegion = bundle.getString("sourceRegion");
             destinationRegion = bundle.getString("destinationRegion");
         }
 
 
-
-        passedRegionID = sourceRegion;
         Log.i("abc", "Initial REgion ID:"+passedRegionID);
 
         //load navigation graph
-        loadNavigationGraph();
+        //loadNavigationGraph();
+
+        // load region data from region graph
+        regionGraph = DataParser.getRegionDataFromRegionGraph(this);
+        mappingOfRegionNameAndID = DataParser.waypointNameAndIDMappings(this,
+                regionGraph.getAllRegionNames());
+
+        navigationPath.add(new Node("empty", "empty", "empty", "empty"));
 
         //load all waypoint data for precise positioning
         loadAllWaypointData();
@@ -364,10 +370,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManagerSetup();
 
         //start navigation
-        navigationPath = startNavigation();
+        //navigationPath = startNavigation();
 
         //set text of destination
-        destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
+        //destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
 
 
         // create a thread to handle the Lbeacon signal
@@ -409,6 +415,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             public void handleMessage(Message msg) {
                 currentLocationName = (String) msg.obj;
                 currentLocationReminder.setText("目前位置 : " + currentLocationName);
+
+                //destinationReminder.setText("目的地 : " + navigationPath.get(navigationPath.size()-1)._waypointName);
             }
         };
 
@@ -953,8 +961,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
                             (lastNode, navigationPath.get(0), navigationPath.get(1));
 
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
                     howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
 
@@ -1010,6 +1016,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         nextTurnMovement.setText("然後抵達目的地");
                     }
 
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+
                     passedGroupID = navigationPath.get(0)._groupID;
                     navigationPath.remove(0);
                 }
@@ -1021,11 +1029,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //the waypoint is removed from the top of the navigationPath
 
         Log.i("abc", "RegionID0:" + navigationPath.get(0)._regionID);
+
+
+
         if(!passedRegionID.equals(navigationPath.get(0)._regionID))
             regionIndex++;
         passedRegionID = navigationPath.get(0)._regionID;
         passedGroupID = navigationPath.get(0)._groupID;
         lastNode = navigationPath.get(0);
+
 
         if(!turnDirection.equals(WRONG))
             navigationPath.remove(0);
@@ -1157,71 +1169,89 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
+
+
         if (beacon.size() > 2) {
 
+
+            Log.i("beacon", "beacon 0: "+beacon.get(0));
+
+            Log.i("beacon", "beacon 1: "+beacon.get(1));
+
+            Log.i("beacon", "beacon 2: "+beacon.get(2));
             Node receiveNode;
             Boolean pass = false;
 
             wf.writeFile("NAP1:"+beacon.toString());
             Log.i("NAP1",beacon.toString());
             receivebeacon = null;
-            if(beacon.get(2).equals("close")) receivebeacon = beacon.get(1);
-            Log.i("NAP1",beacon.toString() + receivebeacon);
 
-            receiveNode = allWaypointData.get(receivebeacon);
-            Log.i("beaconManager", "receiveID: "+ receivebeacon);
 
-            if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
+            if(beacon.get(2).equals("close"))  receivebeacon = beacon.get(3);
+                Log.i("NAP1",beacon.toString() + receivebeacon);
 
-                if(receiveNode._groupID == navigationPath.get(0)._groupID &&
-                        receiveNode._groupID!=0) {
-                    Log.i("NAP2-1", receiveNode.getName());
-                    currentLBeaconID = navigationPath.get(0)._waypointID;
-                    pass = true;
+                receiveNode = allWaypointData.get(receivebeacon);
+
+                Log.i("beaconManager", "receiveID: "+ receivebeacon);
+
+                if(isFirstBeacon && receiveNode != null){
+
+                    sourceID = receiveNode._waypointID;
+                    sourceRegion = receiveNode._regionID;
+                    passedRegionID = sourceRegion;
+                    loadNavigationGraph();
+                    navigationPath = startNavigation();
+                    progressBar.setMax(navigationPath.size());
+                    isFirstBeacon = false;
+
                 }
-                else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
 
+
+                if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
+
+                    if(receiveNode._groupID == navigationPath.get(0)._groupID &&
+                            receiveNode._groupID!=0) {
+                        Log.i("NAP2-1", receiveNode.getName());
+                        currentLBeaconID = navigationPath.get(0)._waypointID;
+                        pass = true;
+                    }
+                    else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
+
+                        pass = false;
+                    }
+                    else {
+                        Log.i("NAP2-2", receiveNode.getName());
+                        currentLBeaconID = receivebeacon;
+                        pass = true;
+                    }
+                }
+                else{
                     pass = false;
                 }
-                else {
-                    Log.i("NAP2-2", receiveNode.getName());
-                    currentLBeaconID = receivebeacon;
-                    pass = true;
-                }
-            }
-            else{
-                pass = false;
-            }
-            // block the Lbeacon ID the navigator just received
-            if(pass){
+                // block the Lbeacon ID the navigator just received
+                if(pass){
 
-                if(popupWindow != null)
-                    popupWindow.dismiss();
+                    if(popupWindow != null)
+                        popupWindow.dismiss();
 
-                whichWaypointOnProgressBar += 1;
+                    whichWaypointOnProgressBar += 1;
 
-                // Input waypoint name for debug mode
-                //String nameOFWaypoint = waypointIDInput.getText().toString();
+                    // Input waypoint name for debug mode
+                    //String nameOFWaypoint = waypointIDInput.getText().toString();
 
-                //currentLBeaconID = receivebeacon;
+                    //currentLBeaconID = receivebeacon;
 
 //                currentLBeaconID = CConvX.concat(CConvY);
-                synchronized (sync) {
-                    sync.notify();
+                    synchronized (sync) {
+                        sync.notify();
+                    }
                 }
             }
-        }
     }
 
 
     // load waypoint data
     public void loadNavigationGraph(){
-
-        // load region data from region graph
-        regionGraph = DataParser.getRegionDataFromRegionGraph(this);
-
-        mappingOfRegionNameAndID = DataParser.waypointNameAndIDMappings(this,
-                regionGraph.getAllRegionNames());
 
         // regionPath for storing Region objects represent the regions
         //that the user passes by from source to destination
@@ -1272,7 +1302,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
         LBD.set_allWaypointData(allWaypointData);
-
+        new DeviceParameter().setupDeviceParameter(this);
 
     }
 
@@ -1280,6 +1310,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
+        List<Node> tmppath = new ArrayList<>();
 
         int startNodeType = startNode._nodeType;
 
@@ -1287,12 +1318,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         int connectPointID;
 
         // navigation in the same region
-        if(navigationGraph.size()==1)
+        if(navigationGraph.size()==1) {
+
+            path = computeDijkstraShortestPath(startNode, endNode);
+
+            for(int i = 0 ; i < allWaypointData.size();i++) {
+                if (endNode._groupID == allWaypointData.get(i)._groupID && endNode._groupID != 0){
+                    tmpendNode = allWaypointData.get(i);
+                    tmppath = computeDijkstraShortestPath(startNode, tmpendNode);
+                        if(tmppath.size() < path.size())
+                           path = tmppath;
+                }
+            }
+
 
             // preform typical dijkstra's algorithm with two given Node objects
             //navigationPath = computeDijkstraShortestPath(startNode, endNode);
-            path = computeDijkstraShortestPath(startNode, endNode);
 
+
+        }
             // navigation between several regions
         else{
 
@@ -1360,7 +1404,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             }
 
                             destinationOfARegion = computePathToTraversePoint(
-                            navigationGraph.get(i).nodesInSubgraph.get(sourceID),false, i+1);
+                                    navigationGraph.get(i).nodesInSubgraph.get(sourceID),false, i+1);
 
                             // get the connectPointID of the transfer node
                             connectPointID = destinationOfARegion._connectPointID;
@@ -1411,7 +1455,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         for(int i = 0; i<path.size(); i++)
             navigationPath_ID_to_Name_Mapping.put(path.get(i)._waypointID,
                     path.get(i)._waypointName);
-        new DeviceParameter().setupDeviceParameter(this);
+        //new DeviceParameter().setupDeviceParameter(this);
 //        Queue<String> tmp_path = new LinkedList<>();
 //        for (int i = 0; i<navigationPath.size(); i++) {
 //            tmp_path.offer(navigationPath.get(i).getID());
@@ -1657,8 +1701,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(instruction == MAKETURN_NOTIFIER  || instruction == ARRIVED_NOTIFIER){
 
                     if(!thresholdInput.getText().toString().isEmpty())
-                    dp.Direct_change_paramation(currentLBeaconID,
-                            Integer.parseInt(thresholdInput.getText().toString()));
+                        dp.Direct_change_paramation(currentLBeaconID,
+                                Integer.parseInt(thresholdInput.getText().toString()));
                 }
 
                 onclickevent(v,instruction);
@@ -1969,6 +2013,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }
                 }
 
+                Log.i("enter", "syncGo");
+
                 // if the received ID matches the ID of the next waypoint in the navigation path
                 if (navigationPath.get(0)._waypointID.equals(currentLBeaconID)) {
 
@@ -2087,6 +2133,24 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         receiveID = mappingOfRegionNameAndID.get(nameOFWaypoint);
         receiveNode = allWaypointData.get(receiveID);
 
+        Log.i("receiveInfo", "ID: "+receiveNode._waypointID+" Region: "+receiveNode._regionID);
+
+        if(isFirstBeacon){
+
+            sourceID = receiveNode._waypointID;
+            sourceRegion = receiveNode._regionID;
+            passedRegionID = sourceRegion;
+            loadNavigationGraph();
+            navigationPath = startNavigation();
+            progressBar.setMax(navigationPath.size());
+            isFirstBeacon = false;
+
+
+
+        }
+
+        Log.i("receiveInfo", "navigationPath Size "+navigationPath.size());
+
         if(!receiveID.equals(currentLBeaconID) ){
 
             if(receiveNode._groupID == navigationPath.get(0)._groupID &&
@@ -2097,12 +2161,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 pass = true;
             }
             else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
-
+                Log.i("enter", "2");
                 pass = false;
             }
             else{
 
-                Log.i("enter", "2");
+                Log.i("enter", "3");
                 currentLBeaconID = receiveID;
                 pass = true;
             }
@@ -2111,13 +2175,17 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
         else{
 
+            Log.i("enter", "4");
             pass = false;
 
         }
 
         if(pass){
             synchronized (sync) {
-            sync.notify();
+
+                Log.i("enter", "sync");
+                sync.notify();
+
             }
         }
 
