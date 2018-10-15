@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
 
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager.setForegroundScanPeriod(200);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.removeAllMonitorNotifiers();
-        beaconManager.removeAllRangeNotifiers();
+        //beaconManager.removeAllRangeNotifiers();
 
         // Get the details for all the beacons we encounter.
         region = new org.altbeacon.beacon.Region("justGiveMeEverything",
@@ -281,13 +283,15 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         Log.i("beaconManager","onDestroy called");
         super.onDestroy();
 
-        if(beaconManager != null)
+        if(beaconManager != null) {
             beaconManager.unbind(this);
+            beaconManager.removeAllRangeNotifiers();
+        }
     }
 
     @Override
     public void onBeaconServiceConnect() {
-
+        Log.i("beaconManager", "OnBeaconServiceConnect");
         //Start scanning for Lbeacon signal
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
@@ -322,6 +326,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         // currently received Lbeacon ID
         currentWaypointID = beacon.getId2().toString().concat(beacon.getId3().toString());
 
+        Log.i("beaconManager", currentWaypointID);
         // use the reveived ID to retrieve the corresponding waypoint information
         currentWaypoint = allWaypointData.get(currentWaypointID);
 
