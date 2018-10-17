@@ -960,7 +960,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
                             (lastNode, navigationPath.get(0), navigationPath.get(1));
-
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
                     howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
 
@@ -1016,7 +1016,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         nextTurnMovement.setText("然後抵達目的地");
                     }
 
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    //showHintAtWaypoint(MAKETURN_NOTIFIER);
 
                     passedGroupID = navigationPath.get(0)._groupID;
                     navigationPath.remove(0);
@@ -1253,6 +1253,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // load waypoint data
     public void loadNavigationGraph(){
 
+        regionGraph = DataParser.getRegionDataFromRegionGraph(this);
+        mappingOfRegionNameAndID = DataParser.waypointNameAndIDMappings(this,
+                regionGraph.getAllRegionNames());
         // regionPath for storing Region objects represent the regions
         //that the user passes by from source to destination
         regionPath = regionGraph.getRegionPath(sourceRegion, destinationRegion);
@@ -1940,7 +1943,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
         Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 25);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
 

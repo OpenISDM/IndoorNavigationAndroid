@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Destination"
+        android:text="目的地"
         android:textSize="40dp"
         android:textColor="@android:color/white"
         android:paddingTop="40sp"
@@ -29,7 +29,7 @@
         android:onClick="switchToListView"
         android:background="@drawable/edittext"
         android:gravity="center_horizontal"
-        android:hint="choose a destination"/>
+        android:hint="請選擇目的地"/>
 
     <!--<Button
         android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:background="#1976D2"
             android:onClick="startNavigation"
-            android:text="Start"
+            android:text="開始導航"
             android:textColor="@android:color/white"
             android:textSize="50dp"
             android:layout_centerVertical="true"
@@ -58,7 +58,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Preference Setting"
+        android:text="偏好設定"
         android:textSize="20dp"/>
 
     <LinearLayout
@@ -98,7 +98,7 @@
             <RadioButton android:id="@+id/p1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Elevator"
+                android:text="電梯"
                 android:paddingRight="40sp"
                 android:onClick="onPreferenceButtonClicked"
                 android:textSize="15dp"/>
@@ -106,7 +106,7 @@
             <RadioButton android:id="@+id/p2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Stair"
+                android:text="樓梯"
                 android:paddingRight="40sp"
                 android:onClick="onPreferenceButtonClicked"
                 android:textSize="15dp"/>
@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="startDownload"
-        android:text="Download Navigation Graph"
+        android:text="下載導航地圖"
         android:textSize="20dp"/>
 
 

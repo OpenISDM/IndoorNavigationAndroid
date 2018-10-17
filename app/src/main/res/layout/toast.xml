@@ -8,8 +8,8 @@
     android:background="@android:color/white">
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="325dp"
+        android:layout_height="325dp"
         android:id="@+id/toast_image"
         />
 
