@@ -89,33 +89,16 @@ public class ana_signal {
                 }
             }else {
                 int tmp_dif2 = Math.round(data_list.get(0).countavg());
-                if (tmp_dif2 > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
-//                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-//                        dp.get_Paramater(data_list.get(0).getUuid()));
                     location_range.add("close");
                     location_range.add(data_list.get(0).getUuid());
-                }
-                else {
-                    Log.i("def_range", "near " + data_list.get(0).getUuid());
-                    location_range.add("near");
-                    location_range.add(data_list.get(0).getUuid());
-                }
             }
         }
-        else {
+        else if(data_list.size() == 1){
             int tmp_dif = Math.round(data_list.get(0).countavg());
-            if (tmp_dif > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
-//                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
-//                        dp.get_Paramater(data_list.get(0).getUuid()));
                 location_range.add("close");
                 location_range.add(data_list.get(0).getUuid());
-            }
-            else {
-                Log.i("def_range", "near " + data_list.get(0).getUuid());
-                location_range.add("near");
-                location_range.add(data_list.get(0).getUuid());
-            }
         }
+
         List<Float> weight_list = weight_type(weight_type);
         weight_queue.add(new siganl_data_type(
                 data_list.get(0).getUuid(), Math.round(data_list.get(0).countavg())));
