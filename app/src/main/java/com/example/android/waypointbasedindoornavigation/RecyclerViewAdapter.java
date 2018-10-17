@@ -63,7 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
         // determine which of location information to be displayed on UI
         holder.title.setText(current.getName());
-        holder.region.setText(current.get_regionID());
+        //holder.region.setText(current.get_regionID());
 
         // an onclick listener for location names in ListViewActivity
         holder.title.setOnClickListener(new View.OnClickListener() {

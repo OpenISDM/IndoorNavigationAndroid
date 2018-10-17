@@ -20,7 +20,7 @@
         android:paddingTop="40sp"
         android:gravity="center_horizontal"/>
 
-    <EditText
+    <Button
         android:id="@+id/destination"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -30,6 +30,19 @@
         android:background="@drawable/edittext"
         android:gravity="center_horizontal"
         android:hint="請選擇目的地"/>
+
+    <!--
+        <EditText
+            android:id="@+id/destination"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:textSize="30sp"
+            android:ems="10"
+            android:onClick="switchToListView"
+            android:background="@drawable/edittext"
+            android:gravity="center_horizontal"
+            android:hint="請選擇目的地"/>
+    -->
 
     <!--<Button
         android:layout_width="wrap_content"
@@ -124,6 +137,7 @@
         android:id="@+id/download_navigation_graoh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:onClick="startDownload"
         android:text="下載導航地圖"
         android:textSize="20dp"/>

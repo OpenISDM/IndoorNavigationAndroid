@@ -111,6 +111,12 @@ public class ana_signal {
         List<String> tmp_return = new ArrayList<>();
         tmp_return.add(count_data_weight.get(0).getUuid());
         tmp_return.addAll(location_range);
+        for(int i = 0 ; i < data_list.size(); i++){
+            Log.i("xxx AvgRssiMonitor", "UUID" + data_list.get(i).getUuid());
+            Log.i("xxx AvgRssiMonitor", "RSSI" + data_list.get(i).getrssilist());
+            Log.i("xxx AvgRssiMonitor", "AvgRSSI" + data_list.get(i).countavg());
+        }
+
         return tmp_return;
     }
 //    -------------------------------------------------------------------------------------

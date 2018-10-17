@@ -297,6 +297,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        setTitle("台大雲林分院室內導航系統");
 
         // find UI objects by IDs
         firstMovement = (TextView) findViewById(R.id.instruction1);
@@ -395,6 +396,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if(navigationPath.get(0)._groupID==navigationPath.get(navigationPath.size()-1)._groupID
                         && navigationPath.get(0)._groupID!=0)
                     turnDirection = ARRIVED;
+
 
                 // distance to the next waypoint
                 int distance = 0;
@@ -1195,7 +1197,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Log.i("beaconManager", "receiveID: "+ receivebeacon);
 
                 if(isFirstBeacon && receiveNode != null){
-
                     sourceID = receiveNode._waypointID;
                     sourceRegion = receiveNode._regionID;
                     passedRegionID = sourceRegion;
@@ -1313,7 +1314,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-        //List<Node> tmppath = new ArrayList<>();
+        List<Node> tmppath = new ArrayList<>();
 
         int startNodeType = startNode._nodeType;
 
@@ -2128,8 +2129,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         Log.i("receiveInfo", "ID: "+receiveNode._waypointID+" Region: "+receiveNode._regionID);
 
-        if(isFirstBeacon){
-
+        if(isFirstBeacon && receiveNode!= null){
             sourceID = receiveNode._waypointID;
             sourceRegion = receiveNode._regionID;
             passedRegionID = sourceRegion;
@@ -2137,9 +2137,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             navigationPath = startNavigation();
             progressBar.setMax(navigationPath.size());
             isFirstBeacon = false;
-
-
-
         }
 
         Log.i("receiveInfo", "navigationPath Size "+navigationPath.size());

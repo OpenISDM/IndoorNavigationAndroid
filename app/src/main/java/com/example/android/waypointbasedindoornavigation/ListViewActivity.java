@@ -56,6 +56,7 @@ public class ListViewActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listview);
+        setTitle("台大雲林分院室內導航系統");
 
         //Find UI objects by IDs
         spinner = (Spinner) findViewById(R.id.spinner);

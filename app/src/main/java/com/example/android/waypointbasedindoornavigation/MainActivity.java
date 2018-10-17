@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Two search bars, one for source and one for destination
-    EditText searchBarForDestination;
+    Button searchBarForDestination;
 
     Button selectGraph;
 
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("台大雲林分院室內導航系統");
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
         //Get the position of popupwindow (center of phone screen)
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Find UI objects by ID
-        searchBarForDestination = (EditText) findViewById(R.id.destination);
+        searchBarForDestination = (Button) findViewById(R.id.destination);
 
 
         //Decide which search bar to be set value
