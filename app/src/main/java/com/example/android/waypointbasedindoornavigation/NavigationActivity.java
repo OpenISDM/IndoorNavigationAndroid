@@ -1310,7 +1310,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-        List<Node> tmppath = new ArrayList<>();
+        //List<Node> tmppath = new ArrayList<>();
 
         int startNodeType = startNode._nodeType;
 
@@ -1321,16 +1321,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if(navigationGraph.size()==1) {
 
             path = computeDijkstraShortestPath(startNode, endNode);
-
-            for(int i = 0 ; i < allWaypointData.size();i++) {
-                if (endNode._groupID == allWaypointData.get(i)._groupID && endNode._groupID != 0){
-                    tmpendNode = allWaypointData.get(i);
-                    tmppath = computeDijkstraShortestPath(startNode, tmpendNode);
-                        if(tmppath.size() < path.size())
-                           path = tmppath;
-                }
-            }
-
 
             // preform typical dijkstra's algorithm with two given Node objects
             //navigationPath = computeDijkstraShortestPath(startNode, endNode);
