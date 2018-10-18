@@ -87,6 +87,7 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.android.waypointbasedindoornavigation.R.id.beginning;
 import static com.example.android.waypointbasedindoornavigation.R.id.imageView;
 import static com.example.android.waypointbasedindoornavigation.Setting.getPreferenceValue;
 
@@ -168,7 +169,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     String currentLocationName;
 
     boolean isFirstBeacon = true;
-
+    boolean isFirstCount = true;
     Node startNode;
     Node endNode;
     Node tmpendNode;
@@ -301,7 +302,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         setTitle("台大雲林分院室內導航系統");
-
         // find UI objects by IDs
         firstMovement = (TextView) findViewById(R.id.instruction1);
         howFarToMove = (TextView) findViewById(R.id.instruction2);
@@ -367,7 +367,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 regionGraph.getAllRegionNames());
 
         navigationPath.add(new Node("empty", "empty", "empty", "empty"));
-
         //load all waypoint data for precise positioning
         loadAllWaypointData();
 
@@ -1169,7 +1168,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons,Region region) {
-                Log.i("beacon","Beacon Size:"+beacons.size());
+                Log.i("beacon","Beacono Size:"+beacons.size());
                 Log.i("beaconManager","beaconRanging");
                 if (beacons.size() > 0) {
                     Iterator<Beacon> beaconIterator = beacons.iterator();
@@ -1217,20 +1216,23 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 Log.i("beaconManager", "receiveID: "+ receivebeacon);
 
+                Log.i("xxx_isFirstBeacon", "isFirstBeacon = " + isFirstBeacon);
                 if(isFirstBeacon && receiveNode != null){
+                    isFirstBeacon = false;
                     sourceID = receiveNode._waypointID;
                     sourceRegion = receiveNode._regionID;
                     passedRegionID = sourceRegion;
                     loadNavigationGraph();
                     navigationPath = startNavigation();
                     progressBar.setMax(navigationPath.size());
-                    isFirstBeacon = false;
-
+                    Log.i("xxx_First","xxx_firest executed");
                 }
 
 
                 if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
-
+                    Log.i("xxx_receivebeacon","receivebeacon =" + receivebeacon);
+                    Log.i("xxx_receiveNode","receiveNode = " + receiveNode._waypointName);
+                   // Log.i("xxx_navigationPath","navigationPath.get(0)ID = " + navigationPath.get(0)._waypointName);
                     if(receiveNode._groupID == navigationPath.get(0)._groupID &&
                             receiveNode._groupID!=0) {
                         Log.i("NAP2-1", receiveNode.getName());
@@ -1611,6 +1613,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             path.add(node);
         }
 
+
+
         // reverse path to get correct order
         Collections.reverse(path);
         return path;
@@ -1790,8 +1794,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         final Button popupButton = (Button) customView.findViewById(R.id.popupButton_user);
 
         if(instruction== ARRIVED_NOTIFIER){
-
-            image.setImageResource(R.drawable.arrived_image);
+           image.setImageResource(R.drawable.arrived_image);
             tts.speak(YOU_HAVE_ARRIVE, TextToSpeech.QUEUE_ADD, null);
             Toast.makeText(this,YOU_HAVE_ARRIVE, 500).show();
             myVibrator.vibrate(800);
@@ -1999,6 +2002,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
         else if(instruction == ARRIVED_NOTIFIER){
+            isFirstBeacon = true;
+            beaconManager.unbind(this);
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             initToast(toast);
             myVibrator.vibrate(800);
@@ -2175,6 +2180,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             navigationPath = startNavigation();
             progressBar.setMax(navigationPath.size());
             isFirstBeacon = false;
+            Log.i("xxx_isFistHand","手動輸入被改成false");
+
         }
 
         Log.i("receiveInfo", "navigationPath Size "+navigationPath.size());

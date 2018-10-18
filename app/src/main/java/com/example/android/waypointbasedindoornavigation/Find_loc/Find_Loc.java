@@ -44,7 +44,7 @@ public class Find_Loc {
         if(dp.our_Beacon(beacondata[1].concat(beacondata[2]))){
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
-                if ((endT-startT)>500){
+                if ((endT-startT)>1000){
                     startT = System.currentTimeMillis();
                     researchdata.addAll(as.ana_signal(data_queue,algo_num,weight_type, remind_range));
 //                    wf.writeFile("LBD:"+data_queue.toString() +"\t"
