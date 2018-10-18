@@ -124,6 +124,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:onClick="exitProgram"
+            android:text="離開"
+            android:textSize="20sp"
+            android:visibility="visible" />
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

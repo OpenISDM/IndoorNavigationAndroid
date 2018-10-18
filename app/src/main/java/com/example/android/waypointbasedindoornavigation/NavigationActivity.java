@@ -84,6 +84,8 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.example.android.waypointbasedindoornavigation.R.id.imageView;
 import static com.example.android.waypointbasedindoornavigation.Setting.getPreferenceValue;
@@ -127,7 +129,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String THEN_TAKE_ELEVATOR = "然後搭電梯";
     private static final String THEN_WALK_UP_STAIR = "然後走樓梯";
     private static final String WAIT_FOR_ELEVATOR = "電梯中請稍候";
-    private static final String WALKING_UP_STAIR = "爬樓梯中";
+    private static final String WALKING_UP_STAIR = "爬樓梯";
 
 
 
@@ -283,6 +285,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // variables created for demo purpose
     EditText waypointIDInput;
     Button waypointIDInputButton;
+    Button exitButton;
     int whichWaypointOnProgressBar = 0;
 
     // Find_loc part
@@ -309,6 +312,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         positionOfPopup = (LinearLayout) findViewById(R.id.navigationLayout);
         waypointIDInput = (EditText) findViewById(R.id.inputID);
         waypointIDInputButton = (Button) findViewById(R.id.inputButton);
+        exitButton = (Button) findViewById(R.id.exitButton);
         //drawPanel = (ImageView) findViewById(R.id.drawpanel);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressNumber = (TextView) findViewById(R.id.progressNumber);
@@ -515,7 +519,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
                             nextTurnMovement.setText(THEN_TURN_LEFT);*/
-                imageTurnIndicator.setImageResource(R.drawable.left_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.straight_left);
 
                 if(turnNotificationForPopup !=null){
                     if(Setting.getPreferenceValue()==4)
@@ -566,7 +570,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         else
                             nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);*/
 
-                imageTurnIndicator.setImageResource(R.drawable.frontleft_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.left_up);
                 if(turnNotificationForPopup !=null){
                     if(Setting.getPreferenceValue()==4)
                         showPopupWindow(MAKETURN_NOTIFIER);
@@ -615,7 +619,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         else
                             nextTurnMovement.setText(THEN_TURN_REAR_LEFT);*/
 
-                imageTurnIndicator.setImageResource(R.drawable.rearleft_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.left_down);
                 if(turnNotificationForPopup !=null){
                     if(Setting.getPreferenceValue()==4)
                         showPopupWindow(MAKETURN_NOTIFIER);
@@ -664,7 +668,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nextTurnMovement.setText(THEN_WALK_UP_STAIR);
                         else
                             nextTurnMovement.setText(THEN_TURN_RIGHT);*/
-                imageTurnIndicator.setImageResource(R.drawable.right_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.straight_right);
                 if(turnNotificationForPopup !=null){
                     if(Setting.getPreferenceValue()==4)
                         showPopupWindow(MAKETURN_NOTIFIER);
@@ -713,7 +717,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         else
                             nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);*/
 
-                imageTurnIndicator.setImageResource(R.drawable.frontright_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.right_up);
                 if(turnNotificationForPopup !=null){
 
                     if(Setting.getPreferenceValue()==4)
@@ -764,7 +768,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         else
                             nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);*/
 
-                imageTurnIndicator.setImageResource(R.drawable.rearright_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.right_down);
                 if(turnNotificationForPopup !=null){
                     if(Setting.getPreferenceValue()==4)
                         showPopupWindow(MAKETURN_NOTIFIER);
@@ -831,7 +835,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 nextTurnMovement.setText(THEN_GO_STRAIGHT);
                         }*/
 
-                imageTurnIndicator.setImageResource(R.drawable.up_arrow);
+                imageTurnIndicator.setImageResource(R.drawable.up_now);
                 if(turnNotificationForPopup !=null){
                     if(Setting.getPreferenceValue()==4)
                         showPopupWindow(MAKETURN_NOTIFIER);
@@ -848,7 +852,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case STAIR:
                 turnNotificationForPopup = STAIR;
-                firstMovement.setText(WALKING_UP_STAIR);
+                switch(navigationPath.get(2)._elevation) {
+                    case 0:
+                        firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                        break;
+                    case 1:
+                        firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                        break;
+                    case 2:
+                        firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                        break;
+                    case 3:
+                        firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                        break;
+                }
                 howFarToMove.setText("");
                 nextTurnMovement.setText("");
                 imageTurnIndicator.setImageResource(R.drawable.stair);
@@ -975,31 +992,31 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                             case RIGHT:
                                 nextTurnMovement.setText(THEN_TURN_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.right_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.straight_right);
                                 break;
                             case LEFT:
                                 nextTurnMovement.setText(THEN_TURN_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.left_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.straight_left);
                                 break;
                             case FRONT_RIGHT:
                                 nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.frontright_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.right_up);
                                 break;
                             case FRONT_LEFT:
                                 nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.frontleft_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.left_up);
                                 break;
                             case REAR_RIGHT:
                                 nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.rearright_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.right_down);
                                 break;
                             case REAR_LEFT:
                                 nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.rearleft_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.left_down);
                                 break;
                             case FRONT:
                                 nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.up_arrow);
+                                imageTurnIndicator.setImageResource(R.drawable.up_now);
                                 break;
                             case ELEVATOR:
                                 nextTurnMovement.setText(THEN_TAKE_ELEVATOR);
@@ -1053,12 +1070,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if(transferPointType == ELEVATOR_WAYPOINT){
 
             switch(elevation){
-
+                //修改TAKE_TAKE_ELEVATOR 成 THEN_WALK_UP_STAIR
                 case 0:
-                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toBasement);
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR+toBasement);
                     break;
                 case 1:
-                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toFirstFloor);
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR+toFirstFloor);
                     break;
                 case 2:
                     nextTurnMovement.setText(THEN_TAKE_ELEVATOR+toSecondFloor);
@@ -1780,31 +1797,31 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 case RIGHT:
                     turnDirection = PLEASE_TURN_RIGHT;
-                    image.setImageResource(R.drawable.right_arrow);
+                    image.setImageResource(R.drawable.straight_right);
                     break;
                 case LEFT:
                     turnDirection = PLEASE_TURN_LEFT;
-                    image.setImageResource(R.drawable.left_arrow);
+                    image.setImageResource(R.drawable.straight_left);
                     break;
                 case FRONT_RIGHT:
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                    image.setImageResource(R.drawable.frontright_arrow);
+                    image.setImageResource(R.drawable.right_up);
                     break;
                 case FRONT_LEFT:
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
-                    image.setImageResource(R.drawable.frontleft_arrow);
+                    image.setImageResource(R.drawable.left_up);
                     break;
                 case REAR_RIGHT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.rearright_arrow);
+                    image.setImageResource(R.drawable.right_down);
                     break;
                 case REAR_LEFT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.rearleft_arrow);
+                    image.setImageResource(R.drawable.left_down);
                     break;
                 case FRONT:
                     turnDirection = PLEASE_GO_STRAIGHT;
-                    image.setImageResource(R.drawable.up_arrow);
+                    image.setImageResource(R.drawable.up_now);
                     break;
                 case ELEVATOR:
                     turnDirection = PLEASE_TAKE_ELEVATOR;
@@ -1901,31 +1918,31 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 case RIGHT:
                     turnDirection = PLEASE_TURN_RIGHT;
-                    image.setImageResource(R.drawable.right_arrow);
+                    image.setImageResource(R.drawable.right_now);
                     break;
                 case LEFT:
                     turnDirection = PLEASE_TURN_LEFT;
-                    image.setImageResource(R.drawable.left_arrow);
+                    image.setImageResource(R.drawable.left_now);
                     break;
                 case FRONT_RIGHT:
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                    image.setImageResource(R.drawable.frontright_arrow);
+                    image.setImageResource(R.drawable.rightup_now);
                     break;
                 case FRONT_LEFT:
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
-                    image.setImageResource(R.drawable.frontleft_arrow);
+                    image.setImageResource(R.drawable.leftup_now);
                     break;
                 case REAR_RIGHT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.rearright_arrow);
+                    image.setImageResource(R.drawable.rightdown_now);
                     break;
                 case REAR_LEFT:
                     turnDirection = PLEASE_TURN_REAR_LEFT;
-                    image.setImageResource(R.drawable.rearleft_arrow);
+                    image.setImageResource(R.drawable.leftdown_now);
                     break;
                 case FRONT:
                     turnDirection = PLEASE_GO_STRAIGHT;
-                    image.setImageResource(R.drawable.up_arrow);
+                    image.setImageResource(R.drawable.up_now);
                     break;
                 case ELEVATOR:
                     turnDirection = PLEASE_TAKE_ELEVATOR;
@@ -1945,11 +1962,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
 
-        Toast toast = new Toast(getApplicationContext());
+        final Toast toast = new Toast(getApplicationContext());
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 25);
-        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
 
+        Timer timer = new Timer();
         if(instruction == MAKETURN_NOTIFIER){
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             tts.speak(firstMovement.getText().toString() + howFarToMove.getText().toString() +
@@ -1957,9 +1975,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             Log.i("showHint", "showHint");
             if(turnNotificationForPopup != null){
-                toast.show();
-                Log.i("showHint", "show");
-
+                initToast(toast);
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        initToast(toast);
+                    }
+                }, 2000);
             }
 
 
@@ -1967,7 +1989,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
         else if(instruction == ARRIVED_NOTIFIER){
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
-            toast.show();
+            initToast(toast);
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    initToast(toast);
+                }
+            }, 2000);
             myVibrator.vibrate(800);
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
@@ -1976,7 +2004,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
         else if(instruction == WRONGWAY_NOTIFIER){
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
-            toast.show();
+            initToast(toast);
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    initToast(toast);
+                }
+            }, 2000);
             myVibrator.vibrate(1000);
             sourceID = currentLBeaconID;
             Intent i = new Intent(this, NavigationActivity.class);
@@ -2112,9 +2146,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
     }
 
-
-
-
     // enter a waypoint ID to emulate the navigator receiving the corresponding Lbeacon ID (for demo)
     public void enterWaypointID(View view){
 
@@ -2186,6 +2217,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public void clearEditText(View v){
 
         waypointIDInput.getText().clear();
+    }
+
+    private void initToast(Toast toast){
+        toast.show();
+    }
+
+    public void exitProgram(View view){
+        android.os.Process.killProcess(android.os.Process.myPid());
+     Log.i("xxx", "InexitProgram");
     }
 
 }
