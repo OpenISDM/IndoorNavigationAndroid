@@ -483,7 +483,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     void navigationInstructionDisplay(String turnDirection, int distance){
-
+                firstMovement.setVisibility(View.INVISIBLE);
+                howFarToMove.setVisibility(View.INVISIBLE);
+                nextTurnMovement.setVisibility(View.INVISIBLE);
+                imageTurnIndicator.setVisibility(View.INVISIBLE);
         switch(turnDirection){
 
             case LEFT:
@@ -1036,7 +1039,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 break;
         }
-
         //After the navigational instruction for current waypoint is properly given,
         //the waypoint is removed from the top of the navigationPath
 
@@ -1053,6 +1055,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if(!turnDirection.equals(WRONG))
             navigationPath.remove(0);
+       Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showBackImage();
+                Log.i("xxx_timer", "Timercomplete");
+            }
+        },1000);
 
     }
 
@@ -2215,6 +2225,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     private void initToast(Toast toast){
         toast.show();
+    }
+
+    private void showBackImage(){
+        firstMovement.setVisibility(View.VISIBLE);
+        howFarToMove.setVisibility(View.VISIBLE);
+        nextTurnMovement.setVisibility(View.VISIBLE);
+        imageTurnIndicator.setVisibility(View.VISIBLE);
     }
 
     public void exitProgram(View view){
