@@ -23,12 +23,12 @@
     <Button
         android:id="@+id/destination"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:textSize="30sp"
         android:ems="10"
         android:onClick="switchToListView"
         android:background="@drawable/edittext"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:hint="請選擇目的地"/>
 
     <!--

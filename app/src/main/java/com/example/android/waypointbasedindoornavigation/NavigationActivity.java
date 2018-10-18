@@ -1315,7 +1315,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         List<Node> path = new ArrayList<>();
         List<Node> tmppath = new ArrayList<>();
-
+     /*   for(int i = 0 ; i < navigationGraphForAllWaypoint.size() ; i++) {
+            if(endNode._groupID == navigationGraphForAllWaypoint.get(i).nodesInSubgraph.get(i)._groupID && endNode._groupID != 0 && endNode._waypointID != navigationGraphForAllWaypoint.get(i).nodesInSubgraph.get(i)._waypointID)
+        }*/
         int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
