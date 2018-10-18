@@ -975,6 +975,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
                             (lastNode, navigationPath.get(0), navigationPath.get(1));
+                    currentLocationReminder.setText("目前位置:" + currentLocationName);
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
                     howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
