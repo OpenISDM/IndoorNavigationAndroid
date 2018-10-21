@@ -59,7 +59,7 @@ public class DeviceParameter {
                                 tmp_add_jobject.put(this.id, tmp_arraylist);
                                 tmp_add_jobject.put(this.name, tmp_node.getName());
                                 tmp_add_jobject.put(this.parameter, 0);
-                                tmp_add_jobject.put(this.R0, -45);
+                                tmp_add_jobject.put(this.R0, -53);
                                 tmp_add_jobject.put(this.n_value, -2.14);
                                 tmp_add_jobject.put(this.install_hight, 1.5);
                                 jarray.put(tmp_add_jobject);
@@ -259,7 +259,7 @@ public class DeviceParameter {
                 JSONObject tmp_add_jobject = new JSONObject();
                 tmp_add_jobject.put(this.id, tmp_node.getID());
                 tmp_add_jobject.put(this.parameter, 0);
-                tmp_add_jobject.put(this.R0, -45);
+                tmp_add_jobject.put(this.R0, -53);
                 tmp_add_jobject.put(this.n_value, -2.14);
                 tmp_add_jobject.put(this.install_hight, 1.5);
                 tmp_jarray.put(tmp_add_jobject);

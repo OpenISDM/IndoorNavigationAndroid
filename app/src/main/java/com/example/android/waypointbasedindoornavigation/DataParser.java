@@ -47,7 +47,7 @@ public class DataParser {
     public static File path  = new File(Environment.getExternalStorageDirectory() +
             File.separator +"WPBIN");
 
-    //Parse data from Region Graph
+    //Parse data from Region Graph  抓取Download裡面的資料夾將BuildingA讀取
     public static RegionGraph getRegionDataFromRegionGraph(Context context) {
 
         file = new File(path, "buildingA.xml");
@@ -60,7 +60,7 @@ public class DataParser {
 
         //get XML file from asset folder
         AssetManager assetManager = context.getAssets();
-
+    //將BulidA.xml檔裡面的資料抓出來
         try
         {
             InputStream is = new FileInputStream(file);
@@ -194,6 +194,7 @@ public class DataParser {
         List<NavigationSubgraph> routingData = new ArrayList<>();
 
         // load navigation subgraphs according to the regions that will be traveled
+        //把list裡面的每個String抓出來,那個s = 當下的string
         for(String s : regionsToBeLoaded) {
 
             // create a navigationSubgraph object
@@ -201,7 +202,7 @@ public class DataParser {
 
             XmlPullParser pullParser = Xml.newPullParser();
             AssetManager assetManager = context.getAssets();
-
+            //要改Region1名稱檔名也需要更改
             file =  new File(path, "buildingA_"+s+".xml");
 
             try {

@@ -1229,7 +1229,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
 
 
-                if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
+                if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon) && receiveNode!=null){
                     Log.i("xxx_receivebeacon","receivebeacon =" + receivebeacon);
                     Log.i("xxx_receiveNode","receiveNode = " + receiveNode._waypointName);
                    // Log.i("xxx_navigationPath","navigationPath.get(0)ID = " + navigationPath.get(0)._waypointName);
@@ -1323,7 +1323,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 DataParser.getWaypointDataFromNavigationGraph(this, regionGraph.getAllRegionNames());
 
 
-
+        //allWaypointData 是HashMap(所有Node資料)     navigationGraphForAllWaypoint(regionID)
         for(int i=0; i<navigationGraphForAllWaypoint.size(); i++)
             allWaypointData.putAll(navigationGraphForAllWaypoint.get(i).nodesInSubgraph);
 
