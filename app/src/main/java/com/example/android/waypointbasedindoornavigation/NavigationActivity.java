@@ -485,11 +485,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 howFarToMove.setVisibility(View.INVISIBLE);
                 nextTurnMovement.setVisibility(View.INVISIBLE);
                 imageTurnIndicator.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                progressNumber.setVisibility(View.INVISIBLE);
         switch(turnDirection){
 
             case LEFT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -539,7 +541,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case FRONT_LEFT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -586,7 +588,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 break;
             case REAR_LEFT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -635,7 +637,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case RIGHT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -683,7 +686,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case FRONT_RIGHT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -734,7 +738,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case REAR_RIGHT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -783,7 +788,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case FRONT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS);
+                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
 
                 Log.i("bbb", navigationPath.get(1)._waypointName);
 
@@ -976,7 +981,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     currentLocationReminder.setText("目前位置:" + currentLocationName);
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
-                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
+                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS + "至" + navigationPath.get(1)._waypointName);
 
                     if(navigationPath.size()>=3){
 
@@ -1225,6 +1230,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     navigationPath = startNavigation();
                     progressBar.setMax(navigationPath.size());
                     Log.i("xxx_First","xxx_firest executed");
+                    Log.i("bbb_navigationpahSize","navigationPathSize in isFirstBeacon = " + navigationPath.size());
                 }
 
                 if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon) && receiveNode!=null){
@@ -1338,8 +1344,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-        List<Node> tmppath = new ArrayList<>();
-     /*   for(int i = 0 ; i < navigationGraphForAllWaypoint.size() ; i++) {
+        /*   for(int i = 0 ; i < navigationGraphForAllWaypoint.size() ; i++) {
             if(endNode._groupID == navigationGraphForAllWaypoint.get(i).nodesInSubgraph.get(i)._groupID && endNode._groupID != 0 && endNode._waypointID != navigationGraphForAllWaypoint.get(i).nodesInSubgraph.get(i)._waypointID)
         }*/
         int startNodeType = startNode._nodeType;
@@ -2253,6 +2258,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         howFarToMove.setVisibility(View.VISIBLE);
         nextTurnMovement.setVisibility(View.VISIBLE);
         imageTurnIndicator.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        progressNumber.setVisibility(View.VISIBLE);
     }
 
     public void exitProgram(View view){

@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Two search bars, one for source and one for destination
     Button searchBarForDestination;
-
-    Button selectGraph;
-
+    Button StartButton;
     //Variables to record a location's name, id and region passed from ListViewActivity
     String namePassedFromListView, IDPassedFromListView, regionPassedFromListView;
 
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("台大雲林分院室內導航系統");
 
+
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
         //Get the position of popupwindow (center of phone screen)
         positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Find UI objects by ID
         searchBarForDestination = (Button) findViewById(R.id.destination);
-
+        StartButton = (Button)findViewById(R.id.navigation);
 
         //Decide which search bar to be set value
         if(searchBarClicked == true) {
@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             destinationID = IDPassedFromListView;
             destinationRegion = regionPassedFromListView;
             searchBarForDestination.setText(destinationName);
+            StartButton.setVisibility(View.VISIBLE);
         }
 
         //If switch time is greater or equals to 2, both search bars are set
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Press "Start" button to start navigation
     public void startNavigation(View view){
+
 
         //Start NavigationActivity and pass IDs and Regions of source and destination to it
         if(destinationID == null)
