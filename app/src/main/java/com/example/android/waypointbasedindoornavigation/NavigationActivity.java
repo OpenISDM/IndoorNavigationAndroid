@@ -395,11 +395,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 // receive a turn direction message from threadForHandleLbeaconID
                 String turnDirection = (String) msg.obj;
-
-                if(navigationPath.get(0)._groupID==navigationPath.get(navigationPath.size()-1)._groupID
-                        && navigationPath.get(0)._groupID!=0)
-                    turnDirection = ARRIVED;
-
+                //掃Group->解決前一點是終點走錯路會Arrived,掃描最短路徑,但Group相連時無法導航
+              /*  if(navigationPath.get(0)._groupID==navigationPath.get(navigationPath.size()-1)._groupID
+                                 && navigationPath.get(0)._groupID!=0)
+                                  turnDirection = ARRIVED;*/
 
                 // distance to the next waypoint
                 int distance = 0;
@@ -1228,7 +1227,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Log.i("xxx_First","xxx_firest executed");
                 }
 
-
                 if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon) && receiveNode!=null){
                     Log.i("xxx_receivebeacon","receivebeacon =" + receivebeacon);
                     Log.i("xxx_receiveNode","receiveNode = " + receiveNode._waypointName);
@@ -1236,20 +1234,23 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     if(receiveNode._groupID == navigationPath.get(0)._groupID &&
                             receiveNode._groupID!=0) {
                         Log.i("NAP2-1", receiveNode.getName());
+                        Log.i("enter","1");
                         currentLBeaconID = navigationPath.get(0)._waypointID;
                         pass = true;
                     }
                     else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
-
+                        Log.i("enter","2");
                         pass = false;
                     }
                     else {
                         Log.i("NAP2-2", receiveNode.getName());
+                        Log.i("enter","3");
                         currentLBeaconID = receivebeacon;
                         pass = true;
                     }
                 }
                 else{
+                    Log.i("enter","4");
                     pass = false;
                 }
                 // block the Lbeacon ID the navigator just received
@@ -1520,10 +1521,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         source.minDistance = 0.;
         PriorityQueue<Node> nodeQueue = new PriorityQueue<Node>();
         nodeQueue.add(source);
+        int destinationGroup = destination._groupID;
+
         while (!nodeQueue.isEmpty()) {
             Node v = nodeQueue.poll();
 
             Log.i("bbb", "In dijsk node name "+ v._waypointName);
+
+            if(destinationGroup!=0){
+                if(v._groupID==destinationGroup){
+                    destination = navigationGraph.get(navigationGraph.size()-1).nodesInSubgraph.get(v._waypointID);
+                    Log.i("bbb", "destination is: "+destination._waypointName);
+
+                    break;
+                }
+            }
+
             //Stop searching when reach the destination node
             if (v._waypointID.equals(destination._waypointID))
                 break;
@@ -1615,7 +1628,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
 
-        // reverse path to get correct order
+        // reverse path to get correct order 顛倒
         Collections.reverse(path);
         return path;
     }
@@ -2190,7 +2203,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             if(receiveNode._groupID == navigationPath.get(0)._groupID &&
                     receiveNode._groupID!=0 ){
-
+                //收到相同GroupID 強制將currentLBeaconID設成即將要收到的GroupID
                 Log.i("enter", "1");
                 currentLBeaconID = navigationPath.get(0)._waypointID;
                 pass = true;
