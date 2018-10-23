@@ -24,8 +24,7 @@ public class Setting extends Application{
 
     static int preferenceValue = 2;
     static int modeValue = 3;
-    static boolean turnOnOK = false;
-    static String fileName = "buildingA.xml";
+    static String fileName = "RegionGraph.xml";
     static String graphName = null;
 
     public static int getPreferenceValue() {
@@ -48,15 +47,6 @@ public class Setting extends Application{
         modeValue = m;
     }
 
-    public static boolean getTurnOnOK() {
-
-        return turnOnOK;
-    }
-
-    public static void setTurnOnOK(boolean m) {
-
-        turnOnOK = m;
-    }
 
     public static String getFileName(){
 

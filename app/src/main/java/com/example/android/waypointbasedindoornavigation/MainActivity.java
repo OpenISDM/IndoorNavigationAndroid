@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     //Show popupwindow to notify user one of the search bar is left blank
     public void showPopupWindow(){
 
-        popupWindow.setFocusable(true);
+        //popupWindow.setFocusable(true);
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup, null);
 
@@ -251,7 +251,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                String url = "https://drive.google.com/drive/u/2/folders/19_TvCwGeaCvOURAYRMg5OS7jGr7bzgOn";
+                String url = "https://drive.google.com/open?id=19_TvCwGeaCvOURAYRMg5OS7jGr7bzgOn";
+
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

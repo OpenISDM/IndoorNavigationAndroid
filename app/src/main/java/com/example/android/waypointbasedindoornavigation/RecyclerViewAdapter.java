@@ -77,7 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
         // determine which of location information to be displayed on UI
         holder.title.setText(current.getName());
-        holder.region.setText(current.get_regionID());
+        //holder.region.setText(current.get_regionID());
 
         // an onclick listener for location names in ListViewActivity
         holder.title.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +98,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
         else{
 
             final String graphName = graphs.get(position);
-            holder.title.setText(graphName);
+            holder.title.setText(graphName.substring(7, graphName.length()));
 
             holder.title.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,8 +115,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
             });
 
         }
-
-
 
     }
 
@@ -137,7 +135,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.listText);
-            region = (TextView) itemView.findViewById(R.id.listRegion);
+            //region = (TextView) itemView.findViewById(R.id.listRegion);
         }
     }
 }
