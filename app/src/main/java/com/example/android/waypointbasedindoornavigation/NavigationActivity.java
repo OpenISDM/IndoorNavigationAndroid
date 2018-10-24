@@ -357,6 +357,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //load all waypoint data for precise positioning
         loadAllWaypointData();
 
+        destinationReminder.setText("目的地 : " + allWaypointData.get(destinationID)._waypointName);
+
         // Lbeacon Manager setup
         beaconManagerSetup();
 
@@ -770,6 +772,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 List<Node> newPath = new ArrayList<>();
                 //walkedWaypoint = 0;
                 Node wrongWaypoint = allWaypointData.get(currentLBeaconID);
+                Boolean isLongerPath = false;
                 sourceID = wrongWaypoint._waypointID;
                 sourceRegion = wrongWaypoint._regionID;
 
@@ -781,9 +784,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 for(int i=0; i<newPath.size(); i++)
                     Log.i("renavigate", "path node "+newPath.get(i)._waypointName);
 
+                for(int i=0; i<newPath.size(); i++){
+
+                    if(newPath.get(i)._waypointName.equals(lastNode._waypointName)){
+
+                        isLongerPath = true;
+                        break;
+                    }
+
+                    isLongerPath = false;
+                }
 
 
-                if(newPath.get(1)._waypointName.equals(lastNode._waypointName)){
+
+                if(isLongerPath){
 
                     currentLBeaconID = "EmptyString";
                     //navigationPath.add(0, lastNode);
@@ -812,13 +826,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     progressStatus=1;
                     progressNumber.setText(progressStatus + "/" + progressBar.getMax());
 
+                    turnNotificationForPopup = null;
+
+                    firstMovement.setText(GO_STRAIGHT_ABOUT);
+                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
+
+
+                    /*
 
                     turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
                             (lastNode, navigationPath.get(0), navigationPath.get(1));
                     Log.i("renavigate", "lastNode, 0, 1: "+ lastNode._waypointName +", "
                             +navigationPath.get(0)._waypointName+ ", "+ navigationPath.get(1)._waypointName);
 
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);*/
 
 
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
@@ -1299,7 +1320,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         for(int i=0; i<path.size(); i++)
             Log.i("path", path.get(i)._waypointName);
 
-        destinationReminder.setText("目的地 : " + path.get(path.size()-1)._waypointName);
 
         return path;
 
