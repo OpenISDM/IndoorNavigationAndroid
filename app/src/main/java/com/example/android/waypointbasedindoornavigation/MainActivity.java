@@ -255,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void startDownload(View view){
 
-//        popupWindow.setFocusable(true);
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup, null);
 

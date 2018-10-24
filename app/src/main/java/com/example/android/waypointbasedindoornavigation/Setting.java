@@ -46,17 +46,7 @@ public class Setting extends Application{
 
         modeValue = m;
     }
-
-    public static boolean getTurnOnOK() {
-
-        return turnOnOK;
-    }
-
-    public static void setTurnOnOK(boolean m) {
-
-        turnOnOK = m;
-    }
-
+    
     public static String getFileName(){
 
         return fileName;

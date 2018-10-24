@@ -81,10 +81,6 @@ public class DataParser {
 
                         String regionID = null;
                         String regionName = null;
-                        String neighbor1 = null;
-                        String neighbor2 = null;
-                        String neighbor3 = null;
-                        String neighbor4 = null;
                         List<String> neighbors = new ArrayList<>();
                         List<String> transforNodes = new ArrayList<>();
                         int elevation = 0;
@@ -97,21 +93,6 @@ public class DataParser {
                             elevation = parseInt(pullParser.getAttributeValue(null,
                                     "elevation"));
 
-                        /*neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
-                        neighbor2 = pullParser.getAttributeValue(null, "neighbor2");
-                        neighbor3 = pullParser.getAttributeValue(null, "neighbor3");
-                        neighbor4 = pullParser.getAttributeValue(null, "neighbor4");*/
-
-                        /*
-
-                        if(!neighbor1.isEmpty())
-                            neighbors.add(neighbor1);
-                        if(!neighbor2.isEmpty())
-                            neighbors.add(neighbor2);
-                        if(!neighbor3.isEmpty())
-                            neighbors.add(neighbor3);
-                        if(!neighbor4.isEmpty())
-                            neighbors.add(neighbor4);*/
 
                         for(int i=0; i<pullParser.getAttributeCount(); i++){
 
@@ -206,8 +187,6 @@ public class DataParser {
             file =  new File(path, "buildingA_"+s+".xml");
 
             try {
-                //is = assetManager.open(Setting.getFileName());
-                //is = assetManager.open("buildingA/"+s+".xml");
                 InputStream is = new FileInputStream(file);
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
@@ -220,11 +199,6 @@ public class DataParser {
                     double lat = 0;
                     String region = null;
                     String category = null;
-                    String neighbor1 = null;
-                    String neighbor2 = null;
-                    String neighbor3 = null;
-                    String neighbor4 = null;
-                    String neighbor5 = null;
                     int nodeType = 0;
                     int connectPointID = 0;
                     int groupID = 0;
@@ -249,11 +223,6 @@ public class DataParser {
                             name = pullParser.getAttributeValue(null, "name");
                             region = pullParser.getAttributeValue(null, "region");
                             category = pullParser.getAttributeValue(null, "category");
-                            /*neighbor1 = pullParser.getAttributeValue(null, "neighbor1");
-                            neighbor2 = pullParser.getAttributeValue(null, "neighbor2");
-                            neighbor3 = pullParser.getAttributeValue(null, "neighbor3");
-                            neighbor4 = pullParser.getAttributeValue(null, "neighbor4");
-                            //neighbor5 = pullParser.getAttributeValue(null, "neighbor5");*/
 
                            for(int i=0; i<pullParser.getAttributeCount(); i++){
 
@@ -270,17 +239,6 @@ public class DataParser {
                                }
 
                            }
-
-                           /*
-                            if(!neighbor1.isEmpty())
-                                adjacentNodes.add(neighbor1);
-                            if(!neighbor2.isEmpty())
-                                adjacentNodes.add(neighbor2);
-                            if(!neighbor3.isEmpty())
-                                adjacentNodes.add(neighbor3);
-                            if(!neighbor4.isEmpty())
-                                adjacentNodes.add(neighbor4);*/
-
 
 
                             if (!pullParser.getAttributeValue(null, "nodeType").isEmpty())
@@ -342,8 +300,6 @@ public class DataParser {
 
             file = new File(path, "buildingA_"+s+".xml");
             try {
-                //is = assetManager.open(Setting.getFileName());
-                //is = assetManager.open("buildingA/"+s+".xml");
                 InputStream is = new FileInputStream(file);
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();

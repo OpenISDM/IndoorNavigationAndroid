@@ -27,14 +27,14 @@ public class GeoCalulation {
 
     private static final int RADIUS_OF_EARTH = 6371;
     private static final int FRONT_DIRECTION_SMALL_LOWER_BOUND = 0;
-    private static final int FRONT_DIRECTION_SMALL_UPPER_BOUND = 5;
-    private static final int RIGHT_DIRECTION_LOWER_BOUND = 75;
-    private static final int RIGHT_DIRECTION_UPPER_BOUND = 105;
-    private static final int BACK_DIRECTION_LOWER_BOUND = 175;
-    private static final int BACK_DIRECTION_UPPER_BOUND = 185;
-    private static final int LEFT_DIRECTION_LOWER_BOUND = 255;
-    private static final int LEFT_DIRECTION_UPPER_BOUND = 285;
-    private static final int FRONT_DIRECTION_BIG_LOWER_BOUND = 355;
+    private static final int FRONT_DIRECTION_SMALL_UPPER_BOUND = 20;
+    private static final int RIGHT_DIRECTION_LOWER_BOUND = 70;
+    private static final int RIGHT_DIRECTION_UPPER_BOUND = 110;
+    private static final int BACK_DIRECTION_LOWER_BOUND = 160;
+    private static final int BACK_DIRECTION_UPPER_BOUND = 200;
+    private static final int LEFT_DIRECTION_LOWER_BOUND = 250;
+    private static final int LEFT_DIRECTION_UPPER_BOUND = 290;
+    private static final int FRONT_DIRECTION_BIG_LOWER_BOUND = 340;
     private static final int FRONT_DIRECTION_BIG_UPPER_BOUND = 360;
 
 
