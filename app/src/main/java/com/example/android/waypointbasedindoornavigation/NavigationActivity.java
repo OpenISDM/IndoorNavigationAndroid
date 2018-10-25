@@ -1069,6 +1069,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 receiveNode = allWaypointData.get(receivebeacon);
 
+                if(receiveNode != null)
+                    currentLocationReminder.setText("目前位置 : " + receiveNode._waypointName);
+
                 Log.i("beaconManager", "receiveID: "+ receivebeacon);
 
                 Log.i("bbb_isFirstBeacon", "isFirstBeacon = " + isFirstBeacon);
@@ -1087,33 +1090,31 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         Log.i("bbb_navigationValue","navigationGraph"+ i + "value =" + navigationPath.get(i)._waypointName);
                 }
 
-                if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon) && receiveNode!=null){
-                   Log.i("bbb_receivebeacon","receivebeacon =" + receivebeacon);
-                    Log.i("bbb_receiveNode","receiveNode = " + receiveNode._waypointName);
-                    Log.i("bbb_navigationPath","navigationPath.get(0)ID = " + navigationPath.get(0)._waypointName);
-                    if(receiveNode._groupID == navigationPath.get(0)._groupID &&
-                            receiveNode._groupID!=0) {
+            if(navigationPath.size() > 0) {
+                if (receivebeacon != null && !currentLBeaconID.equals(receivebeacon) && receiveNode != null) {
+                    Log.i("bbb_receivebeacon", "receivebeacon =" + receivebeacon);
+                    Log.i("bbb_receiveNode", "receiveNode = " + receiveNode._waypointName);
+                    Log.i("bbb_navigationPath", "navigationPath.get(0)ID = " + navigationPath.get(0)._waypointName);
+                    if (receiveNode._groupID == navigationPath.get(0)._groupID &&
+                            receiveNode._groupID != 0) {
                         Log.i("NAP2-1", receiveNode.getName());
-                        Log.i("enter","1");
+                        Log.i("enter", "1");
                         currentLBeaconID = navigationPath.get(0)._waypointID;
                         pass = true;
-                    }
-                    else if(receiveNode._groupID == passedGroupID && receiveNode._groupID!=0){
-                        Log.i("enter","2");
+                    } else if (receiveNode._groupID == passedGroupID && receiveNode._groupID != 0) {
+                        Log.i("enter", "2");
                         pass = false;
-                    }
-                    else {
+                    } else {
                         Log.i("NAP2-2", receiveNode.getName());
-                        Log.i("enter","3");
+                        Log.i("enter", "3");
                         currentLBeaconID = receivebeacon;
                         pass = true;
                     }
-                }
-                else{
-                    Log.i("enter","4");
+                } else {
+                    Log.i("enter", "4");
                     pass = false;
                 }
-
+            }
                 Log.i("renavigate", "CurrentID: "+ currentLBeaconID);
                 // block the Lbeacon ID the navigator just received
                 if(pass){
@@ -1739,6 +1740,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         receiveID = mappingOfRegionNameAndID.get(nameOFWaypoint);
         receiveNode = allWaypointData.get(receiveID);
 
+        currentLocationReminder.setText("目前位置 : " + receiveNode._waypointName);
         Log.i("receiveInfo", "ID: "+receiveNode._waypointID+" Region: "+receiveNode._regionID);
 
         if(isFirstBeacon && receiveNode!= null){
@@ -1816,6 +1818,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public void exitProgram(View view){
         android.os.Process.killProcess(android.os.Process.myPid());
      Log.i("xxx", "InexitProgram");
+    }
+
+    public void onBackPressed(View view) {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 
 }

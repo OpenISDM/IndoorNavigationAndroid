@@ -143,7 +143,17 @@
         android:text="下載導航地圖"
         android:textSize="20dp"/>
 
-
+    <Button
+        android:id="@+id/ExitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:onClick="exitProgram"
+        android:text="離開"
+        android:textSize="20sp"
+        android:visibility="visible" />
 
 
 

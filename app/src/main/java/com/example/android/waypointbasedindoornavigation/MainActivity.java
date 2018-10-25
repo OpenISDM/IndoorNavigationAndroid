@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                String url = "https://drive.google.com/drive/u/2/folders/19_TvCwGeaCvOURAYRMg5OS7jGr7bzgOn";
+                String url = "https://drive.google.com/open?id=1c3-OGr3sgWk_uRjVJwXUtn4t92BgC6F4";
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
@@ -282,6 +282,12 @@ public class MainActivity extends AppCompatActivity {
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
 
     }
+
+    public void exitProgram(View view){
+        android.os.Process.killProcess(android.os.Process.myPid());
+        Log.i("xxx", "InexitProgram");
+    }
+
 
 
 }
