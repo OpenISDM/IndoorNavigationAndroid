@@ -30,8 +30,8 @@ public class GeoCalulation {
     private static final int FRONT_DIRECTION_SMALL_UPPER_BOUND = 5;
     private static final int RIGHT_DIRECTION_LOWER_BOUND = 75;
     private static final int RIGHT_DIRECTION_UPPER_BOUND = 105;
-    private static final int BACK_DIRECTION_LOWER_BOUND = 175;
-    private static final int BACK_DIRECTION_UPPER_BOUND = 185;
+    private static final int BACK_DIRECTION_LOWER_BOUND = 179;
+    private static final int BACK_DIRECTION_UPPER_BOUND = 181;
     private static final int LEFT_DIRECTION_LOWER_BOUND = 255;
     private static final int LEFT_DIRECTION_UPPER_BOUND = 285;
     private static final int FRONT_DIRECTION_BIG_LOWER_BOUND = 355;

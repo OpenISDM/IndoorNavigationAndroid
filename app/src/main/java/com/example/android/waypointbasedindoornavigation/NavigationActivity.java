@@ -14,7 +14,7 @@ Abstract:
 
     2. Calculate a navigation path
 
-    3. Background listening to Lbeacon signals
+    3. Background listening Lbeacon signals
 
 Author:
 
@@ -439,7 +439,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     }
 
+    // Display navigation instruction
     void navigationInstructionDisplay(String turnDirection, int distance){
+
+        Log.i("scot", "turndirction: "+turnDirection);
 
         switch(turnDirection){
 
@@ -832,18 +835,19 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
 
 
-                    /*
+
 
                     turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
                             (lastNode, navigationPath.get(0), navigationPath.get(1));
                     Log.i("renavigate", "lastNode, 0, 1: "+ lastNode._waypointName +", "
                             +navigationPath.get(0)._waypointName+ ", "+ navigationPath.get(1)._waypointName);
 
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);*/
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
 
 
+                    /*
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
-                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
+                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);*/
 
                     if(navigationPath.size()>=3){
 
@@ -1085,6 +1089,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
 
 
+            if(navigationPath.size() > 0){
             if(receivebeacon!=null  && !currentLBeaconID.equals(receivebeacon)){
 
                 if(receiveNode._groupID == navigationPath.get(0)._groupID &&
@@ -1105,6 +1110,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
             else{
                 pass = false;
+            }
             }
 
             Log.i("renavigate", "CurrentID: "+ currentLBeaconID);
@@ -1791,6 +1797,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @Override
     public void onBackPressed() {
-        this.moveTaskToBack(true);
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }
