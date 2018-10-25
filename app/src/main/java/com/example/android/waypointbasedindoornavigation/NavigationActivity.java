@@ -365,6 +365,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //load all waypoint data for precise positioning
         loadAllWaypointData();
 
+        destinationReminder.setText("目的地 : " + allWaypointData.get(destinationID)._waypointName);
+
         // Lbeacon Manager setup
         beaconManagerSetup();
 
@@ -1568,7 +1570,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     image.setImageResource(R.drawable.stair);
                     break;
                 case "goback":
-                    turnDirection = "請往回走";
+                    turnDirection = " ";
                     image.setImageResource(R.drawable.turn_back);
                     break;
 
