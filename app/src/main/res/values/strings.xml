@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WayPointBasedIndoorNavigation</string>
+    <string name="title_activity_init_signal">initSignal</string>
+    <string name="rssitestfile">rssitestfile</string>
 </resources>

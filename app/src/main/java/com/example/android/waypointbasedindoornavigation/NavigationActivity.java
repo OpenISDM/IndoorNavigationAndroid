@@ -290,6 +290,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private ReadWrite_File wf  = new ReadWrite_File();
     private DeviceParameter dp;
     String receivebeacon;
+    double offset;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 
     @Override
@@ -297,6 +298,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         setTitle("台大雲林分院室內導航系統");
+        GlobalVariable gv = (GlobalVariable)getApplicationContext();
+        offset = gv.getOffset();
         Log.i("first", "isFirstBeacon:"+ isFirstBeacon);
 
 
@@ -1029,7 +1032,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
-                        logBeaconData(LBD.Find_Loc(beacon,3));
+                        logBeaconData(LBD.Find_Loc(beacon,3, offset));
                     }
                 }
             }

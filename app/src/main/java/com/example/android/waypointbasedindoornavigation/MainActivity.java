@@ -288,6 +288,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i("xxx", "InexitProgram");
     }
 
+    public  void signalInit(View view){
+        Intent i = new Intent(this, initSignal.class);
+        startActivity(i);
+    }
+
+    public void resetSignal(View view){
+        GlobalVariable gv = (GlobalVariable)getApplicationContext();
+        gv.initOffset();
+    }
 
 
 }

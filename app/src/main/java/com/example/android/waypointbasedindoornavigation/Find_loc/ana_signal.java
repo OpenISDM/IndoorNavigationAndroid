@@ -35,7 +35,7 @@ public class ana_signal {
     public void set_allWaypointData(HashMap<String, Node> allWaypointData){
         this.allWaypointData = allWaypointData;
     }
-    public List<String> ana_signal(Queue q, int algo_Type, int weight_type, float remind_range) {
+    public List<String> ana_signal(Queue q, int algo_Type, int weight_type, float remind_range, double offset) {
         List lq = new ArrayList<String>(q);
         List<String> tmp_data_list = new ArrayList<>();
         data_list.clear();
@@ -58,7 +58,7 @@ public class ana_signal {
             for (int i = 0; i < data_list.size(); i++)
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
-            List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range);
+            List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range, offset);
             if (tmp_count_dif != null)
                 if (tmp_count_dif.size() > 2) {
                     float tmp_dif = Math.abs(data_list.get(0).countavg()
@@ -283,7 +283,7 @@ public class ana_signal {
             return null;
 
     }
-    private float ana_signal_5
+  /*  private float ana_signal_5
             (List<siganl_data_type> data_list, float range) {
         Log.i("def_algo", "algo5");
         Log.i("algo5", String.valueOf(tmp_path.length));
@@ -317,10 +317,10 @@ public class ana_signal {
             Log.i("TDN2","null error");
             return 0;
         }
-    }
+    }*/
     List<Float> tmp_returen = new ArrayList<>();
     private List<Float> ana_signal_6
-            (List<siganl_data_type> data_list, float remind_range) {
+            (List<siganl_data_type> data_list, float remind_range,double offset) {
 //       計算距離
         Log.i("algo6", "in algo6" + String.valueOf(data_list.size()));
         Node[] tmp_dis_Node = new Node[2];
@@ -357,9 +357,9 @@ public class ana_signal {
                 Log.i("algo6", String.valueOf(distance));
                 double[] tmp_difference = new double[2];
                 double t_range = count_real_Rd(data_list.get(0).getUuid(),remind_range);
-                tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range);
+                tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range, offset);
                 t_range = count_real_Rd(data_list.get(1).getUuid(),distance - remind_range);
-                tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range);
+                tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range, offset);
                 Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
                 tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
                 tmp_returen.add((float) (tmp_difference[0]));
@@ -393,9 +393,9 @@ public class ana_signal {
         return Math.pow(10,((Rd-R0)/(10*n_vlaue)))/dp.get_install_hight(s);
 //        return Math.pow(10,((Rd-R0)/(10*n_vlaue))/1.3);
     }
-    private double count_Rd(String s,double range){
+    private double count_Rd(String s,double range,double offset){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return R0+(10*n_vlaue*Math.log10(range/1.5));
+        return (R0+(10*n_vlaue*Math.log10(range/1.5))) * offset - 3;
     }
 }

@@ -27,7 +27,7 @@ public class Find_Loc {
         as.set_allWaypointData(allWaypointData);
         dp.set_allWaypointData(allWaypointData);
     }
-    public List<String> Find_Loc(Beacon beacon, float remind_range){
+    public List<String> Find_Loc(Beacon beacon, float remind_range, double offset){
 //    public List<String> logBeaconData(Beacon beacon, boolean ana_switch){
         String[] beacondata = new String[]{
                 beacon.getId1().toString(),
@@ -46,7 +46,7 @@ public class Find_Loc {
                 long endT = System.currentTimeMillis();
                 if ((endT-startT)>1000){
                     startT = System.currentTimeMillis();
-                    researchdata.addAll(as.ana_signal(data_queue,algo_num,weight_type, remind_range));
+                    researchdata.addAll(as.ana_signal(data_queue,algo_num,weight_type, remind_range, offset));
 //                    wf.writeFile("LBD:"+data_queue.toString() +"\t"
 //                            +String.valueOf(data_queue.size()));
                     Log.i("LBD1",data_queue.toString());
