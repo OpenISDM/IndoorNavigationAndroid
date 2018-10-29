@@ -169,10 +169,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     String currentLocationName;
 
     boolean isFirstBeacon = true;
-    boolean isFirstCount = true;
+    boolean NextLandMarkisEnglish = false;
     Node startNode;
     Node endNode;
-    Node tmpendNode;
     Node lastNode;
 
     // integer to record how many waypoints have been traveled
@@ -451,17 +450,26 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     void navigationInstructionDisplay(String turnDirection, int distance){
+                //關閉後面圖示顯示UI
                 firstMovement.setVisibility(View.INVISIBLE);
                 howFarToMove.setVisibility(View.INVISIBLE);
                 nextTurnMovement.setVisibility(View.INVISIBLE);
                 imageTurnIndicator.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
                 progressNumber.setVisibility(View.INVISIBLE);
+                //判斷下個地點是否有LandMark
+                NextLandMarkisEnglish = hasEnglish(navigationPath.get(1)._waypointName);
+
+
         switch(turnDirection){
 
             case LEFT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -504,7 +512,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case FRONT_LEFT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -544,7 +556,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 break;
             case REAR_LEFT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
                 switch(navigationPath.get(1)._nodeType){
 
@@ -578,7 +594,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case RIGHT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
 
                 switch(navigationPath.get(1)._nodeType){
@@ -612,7 +632,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case FRONT_RIGHT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
 
                 switch(navigationPath.get(1)._nodeType){
@@ -647,7 +671,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case REAR_RIGHT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
 
                 switch(navigationPath.get(1)._nodeType){
@@ -681,15 +709,21 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case FRONT:
                 firstMovement.setText(GO_STRAIGHT_ABOUT);
-                howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                //判斷下個目的地是否有LandMark
+                if(NextLandMarkisEnglish == false)
+                    howFarToMove.setText(""+distance +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                else
+                    howFarToMove.setText(""+distance +" "+METERS);
 
                 Log.i("bbb", navigationPath.get(1)._waypointName);
 
                 switch(navigationPath.get(1)._nodeType){
 
                     case ELEVATOR_WAYPOINT:
-                        if(navigationPath.size()==2)
+                        if(navigationPath.size()==2) {
+                            howFarToMove.setText(""+distance +" "+METERS);
                             nextTurnMovement.setText("抵達目的地");
+                        }
                         else{
                             if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
                                 elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
@@ -699,8 +733,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         break;
 
                     case STAIRWELL_WAYPOINT:
-                        if(navigationPath.size()==2)
+                        if(navigationPath.size()==2) {
+                            howFarToMove.setText(""+distance +" "+METERS);
                             nextTurnMovement.setText("抵達目的地");
+                        }
                         else{
                             if(!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
                                 elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
@@ -710,10 +746,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         break;
 
                     case NORMAL_WAYPOINT:
-
-                        if(navigationPath.size()==2)
+                        if(navigationPath.size()==2) {
+                            howFarToMove.setText(""+distance +" "+METERS);
                             nextTurnMovement.setText("抵達目的地");
-                        else
+                        }else
                             nextTurnMovement.setText(THEN_GO_STRAIGHT);
                         break;
 
@@ -835,7 +871,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
 
                     firstMovement.setText(GO_STRAIGHT_ABOUT);
-                    howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                    //判斷下個目的地是否有LandMark
+                    if(NextLandMarkisEnglish == false)
+                        howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS + "至" + navigationPath.get(1)._waypointName);
+                    else
+                        howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
 
                     if(navigationPath.size()>=3){
 
@@ -1086,6 +1126,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     loadNavigationGraph();
                     navigationPath = startNavigation();
                     progressBar.setMax(navigationPath.size());
+                    Intent intent = new Intent(NavigationActivity.this,
+                            CompassActivity.class);
+                    intent.putExtra("degree",
+                            GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0),
+                                    navigationPath.get(1)));
+                    startActivity(intent);
                     Log.i("bbb_First","xxx_firest executed");
                     Log.i("bbb_navigationpahSize","navigationPathSize in isFirstBeacon = " + navigationPath.size());
                     Log.i("bbb_receiveNode_GroupID","receiveNode.groupID  = " + receiveNode._groupID);
@@ -1754,6 +1800,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             navigationPath = startNavigation();
             progressBar.setMax(navigationPath.size());
             isFirstBeacon = false;
+            Intent intent = new Intent(NavigationActivity.this,
+                    CompassActivity.class);
+            intent.putExtra("degree",
+                    GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0),
+                            navigationPath.get(1)));
+            startActivity(intent);
             Log.i("xxx_isFistHand","手動輸入被改成false");
 
         }
@@ -1816,6 +1868,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         imageTurnIndicator.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         progressNumber.setVisibility(View.VISIBLE);
+    }
+
+    private boolean hasEnglish(String str){
+        boolean hasEng = false;
+        Log.i("xxx_tmpString","tmpString = " + str);
+        for(int i = 0;i < str.length(); i++)
+        {
+            String test = str.substring(i,i + 1);
+            if(test.matches("[a-cA-C]+"))
+                hasEng = true;
+        }
+        Log.i("xxx_tmpString","isEnglish = " + hasEng);
+
+        return  hasEng;
     }
 
     public void exitProgram(View view){

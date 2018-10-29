@@ -44,8 +44,9 @@ public class DataParser {
     static List<String> categoryList = new ArrayList<>();
 
     public static File file;
-    public static File path  = new File(Environment.getExternalStorageDirectory() +
-            File.separator +"WPBIN");
+    public static File path  =  Environment.getExternalStoragePublicDirectory
+            (Environment.DIRECTORY_DOWNLOADS+File.separator+"WGRAPH_雲林台大醫院地圖");
+
 
     //Parse data from Region Graph  抓取Download裡面的資料夾將BuildingA讀取
     public static RegionGraph getRegionDataFromRegionGraph(Context context) {

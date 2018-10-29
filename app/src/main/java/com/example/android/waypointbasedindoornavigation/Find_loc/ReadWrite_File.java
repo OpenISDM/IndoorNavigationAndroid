@@ -15,9 +15,10 @@ public class ReadWrite_File {
     private File file;
     private static String file_name = "Log";
     private static boolean sb = false;
-    private final File path  = new File(Environment.getExternalStorageDirectory() +
-            File.separator +"WPBIN");
-//    設定固定檔案名稱
+    private final File path  =  new File(Environment.getExternalStoragePublicDirectory
+            (Environment.DIRECTORY_DOWNLOADS)+File.separator+"WGRAPH_雲林台大醫院地圖");
+
+    //    設定固定檔案名稱
     public ReadWrite_File(){
         if(!path.exists()) path.mkdir();
     }
