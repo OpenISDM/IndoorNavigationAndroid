@@ -1150,7 +1150,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     loadNavigationGraph();
                     navigationPath = startNavigation();
                     progressBar.setMax(navigationPath.size());
-                    Intent intent = new Intent(NavigationActivity.this,
+                    if((sourceID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))){
+                        turnNotificationForPopup = "C04";
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    }else if((sourceID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))){
+                        turnNotificationForPopup = "C11";
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    }
+            /*        Intent intent = new Intent(NavigationActivity.this,
                             CompassActivity.class);
                     intent.putExtra("degree",
                             GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0),
@@ -1160,7 +1167,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Log.i("bbb_navigationpahSize","navigationPathSize in isFirstBeacon = " + navigationPath.size());
                     Log.i("bbb_receiveNode_GroupID","receiveNode.groupID  = " + receiveNode._groupID);
                     for(int i=0;i<navigationPath.size();i++)
-                        Log.i("bbb_navigationValue","navigationGraph"+ i + "value =" + navigationPath.get(i)._waypointName);
+                        Log.i("bbb_navigationValue","navigationGraph"+ i + "value =" + navigationPath.get(i)._waypointName);*/
                 }
 
             if(navigationPath.size() > 0) {
@@ -1599,6 +1606,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             image.setImageResource(R.drawable.computing);
             initToast(toast);
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 1000);
             myVibrator.vibrate(1000);
         }
         else if(instruction== MAKETURN_NOTIFIER) {
@@ -1648,24 +1662,34 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     image.setImageResource(R.drawable.turn_back);
                     break;
 
+                case "C04":
+                    turnDirection = PLEASE_TURN__FRONT_RIGHT;
+                    image.setImageResource(R.drawable.rightup_now);
+                    break;
+
+                case "C11":
+                    turnDirection = PLEASE_TURN_FRONT_LEFT;
+                    image.setImageResource(R.drawable.leftup_now);
+                    break;
+
 
             }
         }
 
 
 
-        Timer timer = new Timer();
             tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
 
             Log.i("showHint", "showHint");
             if(turnNotificationForPopup != null){
                 initToast(toast);
-                /*timer.schedule(new TimerTask() {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         initToast(toast);
                     }
-                }, 2000);*/
+                }, 1000);
             myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
 
@@ -1824,14 +1848,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             navigationPath = startNavigation();
             progressBar.setMax(navigationPath.size());
             isFirstBeacon = false;
-            Intent intent = new Intent(NavigationActivity.this,
+            /*Intent intent = new Intent(NavigationActivity.this,
                     CompassActivity.class);
             intent.putExtra("degree",
                     GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0),
                             navigationPath.get(1)));
-            startActivity(intent);
+            startActivity(intent);*/
+            if((sourceID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))){
+                turnNotificationForPopup = "C04";
+                showHintAtWaypoint(MAKETURN_NOTIFIER);
+                }else if((sourceID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))){
+                turnNotificationForPopup = "C11";
+                showHintAtWaypoint(MAKETURN_NOTIFIER);
+            }
             Log.i("xxx_isFistHand","手動輸入被改成false");
-
+            Log.i("xxx_receiveNodeID","SourceID = " + receiveNode._waypointID);
+            Log.i("xxx_navigationpath","navigationpath(1) = " + navigationPath.get(1)._waypointID);
         }
 
         Log.i("receiveInfo", "navigationPath Size "+navigationPath.size());
