@@ -1565,7 +1565,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         final Toast toast = new Toast(getApplicationContext());
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 25);
-        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
 
         // distance to the next waypoint
@@ -1602,6 +1602,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             myVibrator.vibrate(1000);
         }
         else if(instruction== MAKETURN_NOTIFIER) {
+            //處理空白跳框情形
+            image.setImageResource(R.drawable.turn_back);
 
             switch (turnNotificationForPopup) {
 
@@ -1615,19 +1617,19 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 case FRONT_RIGHT:
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                    image.setImageResource(R.drawable.rightup_now);
+                    image.setImageResource(R.drawable.right_now);
                     break;
                 case FRONT_LEFT:
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
-                    image.setImageResource(R.drawable.leftup_now);
+                    image.setImageResource(R.drawable.left_now);
                     break;
                 case REAR_RIGHT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.rightdown_now);
+                    image.setImageResource(R.drawable.right_now);
                     break;
                 case REAR_LEFT:
                     turnDirection = PLEASE_TURN_REAR_LEFT;
-                    image.setImageResource(R.drawable.leftdown_now);
+                    image.setImageResource(R.drawable.left_now);
                     break;
                 case FRONT:
                     turnDirection = PLEASE_GO_STRAIGHT;
@@ -1658,12 +1660,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("showHint", "showHint");
             if(turnNotificationForPopup != null){
                 initToast(toast);
-                timer.schedule(new TimerTask() {
+                /*timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         initToast(toast);
                     }
-                }, 2000);
+                }, 2000);*/
             myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
 
