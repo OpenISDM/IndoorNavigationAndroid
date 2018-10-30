@@ -884,23 +884,23 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     howFarToMove.setText(""+GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) +" "+METERS);
 
 
-                    /*turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
+                    turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
                             (lastNode, navigationPath.get(0), navigationPath.get(1));
 
                     Log.i("renavigate", "lastNode, 0, 1: "+ lastNode._waypointName +", "
                             +navigationPath.get(0)._waypointName+ ", "+ navigationPath.get(1)._waypointName);
 
                     currentLocationReminder.setText("目前位置:" + currentLocationName);
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);*/
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
 
-                    firstMovement.setText(GO_STRAIGHT_ABOUT);
+                    /*firstMovement.setText(GO_STRAIGHT_ABOUT);
                     if(navigationPath.size() > 1) {
                         //判斷下個目的地是否有LandMark
                         if (NextLandMarkisEnglish == false)
                             howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS + "至" + navigationPath.get(1)._waypointName);
                         else
                             howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
-                    }
+                    }*/
                     if(navigationPath.size()>=3){
 
                         turnNotificationForPopup = GeoCalulation.getDirectionFromBearing
