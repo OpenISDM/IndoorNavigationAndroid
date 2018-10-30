@@ -109,6 +109,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init_signal);
+        dp.setupDeviceParameter(this);
 //        init UI objects
         showtxt = (TextView)findViewById(R.id.textView1);
         showlocation = (TextView)findViewById(R.id.locationtext);
@@ -232,7 +233,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 
 
         UUID = beacondata[1]+beacondata[2];
-        UUID = trtoid.ptr(UUID); //find the corresponding name to uuid
+        //UUID = trtoid.ptr(UUID); //find the corresponding name to uuid
         String rssi = beacondata[3];
 
         //if map have the corresponding uuid than +1 else put 1 and find the max value
@@ -357,7 +358,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             R0 = dp.get_R0(uuid);
             n_vlaue = dp.get_n(uuid);
             estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
-            actualRssi = list.get(0);
+            actualRssi = -list.get(0);
             offset = actualRssi / estimate;
             gv.setOffset(offset);
         }
