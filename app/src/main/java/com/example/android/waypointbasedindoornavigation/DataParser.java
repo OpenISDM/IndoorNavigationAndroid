@@ -189,7 +189,7 @@ public class DataParser {
             InputStream is;
 
             try {
-                is = assetManager.open("buildingA/"+s+".xml");
+                is = assetManager.open("buildingA/buildingA_"+s+".xml");
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -301,7 +301,7 @@ public class DataParser {
             AssetManager assetManager = context.getAssets();
             InputStream is;
             try {
-                is = assetManager.open("buildingA/"+s+".xml");
+                is = assetManager.open("buildingA/buildingA_"+s+".xml");
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
