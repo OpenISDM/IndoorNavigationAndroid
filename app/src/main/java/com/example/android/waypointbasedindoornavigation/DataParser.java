@@ -43,15 +43,15 @@ public class DataParser {
     // a list of String to store a list of category for UI display
     static List<String> categoryList = new ArrayList<>();
 
-    public static File file;
-    public static File path  =  Environment.getExternalStoragePublicDirectory
-            (Environment.DIRECTORY_DOWNLOADS+File.separator+"WGRAPH_雲林台大醫院地圖");
+    //public static File file;
+    //public static File path  =  Environment.getExternalStoragePublicDirectory
+     //       (Environment.DIRECTORY_DOWNLOADS+File.separator+"WGRAPH_雲林台大醫院地圖");
 
 
     //Parse data from Region Graph  抓取Download裡面的資料夾將BuildingA讀取
     public static RegionGraph getRegionDataFromRegionGraph(Context context) {
 
-        file = new File(path, "buildingA.xml");
+      //  file = new File(path, "buildingA.xml");
 
         // a hashmap of Region, the key is the name of the Region object
         RegionGraph regionGraph = new RegionGraph();
@@ -61,10 +61,11 @@ public class DataParser {
 
         //get XML file from asset folder
         AssetManager assetManager = context.getAssets();
+        InputStream is;
     //將BulidA.xml檔裡面的資料抓出來
         try
         {
-            InputStream is = new FileInputStream(file);
+            is = assetManager.open("buildingA.xml");
             //is = assetManager.open("buildingA.xml"); //read the XML file
             pullParser.setInput(is , "utf-8");
             int eventType = pullParser.getEventType();
@@ -185,10 +186,10 @@ public class DataParser {
             XmlPullParser pullParser = Xml.newPullParser();
             AssetManager assetManager = context.getAssets();
             //要改Region1名稱檔名也需要更改
-            file =  new File(path, "buildingA_"+s+".xml");
+            InputStream is;
 
             try {
-                InputStream is = new FileInputStream(file);
+                is = assetManager.open("buildingA/"+s+".xml");
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -298,10 +299,9 @@ public class DataParser {
 
             XmlPullParser pullParser = Xml.newPullParser();
             AssetManager assetManager = context.getAssets();
-
-            file = new File(path, "buildingA_"+s+".xml");
+            InputStream is;
             try {
-                InputStream is = new FileInputStream(file);
+                is = assetManager.open("buildingA/"+s+".xml");
                 pullParser.setInput(is, "utf-8");
                 int eventType = pullParser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
