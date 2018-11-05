@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int STAIRWELL = 2;
     private static final int USER_MODE = 3;
     private static final int TESTER_MODE = 4;
+    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    private static final int REQUEST_ENABLE_BT = 3;
 
 
     //Two search bars, one for source and one for destination
@@ -107,7 +110,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("台大雲林分院室內導航系統");
-
+        BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(!mBtAdapter.isEnabled()) {
+            Intent enableIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_ENABLE );
+            startActivityForResult( enableIntent, REQUEST_ENABLE_BT ); }
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
         //Get the position of popupwindow (center of phone screen)
