@@ -2,10 +2,12 @@ package com.example.android.waypointbasedindoornavigation.Find_loc;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -80,9 +82,10 @@ public class ReadWrite_File {
 
     public JSONArray ReadJsonFile() {
         JSONArray jarray = null;
+        Context context = null;
+        AssetManager assetManager = context.getAssets();
             try {
-                Context context = null;
-                InputStream is = context.getAssets().open("DeviceParamation.json");
+                InputStream is = assetManager.open("DeviceParamation.json");
                 int tmp_size = is.available();
                 byte[] buffer = new byte[tmp_size];
                 is.read(buffer);
@@ -90,7 +93,10 @@ public class ReadWrite_File {
                 String jsonText = new String(buffer, "UTF-8");
                 jarray = new JSONArray(jsonText);
                 Log.i("JSON","load json success");
-            } catch (Exception e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         return jarray;
