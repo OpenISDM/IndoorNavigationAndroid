@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WayPointBasedIndoorNavigation</string>
+    <string name="app_name">台大雲林分院導航</string>
     <string name="title_activity_init_signal">initSignal</string>
     <string name="rssitestfile">rssitestfile</string>
 </resources>

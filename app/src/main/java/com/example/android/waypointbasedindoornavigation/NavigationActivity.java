@@ -1602,7 +1602,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
         else if(instruction== WRONGWAY_NOTIFIER){
             turnDirection = "正在幫您重新規劃路線";
-            tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
+            //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
+            Log.i("xxx_wrong","wrongwayexe");
             image.setImageResource(R.drawable.computing);
             initToast(toast);
             Timer timer = new Timer();
