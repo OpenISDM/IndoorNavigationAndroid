@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
 
-    <region id='1' name='region1' neighbor1='region3' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
+    <region id='1' name='region1' neighbor1='' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
  
-	    <node id='0xfe53bd410xff54f142' name='前門大廳' region='region1' category='新大樓一樓'/>
+	    <node id='0xfa53bd410xff54f142' name='前門大廳' region='region1' category='新大樓一樓'/>
 		<node id='0xcf90b8410x3424f042' name='批價掛號櫃臺' region='region1' category='新大樓一樓'/>
-		<node id='0x0454bd410x0155f142' name='領藥處' region='region1' category='新大樓一樓'/>
+		<node id='0x0054bd410x0055f142' name='領藥處' region='region1' category='新大樓一樓'/>
 		<node id='0x4993bd410x640df142' name='超商' region='region1' category='新大樓一樓'/>	  
 		<node id='0x6029b8410x580af042' name='心臟內科/內科/體檢區(1~10診)' region='region1' category='新大樓一樓'/>
 		<node id='0x3ef8b8410x0f3ef042' name='耳鼻喉科/小兒科/婦產科(11~20診)' region='region1' category='新大樓一樓'/>
@@ -26,11 +26,12 @@
         <node id='0x2c05ba410x4b81f042' name='C25' region='region1' category='新大樓一樓'/>
         <node id='0x4993bd410x640df142' name='A04' region='region1' category='新大樓一樓'/>
 		-->
+        <!--
     </region>
 
     <region id='3' name='region3' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='0'>
        <node id='0x5c93bd410x4f0df142' name='X光報到處' region='region3' category='新大樓地下一樓'/>
-
+-->
     </region>
 
 

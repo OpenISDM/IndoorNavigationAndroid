@@ -301,7 +301,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void resetSignal(View view){
         GlobalVariable gv = (GlobalVariable)getApplicationContext();
-        gv.initOffset();
+        Log.i("xxx_offset","printoffset" + gv.getOffset());
+        //gv.initOffset();
     }
 
 

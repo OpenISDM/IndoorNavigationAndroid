@@ -61,6 +61,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.TreeMap;
 
+import static java.lang.Compiler.disable;
 import static java.lang.Thread.sleep;
 
 
@@ -349,7 +350,17 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                     map.clear();
                     max = 0;
 
-                    turnBack.setVisibility(View.VISIBLE);
+                   // turnBack.setVisibility(View.VISIBLE);
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            beaconManager.removeAllMonitorNotifiers();
+                            beaconManager.removeAllRangeNotifiers();
+                            beaconManager.unbind(initSignal.this);
+                            finish();
+                        }
+                    },1000);
 
                 }
             });
