@@ -33,7 +33,7 @@ public class DeviceParameter {
     public void setupDeviceParameter(Context c) {
         Log.i("setupDeviceParameter","setupDeviceParameter");
         this.c = c;
-        jarray = wf.ReadJsonFile();
+        jarray = wf.ReadJsonFile(c);
         if (jarray == null) initdivice();
         else {
             try {

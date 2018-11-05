@@ -3,9 +3,12 @@ package com.example.android.waypointbasedindoornavigation;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -144,10 +147,19 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         beaconManager.unbind(this);
 
         startT = System.currentTimeMillis();
-        ScanPeriod = 100;
-        SleepTime = 0;
-        beaconManager.setForegroundScanPeriod(ScanPeriod);
-        beaconManager.setForegroundBetweenScanPeriod(SleepTime);
+        Notification.Builder builder = new Notification.Builder(this);
+        //builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setContentTitle("Scanning for Beacons");
+        Intent intent = new Intent(this, initSignal.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        builder.setContentIntent(pendingIntent);
+        beaconManager.enableForegroundServiceScanning(builder.build(), 456);
+        beaconManager.setEnableScheduledScanJobs(false);
+        beaconManager.setBackgroundBetweenScanPeriod(0);
+        beaconManager.setBackgroundScanPeriod(1100);
+        beaconManager.bind(initSignal.this);
         showtxt.setText("");
         write_location_index = 0;
         beaconManager.bind(initSignal.this);

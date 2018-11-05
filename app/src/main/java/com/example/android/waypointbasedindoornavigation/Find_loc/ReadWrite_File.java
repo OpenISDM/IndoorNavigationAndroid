@@ -80,9 +80,8 @@ public class ReadWrite_File {
         }
     }
 
-    public JSONArray ReadJsonFile() {
+    public JSONArray ReadJsonFile(Context context) {
         JSONArray jarray = null;
-        Context context = null;
         AssetManager assetManager = context.getAssets();
             try {
                 InputStream is = assetManager.open("DeviceParamation.json");
