@@ -835,7 +835,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 for(int i=0; i<newPath.size(); i++)
                     Log.i("renavigate", "path node "+newPath.get(i)._waypointName);
 
-
                 for(int i=0; i<newPath.size(); i++){
 
                     if(newPath.get(i)._waypointName.equals(lastNode._waypointName)){
@@ -1415,13 +1414,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("path", path.get(i)._waypointName);
 
         //防止連續接收
-        /*Handler handler = new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable()  {
             @Override
             public void run() {
             }
-        },4000);
-*/
+        },1000);
+
         return path;
 
     }

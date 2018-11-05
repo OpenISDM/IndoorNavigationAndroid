@@ -1,5 +1,7 @@
 package com.example.android.waypointbasedindoornavigation.Find_loc;
 
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.os.Environment;
 import android.util.Log;
 
@@ -10,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ReadWrite_File {
     private File file;
@@ -74,7 +77,25 @@ public class ReadWrite_File {
             }
         }
     }
+
     public JSONArray ReadJsonFile() {
+        JSONArray jarray = null;
+            try {
+                Context context = null;
+                InputStream is = context.getAssets().open("DeviceParamation.json");
+                int tmp_size = is.available();
+                byte[] buffer = new byte[tmp_size];
+                is.read(buffer);
+                is.close();
+                String jsonText = new String(buffer, "UTF-8");
+                jarray = new JSONArray(jsonText);
+                Log.i("JSON","load json success");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return jarray;
+    }
+    /*public JSONArray ReadJsonFile() {
         file = new File(path, "DeviceParamation.json");
         JSONArray jarray = null;
         if(file.exists()) {
@@ -92,5 +113,5 @@ public class ReadWrite_File {
             }
         }else   Log.i("JSON","don't have file");
         return jarray;
-    }
+    }*/
 }
