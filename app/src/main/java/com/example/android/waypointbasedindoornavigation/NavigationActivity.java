@@ -1159,6 +1159,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 loadNavigationGraph();
                 navigationPath = startNavigation();
                 progressBar.setMax(navigationPath.size());
+                //門口Special case顯示方向
                 if ((sourceID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
                     turnNotificationForPopup = "C04";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
@@ -1166,6 +1167,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     turnNotificationForPopup = "C11";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 }
+                //sourceID = destination
+                if((endNode._groupID != 0 && endNode._groupID == receiveNode._groupID) || sourceID.equals(destinationID));
+                showHintAtWaypoint(ARRIVED_NOTIFIER);
+
+                //羅盤校正
             /*        Intent intent = new Intent(NavigationActivity.this,
                             CompassActivity.class);
                     intent.putExtra("degree",
@@ -1580,16 +1586,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
 
-        // distance to the next waypoint
-        int distance = 0;
+        // distance determine showhint time
+        int DistanceForShowHint = 0;
         // if there are two or more waypoints to go
-        /*依距離顯示時間測試->到達的點會先被Remove掉
+        //依距離顯示時間測試->到達的點會先被Remove掉
         if(navigationPath.size()>=2)
-            distance = (int) GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1));
+            DistanceForShowHint = (int) GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1));
 
         Log.i("xxx_showhint","navigationPath(0) = " +navigationPath.get(0)._waypointName );
-        Log.i("xxx_showhint","navigationPath(1) = " +navigationPath.get(1)._waypointName );
-*/
+      //  Log.i("xxx_showhint","LastNode = " +lastNode._waypointName);
+
 
         //image.setImageResource(R.drawable.img_compass);
         String turnDirection = null;
@@ -1688,15 +1694,19 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         Log.i("showHint", "showHint");
         if (turnNotificationForPopup != null) {
+            Log.i("xxx_showhint","DistanceForShowHint  = " + DistanceForShowHint);
             initToast(toast);
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    initToast(toast);
-                }
-            }, 1000);
-            myVibrator.vibrate(new long[]{50, 100, 50}, -1);
+            if(DistanceForShowHint > 8) {
+                Log.i("xxx_showhint","ShowHintLong");
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        initToast(toast);
+                    }
+                }, 1000);
+                myVibrator.vibrate(new long[]{50, 100, 50}, -1);
+            }
         }
 
     }
@@ -1868,9 +1878,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 turnNotificationForPopup = "C11";
                 showHintAtWaypoint(MAKETURN_NOTIFIER);
             }
-            Log.i("xxx_isFistHand", "手動輸入被改成false");
-            Log.i("xxx_receiveNodeID", "SourceID = " + receiveNode._waypointID);
-            Log.i("xxx_navigationpath", "navigationpath(1) = " + navigationPath.get(1)._waypointID);
+
+            //sourceID = destination
+            if((endNode._groupID != 0 && endNode._groupID == receiveNode._groupID) || sourceID.equals(destinationID));
+                showHintAtWaypoint(ARRIVED_NOTIFIER);
+
+
         }
 
         Log.i("receiveInfo", "navigationPath Size " + navigationPath.size());
