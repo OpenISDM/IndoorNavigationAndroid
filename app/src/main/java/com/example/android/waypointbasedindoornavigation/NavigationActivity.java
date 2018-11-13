@@ -1168,7 +1168,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 }
                 //sourceID = destination
-                if((endNode._groupID != 0 && endNode._groupID == receiveNode._groupID) || sourceID.equals(destinationID));
+               if((endNode._groupID != 0 && endNode._groupID == startNode._groupID) || startNode._waypointID.equals(endNode._waypointID))
                 showHintAtWaypoint(ARRIVED_NOTIFIER);
 
                 //羅盤校正
@@ -1878,12 +1878,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 turnNotificationForPopup = "C11";
                 showHintAtWaypoint(MAKETURN_NOTIFIER);
             }
-
             //sourceID = destination
-            if((endNode._groupID != 0 && endNode._groupID == receiveNode._groupID) || sourceID.equals(destinationID));
+            if((endNode._groupID != 0 && endNode._groupID == startNode._groupID) || startNode._waypointID.equals(endNode._waypointID))
                 showHintAtWaypoint(ARRIVED_NOTIFIER);
-
-
         }
 
         Log.i("receiveInfo", "navigationPath Size " + navigationPath.size());
