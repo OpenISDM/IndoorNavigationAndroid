@@ -360,7 +360,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                             beaconManager.unbind(initSignal.this);
                             finish();
                         }
-                    },1000);
+                    },8000);
 
                 }
             });
