@@ -68,6 +68,28 @@ public class UUIDtoID {
                 return "A05";
             case "0x4b81ca410x0e21f342":
                 return "C31";
+            case "0x283ff0420x00000000":
+                return "C35";
+            case "0xff14f0420x00000000":
+                return "B10";
+            case "0x030000430x00000000":
+                return "C39";
+            case "0x0800b8410x0200f042":
+                return "A15";
+            case "0xa692bd410x430df142":
+                return "A16";
+            case "0xeb57ba410xfb95f042":
+                return "C36";
+            case "0x8193bd410x540df142":
+                return "A06";
+            case "0xde57c8410x0721f342":
+                return "B07";
+            case "0xc43af3420x00000000":
+                return "C40";
+            case "0x0e94bd410x4e0df142":
+                return "A08";
+            case "0x0d93bd410x530df142":
+                return "A14";
             default:
                 return s;
         }

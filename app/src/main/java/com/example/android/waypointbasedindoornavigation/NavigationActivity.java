@@ -364,7 +364,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //load all waypoint data for precise positioning
         loadAllWaypointData();
 
-        destinationReminder.setText("目的地 : " + allWaypointData.get(destinationID)._waypointName);
+       destinationReminder.setText("目的地 : " + allWaypointData.get(destinationID)._waypointName);
 
         // Lbeacon Manager setup
         beaconManagerSetup();
