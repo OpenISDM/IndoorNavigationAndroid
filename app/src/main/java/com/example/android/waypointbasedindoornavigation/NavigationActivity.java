@@ -73,6 +73,13 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1171,6 +1178,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                if((endNode._groupID != 0 && endNode._groupID == startNode._groupID) || startNode._waypointID.equals(endNode._waypointID))
                 showHintAtWaypoint(ARRIVED_NOTIFIER);
 
+                appendLog("StartNavigation");
                 //羅盤校正
             /*        Intent intent = new Intent(NavigationActivity.this,
                             CompassActivity.class);
@@ -1213,8 +1221,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("renavigate", "CurrentID: " + currentLBeaconID);
             // block the Lbeacon ID the navigator just received
             if (pass) {
+                appendLog(navigationPath.get(0)._waypointName);
 
-                if (popupWindow != null)
+                 if (popupWindow != null)
                     popupWindow.dismiss();
 
                 whichWaypointOnProgressBar += 1;
@@ -1602,6 +1611,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         Vibrator myVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
         if (instruction == ARRIVED_NOTIFIER) {
+            appendLog("EndNavigation");
             turnDirection = YOU_HAVE_ARRIVE;
             image.setImageResource(R.drawable.arrived_image);
             //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
@@ -1881,6 +1891,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             //sourceID = destination
             if((endNode._groupID != 0 && endNode._groupID == startNode._groupID) || startNode._waypointID.equals(endNode._waypointID))
                 showHintAtWaypoint(ARRIVED_NOTIFIER);
+
+            appendLog("StartNavigation");
         }
 
         Log.i("receiveInfo", "navigationPath Size " + navigationPath.size());
@@ -1912,6 +1924,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
         if (pass) {
+            appendLog(navigationPath.get(0)._waypointName);
             synchronized (sync) {
 
                 Log.i("enter", "sync");
@@ -1940,6 +1953,35 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         progressNumber.setVisibility(View.VISIBLE);
     }
 
+    public void appendLog(String text)
+    {
+        File logFile = new File("sdcard/logfile.txt");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            Writer buf = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile,true),"UTF-8"));
+            buf.append(text + "\n");
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     private boolean hasEnglish(String str) {
         boolean hasEng = false;
         Log.i("xxx_tmpString", "tmpString = " + str);
@@ -1954,11 +1996,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     public void exitProgram(View view) {
+        appendLog("EndNavigation");
         android.os.Process.killProcess(android.os.Process.myPid());
         Log.i("xxx", "InexitProgram");
     }
 
     public void onBackPressed(View view) {
+        appendLog("EndNavigation");
         //navigationPath.clear();
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();
