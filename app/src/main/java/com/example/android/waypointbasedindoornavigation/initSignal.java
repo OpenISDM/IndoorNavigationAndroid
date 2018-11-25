@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -340,9 +342,9 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 
                     countOffset(maxUuid,3);
                     showtxt.append(" "+'\n');
-                    GlobalVariable gv = (GlobalVariable)getApplicationContext();
-                    double n = gv.getOffset();
-                    showtxt.append("調整比率 = " + String.format("%.2f ", Double.valueOf(n)) + '\n');
+                    SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    float offset = offsetPref.getFloat("offset",1);
+                    showtxt.append("調整比率 = "+String.format("%.2f ", Float.valueOf(offset)));
                     showtxt.append("調整完成"+'\n');
                     showtxt.append(" "+'\n');
                     list.clear();
@@ -375,7 +377,8 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         double estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
         double actualRssi = list.get(0);
         double offset;
-        GlobalVariable gv = (GlobalVariable)getApplicationContext();
+        SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = offsetPref.edit();
         if(dp.our_Beacon(uuid))
         {
             R0 = dp.get_R0(uuid);
@@ -383,11 +386,14 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
             actualRssi = -list.get(0);
             offset = actualRssi / estimate;
-            gv.setOffset(offset);
-        }
-        else
-            gv.initOffset();
+            editor.putFloat("offset",(float)offset);
+            editor.commit();
 
+        }
+        else {
+            editor.putFloat("offset", (float) 1.0);
+            editor.commit();
+        }
     }
     public void Clickevent(View view){
         switch (view.getId()){

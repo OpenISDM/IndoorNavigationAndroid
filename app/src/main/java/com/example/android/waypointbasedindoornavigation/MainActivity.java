@@ -19,11 +19,15 @@ Author:
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -300,9 +304,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetSignal(View view){
-        GlobalVariable gv = (GlobalVariable)getApplicationContext();
-        Log.i("xxx_offset","printoffset" + gv.getOffset());
-        //gv.initOffset();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        float offset = pref.getFloat("offset",1);
+        AlertDialog.Builder dialogBuilder =  new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(String.format("%.2f ", Float.valueOf(offset)));
+        dialogBuilder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
 

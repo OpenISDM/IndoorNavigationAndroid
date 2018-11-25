@@ -34,6 +34,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -45,6 +46,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -306,8 +308,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         setTitle("台大雲林分院室內導航系統");
-        GlobalVariable gv = (GlobalVariable) getApplicationContext();
-        offset = gv.getOffset();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        offset = (double) pref.getFloat("offset",1);
         Log.i("xxx_wrong", "onCreate");
 
 
