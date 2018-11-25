@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <BuildingA>
 
-    <region id='1' name='region1' neighbor1='region3' neighbor2='' neighbor3='' neighbor4='' elevation='1'>
+    <region id='1' name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='1'>
  
 	    <node id='0xfa53bd410xff54f142' name='前門大廳' region='region1' category='新大樓一樓'/>
 		<node id='0xcf90b8410x3424f042' name='批價掛號櫃臺' region='region1' category='新大樓一樓'/>
@@ -19,9 +19,14 @@
 		<node id='0x0800b8410x0200f042' name='病歷室' region='region1' category='舊大樓一樓'/>
 		<node id='0x0d93bd410x530df142' name='X光' region='region1' category='舊大樓一樓'/>
 		<node id='0xeb57ba410xfb95f042' name='後門' region='region1' category='舊大樓一樓'/>
-
 	
 	</region>
+	
+	<region id='2' name='region2' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>
+     
+	<node id='0xff14f0420x00000001' name='超音波' region='region2' category='舊大樓二樓'/>
+
+    </region>
 
 
     <region id='3' name='region3' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='0'>

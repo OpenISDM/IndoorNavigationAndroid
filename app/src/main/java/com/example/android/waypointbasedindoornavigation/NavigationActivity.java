@@ -469,24 +469,30 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("xyz", "NextLandMarkisEnglish = " + NextLandMarkisEnglish);
             Log.i("xyz", "navigationnPath.get(1) = " + NextLandMarkisEnglish);
         }
+
         //收到的ConnectID != 0
-        if(navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._nodeType != 0){
+        if(navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._connectPointID == navigationPath.get(0)._connectPointID){
             for(int i = 0 ; i < virtualNode.size() ; i ++) {
                 //第i個connectID = navigationPath(0) & 進入
                 if(virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false){
                     turnNotificationForPopup = getDirectionFromBearing(lastNode,navigationPath.get(0),virtualNode.get(i));
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    Log.i("xxx_virtualNodeTest", "Show in top");
                     isInVirtualNode = true;
                 }
             }
             Log.i("xxx_virtualNodeTest", "HaveConnectPoint");
-        } else if(navigationPath.get(0)._connectPointID != 0 && isInVirtualNode == true){
+        } else if(navigationPath.get(0)._connectPointID != 0 && lastNode._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true){
             for(int i = 0 ; i < virtualNode.size() ; i ++) {
-                turnNotificationForPopup = getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1));
-                showHintAtWaypoint(MAKETURN_NOTIFIER);
-                isInVirtualNode = false;
+                if(virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID  && isInVirtualNode == true) {
+                    turnNotificationForPopup = getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1));
+                    //showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    Log.i("xxx_virtualNodeTest", "Show in down");
+                    isInVirtualNode = false;
+                }
             }
         }
+
 
         switch (turnDirection) {
 
