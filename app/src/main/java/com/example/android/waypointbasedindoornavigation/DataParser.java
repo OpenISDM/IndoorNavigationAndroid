@@ -22,6 +22,7 @@ Author:
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -285,7 +286,78 @@ public class DataParser {
 
         return routingData;
     }
+//-------------------------------VittualNode test-------------------------------------
+// Parse data from Navigation Graph
+public static List<Node> getVirtualNode(Context context) {
 
+
+    // create a list of navigation subgraph used as routing data
+    List<Node> VirtualData = new ArrayList<>();
+
+
+        // create a navigationSubgraph object
+        NavigationSubgraph navigationSubgraph = new NavigationSubgraph();
+
+        XmlPullParser pullParser = Xml.newPullParser();
+        AssetManager assetManager = context.getAssets();
+        //要改Region1名稱檔名也需要更改
+        InputStream is;
+
+        try {
+            is = assetManager.open("virtual_node.xml");
+            pullParser.setInput(is, "utf-8");
+            int eventType = pullParser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+
+                String tag = null;
+                String id = null;
+                double lon = 0;
+                double lat = 0;
+                int connectPointID = 0;
+
+
+                // get complete waypoint data from navigation subgraph
+                if (eventType == XmlPullParser.START_TAG) {
+
+                    tag = pullParser.getName();
+
+                    if (tag.equals("node")) {
+
+
+                        id = pullParser.getAttributeValue(null, "id");
+                        lon = Double.parseDouble(pullParser.getAttributeValue(null,
+                                "lat"));
+                        lat = Double.parseDouble(pullParser.getAttributeValue(null,
+                                "lon"));
+
+
+                        if (!pullParser.getAttributeValue(null, "connectPointID").isEmpty())
+                            connectPointID = parseInt(pullParser.getAttributeValue(null,
+                                    "connectPointID"));
+
+
+                        // create a Node object initialized with the retrieved data
+                        Node node = new Node(id, lon, lat, connectPointID);
+
+                        // put each Node object into a navigationSubgraph object
+                        navigationSubgraph.nodesInSubgraph.put(id, node);
+
+                        VirtualData.add(node);
+
+                        Log.i("virtualtest",node._waypointID);
+
+                    }
+                }
+                eventType = pullParser.next();
+            }
+        } catch (IOException e) {
+        } catch (XmlPullParserException e) {
+        }
+
+
+    return VirtualData;
+}
+// -------------------------------VirtualNode end---------------------------------
 
     // Parse data from Navigation Graph
     public static HashMap<String, String> waypointNameAndIDMappings(Context context, List<String> regionsToBeLoaded) {

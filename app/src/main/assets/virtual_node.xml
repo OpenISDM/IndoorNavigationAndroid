@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<BuildingA>
+
+    <region1>
+        <node id='first' lat='23.698518470350035' lon='120.52718700409886' connectPointID='1' />
+        <node id='second' lat='23.698518470350035' lon='120.52718700409886' connectPointID='2' />
+   </region1>
+
+
+</BuildingA>
+
+

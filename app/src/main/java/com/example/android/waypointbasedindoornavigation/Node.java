@@ -55,6 +55,14 @@ public class Node implements Comparable<Node> {
 
     }
 
+    //Virtual Node information
+    public Node(String id, double lat, double lon, int connectPointID) {
+        this._waypointID = id;
+        this._lat = lat;
+        this._lon = lon;
+        this._connectPointID = connectPointID;
+
+    }
 
 
     // constructor for a Node object for UI display

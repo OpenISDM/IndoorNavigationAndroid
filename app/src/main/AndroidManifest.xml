@@ -38,6 +38,9 @@
             android:name=".CompassActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".InitDirectionImage"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".initSignal"
             android:label="@string/title_activity_init_signal"
             android:theme="@style/AppTheme.NoActionBar" />
