@@ -1648,7 +1648,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         } else if (instruction == WRONGWAY_NOTIFIER) {
             turnDirection = "正在幫您重新計算路線";
             //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
-            Log.i("xxx_wrong", "wrongwayexe");
+            Log.i("xxx_wrong", "wrongway");
             image.setImageResource(R.drawable.refresh);
             initToast(toast);
             Timer timer = new Timer();
@@ -1662,7 +1662,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         } else if (instruction == MAKETURN_NOTIFIER) {
             //處理空白跳框情形
             image.setImageResource(R.drawable.turn_back);
-
+            Log.i("xxx_LastSlash","LastisSlash = " + LastisSlash);
             switch (turnNotificationForPopup) {
 
                 case RIGHT:
@@ -1675,19 +1675,47 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 case FRONT_RIGHT:
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                    image.setImageResource(R.drawable.rightup_now);
+                    if(LastisSlash == false) {
+                        image.setImageResource(R.drawable.rightup_now);
+                        LastisSlash = true;
+                    }
+                    else{
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
                     break;
                 case FRONT_LEFT:
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
-                    image.setImageResource(R.drawable.leftup_now);
+                    if(LastisSlash == false) {
+                        image.setImageResource(R.drawable.leftup_now);
+                        LastisSlash = true;
+                    }
+                    else{
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
                     break;
                 case REAR_RIGHT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.rightdown_now);
+                    if(LastisSlash == false) {
+                        image.setImageResource(R.drawable.rightdown_now);
+                        LastisSlash = true;
+                    }
+                    else{
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
                     break;
                 case REAR_LEFT:
                     turnDirection = PLEASE_TURN_REAR_LEFT;
-                    image.setImageResource(R.drawable.leftdown_now);
+                    if(LastisSlash == false) {
+                        image.setImageResource(R.drawable.leftdown_now);
+                        LastisSlash = true;
+                    }
+                    else{
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
                     break;
                 case FRONT:
                     turnDirection = PLEASE_GO_STRAIGHT;
