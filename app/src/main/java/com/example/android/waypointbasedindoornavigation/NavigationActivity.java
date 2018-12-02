@@ -184,9 +184,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean isFirstBeacon = true;
     boolean NextLandMarkisEnglish = false;
     boolean isInVirtualNode = false;
+    boolean LastisRecalculate = false;
+    boolean LastisSlash = false;
     Node startNode;
     Node endNode;
     Node lastNode;
+    Node wrongWaypoint;
 
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
@@ -459,44 +462,17 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     void navigationInstructionDisplay(String turnDirection, int distance) {
         //關閉後面圖示顯示UI
-        firstMovement.setVisibility(View.INVISIBLE);
-        howFarToMove.setVisibility(View.INVISIBLE);
-        nextTurnMovement.setVisibility(View.INVISIBLE);
-        imageTurnIndicator.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
-        progressNumber.setVisibility(View.INVISIBLE);
+        closeImage();
         //判斷下個地點是否有LandMark
         if (navigationPath.size() > 1) {
             NextLandMarkisEnglish = hasEnglish(navigationPath.get(1)._waypointName);
             Log.i("xyz", "NextLandMarkisEnglish = " + NextLandMarkisEnglish);
             Log.i("xyz", "navigationnPath.get(1) = " + NextLandMarkisEnglish);
         }
+        //樓梯或電梯方向顯示
+        if(turnDirection != WRONG)
+            ShowDirectionFromConnectPoint();
 
-            Log.i("qwe_test","isFirstBeacon =" + isFirstBeacon);
-    if(startNode._waypointID != navigationPath.get(0)._waypointID) {
-        //收到的ConnectID != 0 目前與下個點的conectID相同
-        if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._connectPointID == navigationPath.get(0)._connectPointID) {
-            for (int i = 0; i < virtualNode.size(); i++) {
-                //第i個connectID = navigationPath(0) & 進入
-                if (virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false) {
-                    turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNode.get(i));
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                    Log.i("xxx_virtualNodeTest", "Show in top");
-                    isInVirtualNode = true;
-                }
-            }
-            Log.i("xxx_virtualNodeTest", "HaveConnectPoint");
-        } else if (navigationPath.get(0)._connectPointID != 0 && lastNode._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
-            for (int i = 0; i < virtualNode.size(); i++) {
-                if (virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
-                    turnNotificationForPopup = getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1));
-                    //showHintAtWaypoint(MAKETURN_NOTIFIER);
-                    Log.i("xxx_virtualNodeTest", "Show in down");
-                    isInVirtualNode = false;
-                }
-            }
-        }
-    }
         switch (turnDirection) {
 
             case LEFT:
@@ -852,11 +828,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 break;
 
             case WRONG:
+                LastisRecalculate = true;
                 Log.i("wrong", "Out");
                 List<Node> newPath = new ArrayList<>();
                 //walkedWaypoint = 0;
                     Log.i("xxx_wrong","allWaypointData.get(currentLBeaconID) = " + allWaypointData.get(currentLBeaconID)._waypointID);
-                    Node wrongWaypoint = allWaypointData.get(currentLBeaconID);
+                    wrongWaypoint = allWaypointData.get(currentLBeaconID);
                     Log.i("xxx_wrong","wrongWaypoint = " + wrongWaypoint._waypointID);
                     currentLocationReminder.setText("目前位置 : " + currentLocationName);
                     Log.i("xxx_wrong","LocationName" + currentLocationName);
@@ -887,7 +864,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
                     if (isLongerPath) {
-
+                        appendLog("重新規劃路線，且是返回走");
                         currentLBeaconID = "EmptyString";
                         //navigationPath.add(0, lastNode);
                         //navigationPath.add(0, wrongWaypoint);
@@ -906,6 +883,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         turnNotificationForPopup = null;
 
                     } else {
+                        appendLog("重新規劃路線");
                         showHintAtWaypoint(WRONGWAY_NOTIFIER);
 
                         navigationPath = newPath;
@@ -1011,6 +989,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         lastNode = navigationPath.get(0);
 
 
+
         if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
         Handler handler = new Handler();
@@ -1038,7 +1017,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     nextTurnMovement.setText(THEN_WALK_UP_STAIR + toFirstFloor);
                     break;
                 case 2:
-                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR + toSecondFloor);
+                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toSecondFloor);
                     break;
                 case 3:
                     nextTurnMovement.setText(THEN_TAKE_ELEVATOR + toThirdFloor);
@@ -1667,10 +1646,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             finish();
 
         } else if (instruction == WRONGWAY_NOTIFIER) {
-            turnDirection = "正在幫您重新規劃路線";
+            turnDirection = "正在幫您重新計算路線";
             //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
             Log.i("xxx_wrong", "wrongwayexe");
-            image.setImageResource(R.drawable.computing);
+            image.setImageResource(R.drawable.refresh);
             initToast(toast);
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -1696,33 +1675,29 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 case FRONT_RIGHT:
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                    image.setImageResource(R.drawable.up_now);
+                    image.setImageResource(R.drawable.rightup_now);
                     break;
                 case FRONT_LEFT:
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
-                    image.setImageResource(R.drawable.up_now);
+                    image.setImageResource(R.drawable.leftup_now);
                     break;
                 case REAR_RIGHT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.right_now);
+                    image.setImageResource(R.drawable.rightdown_now);
                     break;
                 case REAR_LEFT:
                     turnDirection = PLEASE_TURN_REAR_LEFT;
-                    image.setImageResource(R.drawable.left_now);
+                    image.setImageResource(R.drawable.leftdown_now);
                     break;
                 case FRONT:
                     turnDirection = PLEASE_GO_STRAIGHT;
                     image.setImageResource(R.drawable.up_now);
                     break;
                 case ELEVATOR:
-                    Log.i("xxx_virtualNodeTest","elevation");
-                    Log.i("xxx_virtualNodeTest","navigationPath( 0 )  = " + navigationPath.get(0)._waypointName);
                     turnDirection = PLEASE_TAKE_ELEVATOR;
                     image.setImageResource(R.drawable.elevator);
                     break;
                 case STAIR:
-                    Log.i("xxx_virtualNodeTest","stair");
-                    Log.i("xxx_virtualNodeTest","navigationPath( 0 )  = " + navigationPath.get(0)._waypointName);
                     turnDirection = PLEASE_WALK_UP_STAIR;
                     image.setImageResource(R.drawable.stair);
                     break;
@@ -1994,6 +1969,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         toast.show();
     }
 
+    private void closeImage(){
+        //關閉後面圖示顯示UI
+        firstMovement.setVisibility(View.INVISIBLE);
+        howFarToMove.setVisibility(View.INVISIBLE);
+        nextTurnMovement.setVisibility(View.INVISIBLE);
+        imageTurnIndicator.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        progressNumber.setVisibility(View.INVISIBLE);
+    }
+
     private void showBackImage() {
         firstMovement.setVisibility(View.VISIBLE);
         howFarToMove.setVisibility(View.VISIBLE);
@@ -2003,6 +1988,41 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         progressNumber.setVisibility(View.VISIBLE);
     }
 
+    private void ShowDirectionFromConnectPoint(){
+        Log.i("xxx_virtualNodeTest","startNode = " + startNode._waypointName);
+        if(startNode._waypointID != navigationPath.get(0)._waypointID) {
+            //收到的ConnectID != 0 目前與下個點的conectID相同
+            if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._connectPointID == navigationPath.get(0)._connectPointID) {
+                for (int i = 0; i < virtualNode.size(); i++) {
+                    //第i個connectID = navigationPath(0) & 進入
+                    if (virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == false) {
+                        turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNode.get(i));
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        isInVirtualNode = true;
+                      }else if(virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == true){
+                        turnNotificationForPopup = getDirectionFromBearing(wrongWaypoint, navigationPath.get(0), virtualNode.get(i));
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        isInVirtualNode = true;
+                    }
+                }
+            } else if (navigationPath.get(0)._connectPointID != 0 && lastNode._connectPointID == navigationPath.get(0)._connectPointID) {
+                for (int i = 0; i < virtualNode.size(); i++) {
+                    if (virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
+                        turnNotificationForPopup = getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1));
+                        Log.i("xxx_virtualNodeTest","" + getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1)));
+                        // showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        Log.i("xxx_virtualNodeTest", "Show in down");
+                        Log.i("xxx_virtualNodeTest","v =" + virtualNode.get(i)._waypointID + "p(0) =" + navigationPath.get(0)._waypointName + "p(1)= " + navigationPath.get(1)._waypointName);
+                        isInVirtualNode = false;
+                    }
+                }
+            }
+        }else if(startNode._connectPointID != 0 && startNode._waypointID == navigationPath.get(0)._waypointID && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
+            isInVirtualNode = true;
+            Log.i("xxx_virtualNodeTest", "isInvirtualNodeSetup out");
+        }
+        Log.i("xxx_virtualNodeTest", "isInVirtualNode = " +isInVirtualNode);
+    }
     public void appendLog(String text)
     {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss - ");
@@ -2068,6 +2088,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        appendLog("EndNavigation");
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             beaconManager.removeAllMonitorNotifiers();
