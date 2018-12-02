@@ -69,7 +69,7 @@ public class ana_signal {
                             data_list.get(Math.round(tmp_count_dif.get(2))).getUuid() +
                             data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " " +
                             String.valueOf(data_list.get(1).countavg()));
-                    if (tmp_dif > tmp_count_dif.get(0) &&
+                   if (tmp_dif > tmp_count_dif.get(0) &&
                             data_list.get(0).countavg() > tmp_count_dif.get(1)) {
                         Log.i("def_range", "close " + data_list.get(0).getUuid());
                         Log.i("tmp_count","threshold = " + tmp_count_dif.get(1));
