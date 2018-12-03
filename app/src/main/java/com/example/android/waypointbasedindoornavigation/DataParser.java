@@ -205,9 +205,10 @@ public class DataParser {
                     int nodeType = 0;
                     int connectPointID = 0;
                     int groupID = 0;
+                    int mainID = 0;
                     int elevation = 0;
                     List<String> adjacentNodes = new ArrayList<>();
-
+                    List<Integer> attachIDs = new ArrayList<>();
                     // get complete waypoint data from navigation subgraph
                     if (eventType == XmlPullParser.START_TAG) {
 
@@ -226,6 +227,22 @@ public class DataParser {
                             name = pullParser.getAttributeValue(null, "name");
                             region = pullParser.getAttributeValue(null, "region");
                             category = pullParser.getAttributeValue(null, "category");
+
+                           for(int i=0; i<pullParser.getAttributeCount(); i++){
+
+                               String attributeName = pullParser.getAttributeName(i);
+
+                               if(attributeName.length()>=8){
+
+                                   if(attributeName.substring(0, 8).equals("attachID")){
+
+                                       if(!pullParser.getAttributeValue(i).isEmpty())
+                                           attachIDs.add(parseInt(pullParser.getAttributeValue(i)));
+
+                                   }
+                               }
+
+                           }
 
                            for(int i=0; i<pullParser.getAttributeCount(); i++){
 
@@ -256,6 +273,10 @@ public class DataParser {
                                groupID = parseInt(pullParser.getAttributeValue(null,
                                        "groupID"));
 
+                           if (!pullParser.getAttributeValue(null, "mainID").isEmpty())
+                               mainID = parseInt(pullParser.getAttributeValue(null,
+                                       "mainID"));
+
                             if (!pullParser.getAttributeValue(null, "elevation").isEmpty())
                                 elevation = parseInt(pullParser.getAttributeValue(null,
                                         "elevation"));
@@ -263,7 +284,7 @@ public class DataParser {
 
                             // create a Node object initialized with the retrieved data
                             Node node = new Node(id, name, lon, lat, adjacentNodes, region,
-                                    category, nodeType, connectPointID, groupID, elevation);
+                                    category, nodeType, connectPointID, groupID, mainID, attachIDs, elevation);
 
                             // put each Node object into a navigationSubgraph object
                             navigationSubgraph.nodesInSubgraph.put(id, node);

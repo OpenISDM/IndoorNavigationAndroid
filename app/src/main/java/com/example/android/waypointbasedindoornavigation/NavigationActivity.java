@@ -1186,9 +1186,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 }
                 //sourceID = destination
-               if((endNode._groupID != 0 && endNode._groupID == startNode._groupID) || startNode._waypointID.equals(endNode._waypointID))
-                showHintAtWaypoint(ARRIVED_NOTIFIER);
-
+               for (int i = 0;i < startNode._attachIDs.size();i++) {
+                   if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i)) || startNode._waypointID.equals(endNode._waypointID))
+                       showHintAtWaypoint(ARRIVED_NOTIFIER);
+               }
                 appendLog("StartNavigation");
 
                 //初始方向顯示圖片
@@ -1207,9 +1208,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0),
                                     navigationPath.get(1)));
                     startActivity(intent);
-                    Log.i("bbb_First","xxx_firest executed");
-                    Log.i("bbb_navigationpahSize","navigationPathSize in isFirstBeacon = " + navigationPath.size());
-                    Log.i("bbb_receiveNode_GroupID","receiveNode.groupID  = " + receiveNode._groupID);
                     for(int i=0;i<navigationPath.size();i++)
                         Log.i("bbb_navigationValue","navigationGraph"+ i + "value =" + navigationPath.get(i)._waypointName);*/
             }
@@ -1309,9 +1307,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-        /*   for(int i = 0 ; i < navigationGraphForAllWaypoint.size() ; i++) {
-            if(endNode._groupID == navigationGraphForAllWaypoint.get(i).nodesInSubgraph.get(i)._groupID && endNode._groupID != 0 && endNode._waypointID != navigationGraphForAllWaypoint.get(i).nodesInSubgraph.get(i)._waypointID)
-        }*/
+
         int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
@@ -1494,7 +1490,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         source.minDistance = 0.;
         PriorityQueue<Node> nodeQueue = new PriorityQueue<Node>();
         nodeQueue.add(source);
-        int destinationGroup = destination._groupID;
+        int destinationGroup = destination._mainID;
 
         while (!nodeQueue.isEmpty()) {
             Node v = nodeQueue.poll();
@@ -1502,11 +1498,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("bbb", "In dijsk node name " + v._waypointName);
 
             if (destinationGroup != 0) {
-                if (v._groupID == destinationGroup) {
-                    destination = navigationGraph.get(navigationGraph.size() - 1).nodesInSubgraph.get(v._waypointID);
-                    Log.i("bbb", "destination is: " + destination._waypointName);
-
-                    break;
+                for(int i = 0 ; i < v._attachIDs.size(); i++) {
+                    if (v._attachIDs.get(i) == destinationGroup) {
+                        destination = navigationGraph.get(navigationGraph.size() - 1).nodesInSubgraph.get(v._waypointID);
+                        Log.i("bbb", "destination is: " + destination._waypointName);
+                        break;
+                    }
                 }
             }
 
@@ -1927,8 +1924,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             isFirstBeacon = false;
 
             //sourceID = destination
-            if((endNode._groupID != 0 && endNode._groupID == startNode._groupID) || startNode._waypointID.equals(endNode._waypointID))
-                showHintAtWaypoint(ARRIVED_NOTIFIER);
+            for (int i = 0;i < startNode._attachIDs.size();i++) {
+                if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i)) || startNode._waypointID.equals(endNode._waypointID))
+                    showHintAtWaypoint(ARRIVED_NOTIFIER);
+            }
 
             appendLog("StartNavigation");
 
@@ -1942,8 +1941,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 startActivity(intent);
             }
 
-            Log.i("test","SourceID = " + sourceID);
-
+           // Log.i("xxx_des","attachID1 = " + startNode._attachIDs.get(0));
 
 
         }
