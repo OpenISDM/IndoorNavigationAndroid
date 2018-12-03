@@ -851,7 +851,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     destinationRegion = wrongWaypoint._regionID;
                     loadNavigationGraph();
                     wrongPath = startNavigation();
-                    lastNode = wrongPath.get(wrongPath.size()-1);
+                    lastNode = wrongPath.get(wrongPath.size() - 2);
+                    Log.i("xxx_path","wrongWay LastNode = " + lastNode._waypointName);
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
 
