@@ -178,7 +178,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // start ---------- Variables used to record important values ------------
 
     // IDs and Regions of source and destination input by user on home screen
-    String sourceID, destinationID, sourceRegion, destinationRegion;
+    String sourceID, destinationID, sourceRegion, destinationRegion, wrongdestinationID, wrongdestinationRegion, tmpdestinationID, tmpdestinationRegion;
     String currentLocationName;
 
     boolean isFirstBeacon = true;
@@ -831,6 +831,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 LastisRecalculate = true;
                 Log.i("wrong", "Out");
                 List<Node> newPath = new ArrayList<>();
+                List<Node> wrongPath = new ArrayList<>();
+
                 //walkedWaypoint = 0;
                     Log.i("xxx_wrong","allWaypointData.get(currentLBeaconID) = " + allWaypointData.get(currentLBeaconID)._waypointID);
                     wrongWaypoint = allWaypointData.get(currentLBeaconID);
@@ -838,8 +840,26 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     currentLocationReminder.setText("目前位置 : " + currentLocationName);
                     Log.i("xxx_wrong","LocationName" + currentLocationName);
                     Boolean isLongerPath = false;
+                    //----------wrong way test------------------
+                    tmpdestinationID = destinationID;
+                    tmpdestinationRegion = destinationRegion;
+
+
+                    sourceID = startNode._waypointID;
+                    sourceRegion = startNode._regionID;
+                    destinationID = wrongWaypoint._waypointID;
+                    destinationRegion = wrongWaypoint._regionID;
+                    loadNavigationGraph();
+                    wrongPath = startNavigation();
+                    lastNode = wrongPath.get(wrongPath.size()-1);
+                    destinationID = tmpdestinationID;
+                    destinationRegion = tmpdestinationRegion;
+
+                    //---------------------------------------------
                     sourceID = wrongWaypoint._waypointID;
                     sourceRegion = wrongWaypoint._regionID;
+
+                     Log.i("xxx_path","wrongWay newpath :  sourceID = " + sourceID + "destinationID = " + destinationID);
 
                     loadNavigationGraph();
                     newPath = startNavigation();
@@ -1185,15 +1205,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     turnNotificationForPopup = "C11";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 }
+
                 //sourceID = destination
-               for (int i = 0;i < startNode._attachIDs.size();i++) {
-                   if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i)) || startNode._waypointID.equals(endNode._waypointID))
-                       showHintAtWaypoint(ARRIVED_NOTIFIER);
-               }
+                for (int i = 0;i < startNode._attachIDs.size();i++) {
+                    if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i))) {
+                        Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
+                        showHintAtWaypoint(ARRIVED_NOTIFIER);
+                    }
+                    break;
+                }
+
+                if(startNode._waypointID.equals(endNode._waypointID)) {
+                    Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
+                    showHintAtWaypoint(ARRIVED_NOTIFIER);
+                }
+
                 appendLog("StartNavigation");
 
                 //初始方向顯示圖片
-                if ((startNode._waypointID.equals("0x0454bd410x0155f142"))){
+                if ((startNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >=2 ){
                     Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                     intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
                     intent.putExtra("nowID", navigationPath.get(0)._waypointID);
@@ -1284,6 +1314,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
         endNode = navigationGraph.get(navigationGraph.size() - 1).nodesInSubgraph.get(destinationID);
 
+        Log.i("xxx_path","in load navigationGraph : StartNode =" + startNode._waypointName + " EndNode =" + endNode._waypointName);
+
 
     }
 
@@ -1307,7 +1339,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-
+        Log.i("xxx_path", "startNode = " + startNode._waypointName + " endNode = " + endNode._waypointName);
         int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
@@ -1925,14 +1957,27 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             //sourceID = destination
             for (int i = 0;i < startNode._attachIDs.size();i++) {
-                if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i)) || startNode._waypointID.equals(endNode._waypointID))
+                if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i))) {
+                    Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
+                }
+                break;
             }
+
+            if(startNode._waypointID.equals(endNode._waypointID)) {
+                Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
+                showHintAtWaypoint(ARRIVED_NOTIFIER);
+            }
+
+            Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName + "Start size =" + startNode._attachIDs.size());
+
+
+
 
             appendLog("StartNavigation");
 
             //初始方向顯示圖片
-            if ((startNode._waypointID.equals("0x0454bd410x0155f142"))){
+           if ((startNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
                 Log.i("initPic","初始圖片顯示");
                 Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                 intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
