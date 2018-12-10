@@ -841,6 +841,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Log.i("xxx_wrong","LocationName" + currentLocationName);
                     Boolean isLongerPath = false;
                     //----------wrong way test------------------
+                /*
                     tmpdestinationID = destinationID;
                     tmpdestinationRegion = destinationRegion;
 
@@ -851,11 +852,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     destinationRegion = wrongWaypoint._regionID;
                     loadNavigationGraph();
                     wrongPath = startNavigation();
+
                     lastNode = wrongPath.get(wrongPath.size() - 2);
+
                     Log.i("xxx_path","wrongWay LastNode = " + lastNode._waypointName);
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
-
+*/
                     //---------------------------------------------
                     sourceID = wrongWaypoint._waypointID;
                     sourceRegion = wrongWaypoint._regionID;
