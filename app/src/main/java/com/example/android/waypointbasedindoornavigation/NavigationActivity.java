@@ -186,6 +186,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean isInVirtualNode = false;
     boolean LastisRecalculate = false;
     boolean LastisSlash = false;
+    boolean JumpNode = false;
     Node startNode;
     Node endNode;
     Node lastNode;
@@ -566,7 +567,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if (turnNotificationForPopup != null)
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
 
-                imageTurnIndicator.setImageResource(R.drawable.left_up);
+                if(LastisSlash == true){
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                }
+                else
+                    imageTurnIndicator.setImageResource(R.drawable.left_up);
                 turnNotificationForPopup = FRONT_LEFT;
                 break;
             case REAR_LEFT:
@@ -604,7 +610,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if (turnNotificationForPopup != null)
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
 
-                imageTurnIndicator.setImageResource(R.drawable.left_down);
+                if(LastisSlash == true){
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                }
+                else
+                    imageTurnIndicator.setImageResource(R.drawable.left_down);
                 turnNotificationForPopup = REAR_LEFT;
                 break;
 
@@ -680,7 +691,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if (turnNotificationForPopup != null)
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
 
-                imageTurnIndicator.setImageResource(R.drawable.right_up);
+                if(LastisSlash == true){
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                }
+                else
+                    imageTurnIndicator.setImageResource(R.drawable.right_up);
                 turnNotificationForPopup = FRONT_RIGHT;
                 break;
 
@@ -718,8 +734,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
                 if (turnNotificationForPopup != null)
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
-
-                imageTurnIndicator.setImageResource(R.drawable.right_down);
+                if(LastisSlash == true) {
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                }
+                else
+                    imageTurnIndicator.setImageResource(R.drawable.right_down);
                 turnNotificationForPopup = REAR_RIGHT;
                 break;
 
@@ -842,9 +862,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Boolean isLongerPath = false;
                     //----------wrong way test------------------
                 /*
+                    JumpNode = true;
+                    for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
+                       if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
+                                JumpNode = false;
+                         }
+                    }
+
+                if(JumpNode == true) {
                     tmpdestinationID = destinationID;
                     tmpdestinationRegion = destinationRegion;
-
 
                     sourceID = startNode._waypointID;
                     sourceRegion = startNode._regionID;
@@ -855,10 +882,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     lastNode = wrongPath.get(wrongPath.size() - 2);
 
-                    Log.i("xxx_path","wrongWay LastNode = " + lastNode._waypointName);
+                    Log.i("xxx_path", "wrongWay LastNode = " + lastNode._waypointName);
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
-*/
+                }*/
                     //---------------------------------------------
                     sourceID = wrongWaypoint._waypointID;
                     sourceRegion = wrongWaypoint._regionID;
@@ -918,15 +945,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         turnNotificationForPopup = null;
 
                         firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
+                        if(navigationPath.size() >= 2) {
+                            howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
 
 
-                        turnNotificationForPopup = getDirectionFromBearing
-                                (lastNode, navigationPath.get(0), navigationPath.get(1));
+                            turnNotificationForPopup = getDirectionFromBearing
+                                    (lastNode, navigationPath.get(0), navigationPath.get(1));
 
-                        Log.i("renavigate", "lastNode, 0, 1: " + lastNode._waypointName + ", "
-                                + navigationPath.get(0)._waypointName + ", " + navigationPath.get(1)._waypointName);
-
+                            Log.i("renavigate", "lastNode, 0, 1: " + lastNode._waypointName + ", "
+                                    + navigationPath.get(0)._waypointName + ", " + navigationPath.get(1)._waypointName);
+                        }
                         currentLocationReminder.setText("目前位置:" + currentLocationName);
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
 
@@ -2064,6 +2092,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     private void ShowDirectionFromConnectPoint(){
+        if(navigationPath.get(0)._nodeType == 0)
+            isInVirtualNode = false;
+
         Log.i("xxx_virtualNodeTest","startNode = " + startNode._waypointName);
         if(startNode._waypointID != navigationPath.get(0)._waypointID) {
             //收到的ConnectID != 0 目前與下個點的conectID相同
@@ -2088,7 +2119,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         // showHintAtWaypoint(MAKETURN_NOTIFIER);
                         Log.i("xxx_virtualNodeTest", "Show in down");
                         Log.i("xxx_virtualNodeTest","v =" + virtualNode.get(i)._waypointID + "p(0) =" + navigationPath.get(0)._waypointName + "p(1)= " + navigationPath.get(1)._waypointName);
-                        isInVirtualNode = false;
                     }
                 }
             }
@@ -2097,6 +2127,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("xxx_virtualNodeTest", "isInvirtualNodeSetup out");
         }
         Log.i("xxx_virtualNodeTest", "isInVirtualNode = " +isInVirtualNode);
+
+
     }
     public void appendLog(String text)
     {
