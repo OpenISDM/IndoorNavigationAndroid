@@ -464,11 +464,22 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     void navigationInstructionDisplay(String turnDirection, int distance) {
         //關閉後面圖示顯示UI
         closeImage();
+
+        Log.i("123456","navigationpath(0) = " + navigationPath.get(0)._waypointName);
+
+
+
         //判斷下個地點是否有LandMark
         if (navigationPath.size() > 1) {
             NextLandMarkisEnglish = hasEnglish(navigationPath.get(1)._waypointName);
             Log.i("xyz", "NextLandMarkisEnglish = " + NextLandMarkisEnglish);
             Log.i("xyz", "navigationnPath.get(1) = " + NextLandMarkisEnglish);
+            //判斷下個Node鄰居數與是否為電/樓梯
+            if(navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._nodeType == 0) {
+                turnDirection = FRONT;
+                LastisSlash = true;
+            }
+
         }
         //樓梯或電梯方向顯示
        // if(turnDirection != WRONG)
