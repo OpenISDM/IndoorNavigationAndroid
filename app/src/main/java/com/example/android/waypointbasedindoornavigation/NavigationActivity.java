@@ -479,12 +479,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 turnDirection = FRONT;
                 LastisSlash = true;
             }
-
         }
         //樓梯或電梯方向顯示
-       // if(turnDirection != WRONG)
+        if(turnDirection != WRONG && navigationPath.size() >= 2)
             ShowDirectionFromConnectPoint();
 
+        LastisRecalculate = false;
         switch (turnDirection) {
 
             case LEFT:
@@ -1004,11 +1004,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 break;
                             case REAR_RIGHT:
                                 nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.right_down);
+                                imageTurnIndicator.setImageResource(R.drawable.up_now);
                                 break;
                             case REAR_LEFT:
                                 nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.left_down);
+                                imageTurnIndicator.setImageResource(R.drawable.up_now);
                                 break;
                             case FRONT:
                                 nextTurnMovement.setText(THEN_GO_STRAIGHT);
