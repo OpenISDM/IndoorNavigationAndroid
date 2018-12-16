@@ -471,7 +471,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("xyz", "navigationnPath.get(1) = " + NextLandMarkisEnglish);
         }
         //樓梯或電梯方向顯示
-        if(turnDirection != WRONG)
+       // if(turnDirection != WRONG)
             ShowDirectionFromConnectPoint();
 
         switch (turnDirection) {
@@ -875,11 +875,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     sourceID = startNode._waypointID;
                     sourceRegion = startNode._regionID;
-                    destinationID = wrongWaypoint._waypointID;
                     destinationRegion = wrongWaypoint._regionID;
                     loadNavigationGraph();
                     wrongPath = startNavigation();
 
+                    destinationID = wrongWaypoint._waypointID;
                     lastNode = wrongPath.get(wrongPath.size() - 2);
 
                     Log.i("xxx_path", "wrongWay LastNode = " + lastNode._waypointName);
@@ -1729,10 +1729,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 case RIGHT:
                     turnDirection = PLEASE_TURN_RIGHT;
                     image.setImageResource(R.drawable.right_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case LEFT:
                     turnDirection = PLEASE_TURN_LEFT;
                     image.setImageResource(R.drawable.left_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case FRONT_RIGHT:
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
@@ -1744,6 +1748,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         image.setImageResource(R.drawable.up_now);
                         LastisSlash = false;
                     }
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case FRONT_LEFT:
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
@@ -1755,54 +1760,51 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         image.setImageResource(R.drawable.up_now);
                         LastisSlash = false;
                     }
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case REAR_RIGHT:
                     turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    if(LastisSlash == false) {
-                        image.setImageResource(R.drawable.rightdown_now);
-                        LastisSlash = true;
-                    }
-                    else{
-                        image.setImageResource(R.drawable.up_now);
-                        LastisSlash = false;
-                    }
+                    image.setImageResource(R.drawable.rightdown_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case REAR_LEFT:
                     turnDirection = PLEASE_TURN_REAR_LEFT;
-                    if(LastisSlash == false) {
-                        image.setImageResource(R.drawable.leftdown_now);
-                        LastisSlash = true;
-                    }
-                    else{
-                        image.setImageResource(R.drawable.up_now);
-                        LastisSlash = false;
-                    }
+                    image.setImageResource(R.drawable.leftdown_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case FRONT:
                     turnDirection = PLEASE_GO_STRAIGHT;
                     image.setImageResource(R.drawable.up_now);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case ELEVATOR:
                     turnDirection = PLEASE_TAKE_ELEVATOR;
                     image.setImageResource(R.drawable.elevator);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case STAIR:
                     turnDirection = PLEASE_WALK_UP_STAIR;
                     image.setImageResource(R.drawable.stair);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case "goback":
                     turnDirection = " ";
                     image.setImageResource(R.drawable.turn_back);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
 
                 case "C04":
                     turnDirection = PLEASE_TURN__FRONT_RIGHT;
                     image.setImageResource(R.drawable.rightup_now);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
 
                 case "C11":
                     turnDirection = PLEASE_TURN_FRONT_LEFT;
                     image.setImageResource(R.drawable.leftup_now);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
 
 

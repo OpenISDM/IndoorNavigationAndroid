@@ -5,6 +5,7 @@
         <node id='first' lat='23.698518470350035' lon='120.52718700409886' connectPointID='1' />
         <node id='second' lat='23.69809107026142' lon='120.52730700409886' connectPointID='2' />
         <node id='third' lat='23.697900894139058' lon='120.527317418' connectPointID='3' />
+		<node id='fourth' lat='23.697900894139058' lon='120.527200861' connectPointID='4' />
    </region1>
 
 

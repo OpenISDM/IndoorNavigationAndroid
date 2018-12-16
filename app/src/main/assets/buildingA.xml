@@ -25,6 +25,8 @@
 	<region id='2' name='region2' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>
      
 	<node id='0x5d74b9410x175df042' name='心臟血管檢查室' region='region2' category='舊大樓二樓'/>
+	<node id='0x3319b8410x4d06f042' name='D04' region='region2' category='舊大樓二樓'/>
+	<node id='0x4b19b8410x5306f042' name='D05' region='region2' category='舊大樓二樓'/>
 
     </region>
 
