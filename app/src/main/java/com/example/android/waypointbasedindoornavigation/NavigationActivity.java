@@ -187,6 +187,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean LastisRecalculate = false;
     boolean LastisSlash = false;
     boolean JumpNode = false;
+    boolean DirectCompute = false;
     Node startNode;
     Node endNode;
     Node lastNode;
@@ -865,38 +866,41 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 List<Node> wrongPath = new ArrayList<>();
 
                 //walkedWaypoint = 0;
-                    Log.i("xxx_wrong","allWaypointData.get(currentLBeaconID) = " + allWaypointData.get(currentLBeaconID)._waypointID);
-                    wrongWaypoint = allWaypointData.get(currentLBeaconID);
-                    Log.i("xxx_wrong","wrongWaypoint = " + wrongWaypoint._waypointID);
-                    currentLocationReminder.setText("目前位置 : " + currentLocationName);
-                    Log.i("xxx_wrong","LocationName" + currentLocationName);
-                    Boolean isLongerPath = false;
+                Log.i("xxx_wrong","allWaypointData.get(currentLBeaconID) = " + allWaypointData.get(currentLBeaconID)._waypointID);
+                wrongWaypoint = allWaypointData.get(currentLBeaconID);
+                Log.i("xxx_wrong","wrongWaypoint = " + wrongWaypoint._waypointID);
+                currentLocationReminder.setText("目前位置 : " + currentLocationName);
+                Log.i("xxx_wrong","LocationName" + currentLocationName);
+                Boolean isLongerPath = false;
                     //----------wrong way test------------------
-                /*
-                    JumpNode = true;
-                    for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
-                       if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
-                                JumpNode = false;
-                         }
+
+                JumpNode = true;
+                for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
+                    if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
+                        JumpNode = false;
                     }
+                }
 
                 if(JumpNode == true) {
+                    DirectCompute = true;
                     tmpdestinationID = destinationID;
                     tmpdestinationRegion = destinationRegion;
 
                     sourceID = startNode._waypointID;
                     sourceRegion = startNode._regionID;
+                    destinationID = wrongWaypoint._waypointID;
                     destinationRegion = wrongWaypoint._regionID;
                     loadNavigationGraph();
                     wrongPath = startNavigation();
 
-                    destinationID = wrongWaypoint._waypointID;
-                    lastNode = wrongPath.get(wrongPath.size() - 2);
+                    if(wrongPath.size() > 2)
+                        lastNode = wrongPath.get(wrongPath.size() - 2);
 
                     Log.i("xxx_path", "wrongWay LastNode = " + lastNode._waypointName);
+                    DirectCompute = false;
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
-                }*/
+                }
                     //---------------------------------------------
                     sourceID = wrongWaypoint._waypointID;
                     sourceRegion = wrongWaypoint._regionID;
@@ -1051,10 +1055,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         passedGroupID = navigationPath.get(0)._groupID;
         lastNode = navigationPath.get(0);
 
-
-
         if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -1572,7 +1575,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             Log.i("bbb", "In dijsk node name " + v._waypointName);
 
-            if (destinationGroup != 0) {
+            if (destinationGroup != 0 && DirectCompute == false) {
                 for(int i = 0 ; i < v._attachIDs.size(); i++) {
                     if (v._attachIDs.get(i) == destinationGroup) {
                         destination = navigationGraph.get(navigationGraph.size() - 1).nodesInSubgraph.get(v._waypointID);
