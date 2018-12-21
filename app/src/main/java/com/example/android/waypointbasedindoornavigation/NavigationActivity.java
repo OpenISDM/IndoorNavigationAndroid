@@ -809,19 +809,36 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             case STAIR:
                 turnNotificationForPopup = STAIR;
-                switch (navigationPath.get(2)._elevation) {
-                    case 0:
-                        firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                        break;
-                    case 1:
-                        firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                        break;
-                    case 2:
-                        firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                        break;
-                    case 3:
-                        firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                        break;
+                if(navigationPath.size() > 2) {
+                    switch (navigationPath.get(2)._elevation) {
+                        case 0:
+                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                            break;
+                        case 1:
+                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                            break;
+                        case 2:
+                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                            break;
+                        case 3:
+                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                            break;
+                    }
+                }else if (navigationPath.size() == 2) {
+                    switch (navigationPath.get(1)._elevation) {
+                        case 0:
+                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                            break;
+                        case 1:
+                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                            break;
+                        case 2:
+                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                            break;
+                        case 3:
+                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                            break;
+                    }
                 }
                 howFarToMove.setText("");
                 nextTurnMovement.setText("");
@@ -882,6 +899,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
 
                 if(JumpNode == true) {
+                    Log.i("789456","inJumpNode");
+                    Log.i("In","destinationID = " + destinationID + "endNode = " + endNode._waypointID + "wrong = " + wrongWaypoint._waypointID);
+
                     DirectCompute = true;
                     tmpdestinationID = destinationID;
                     tmpdestinationRegion = destinationRegion;
