@@ -27,11 +27,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,20 +48,23 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.example.android.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 import com.example.android.waypointbasedindoornavigation.Find_loc.Find_Loc;
 
 import org.altbeacon.beacon.BeaconManager;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
 
 
-
+    private static final long serialVersionUID = -6470574927973900913L;
     private static final int SOURCE_SEARCH_BAR = 1;
     private static final int DESTINATION_SEARCH_BAR = 2;
     private static final int UNDEFINED = -1;
@@ -91,6 +101,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
+    //A string list to store all the categories names
+    List<String> categoryList = new ArrayList<>();
+    //A HashMap which has String as key and list of vertice as value to be retrieved
+    HashMap<String, List<Node>> categorizedDataList = new HashMap<>();
+    //List of vertice for storing location data from regionData
+    List<Node> listForStoringAllNodes = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+    List<Node> CList = new ArrayList<Node>();
 
     // Variables used to store waypoint infomration of a building
     List<NavigationSubgraph> navigationGraph = new ArrayList<>();
@@ -108,6 +127,33 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION};
+    //UI design
+    Intent intent;
+    ViewPager viewPager;
+    Button btn_stethoscope, btn_bill, btn_exit, btn_medicent, btn_shop, btn_wc;
+    TextView tv_description;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_regulate,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.gear || item.getItemId() == R.id.gear2){
+            Intent intent = new Intent();
+            intent = new Intent(MainActivity.this, initSignal.class);
+            startActivity(intent);
+        }else if(item.getItemId() == R.id.menu_author){
+            Intent intent = new Intent();
+            intent = new Intent(MainActivity.this, author_list.class);
+            startActivity(intent);
+            this.finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +166,16 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult( enableIntent, REQUEST_ENABLE_BT ); }
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
+
+
+        viewPager = (ViewPager)findViewById(R.id.viewPager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(viewPagerAdapter);
+
+
+
         //Get the position of popupwindow (center of phone screen)
-        positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
+       // positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
 
         //Receive location information passed from ListViewActivity
         Bundle bundle = getIntent().getExtras();
@@ -132,14 +186,15 @@ public class MainActivity extends AppCompatActivity {
             searchBarClicked = true;
         }
 
-        //if(!path.exists()) path.mkdir();
-
-        //file_download("https://goo.gl/op2w9N");
-
 
         //Find UI objects by ID
-        searchBarForDestination = (Button) findViewById(R.id.destination);
-        StartButton = (Button)findViewById(R.id.navigation);
+        btn_stethoscope = (Button) findViewById(R.id.btn_stethoscope);
+        btn_bill = (Button)findViewById(R.id.btn_bill);
+        btn_exit = (Button)findViewById(R.id.btn_exit);
+        btn_medicent = (Button)findViewById(R.id.btn_medicent);
+        btn_shop = (Button)findViewById(R.id.btn_shop);
+        btn_wc = (Button)findViewById(R.id.btn_wc);
+        tv_description = (TextView)findViewById(R.id.tv_description);
 
         //Decide which search bar to be set value
         if(searchBarClicked == true) {
@@ -150,14 +205,15 @@ public class MainActivity extends AppCompatActivity {
             StartButton.setVisibility(View.VISIBLE);
         }
 
-        //If switch time is greater or equals to 2, both search bars are set
-        if(searchBarClicked == true)
-            searchBarForDestination.setText(destinationName);
+        loadLocationDatafromRegionGraph();
+        List<Node> data = Collections.emptyList();
+        for(int i = 0 ; i < categoryList.size() ; i++) {
+            Log.i("xxx_List", "Categorylist = " + categoryList.get(i));
+        }
+
 
 
     }
-
-    // Switch to ListView Activity when one of the search bars is clicked
     // Switch to ListView Activity when one of the search bars is clicked
     public void switchToListView(View v){
 
@@ -172,16 +228,10 @@ public class MainActivity extends AppCompatActivity {
 
     //Press "Start" button to start navigation
     public void startNavigation(View view){
-
-
         //Start NavigationActivity and pass IDs and Regions of source and destination to it
-        if(destinationID == null)
-            showPopupWindow();//One of the search bar is blank, show popupwindow to notify user
-        else{
             Intent i = new Intent(this, NavigationActivity.class);
             i.putExtra("destinationID", destinationID);
             i.putExtra("destinationRegion", destinationRegion);
-
             //Initialize values of static variables
             searchBarClicked = false;
             namePassedFromListView = null;
@@ -193,105 +243,8 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(i);
             finish();
-        }
     }
 
-    //Show popupwindow to notify user one of the search bar is left blank
-    public void showPopupWindow(){
-
-        //popupWindow.setFocusable(true);
-        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup, null);
-
-        popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-
-        final Button popupButton = (Button) customView.findViewById(R.id.popupButton);
-        TextView popupText = (TextView) customView.findViewById(R.id.popupText);
-
-
-        popupButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-
-                popupWindow.dismiss();
-            }
-        });
-
-        popupText.setText("請確認已選擇目的地!!");
-
-        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
-    }
-
-
-
-    // Set preference value
-    public void onPreferenceButtonClicked(View view) {
-
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // check which radio button is clicked
-        switch(view.getId()) {
-            case R.id.p1:
-                if (checked)
-                    Setting.setPreferenceValue(ELEVATOR);
-                break;
-            case R.id.p2:
-                if (checked)
-                    Setting.setPreferenceValue(STAIRWELL);
-                break;
-            case R.id.p3:
-                if (checked)
-                    Setting.setModeValue(USER_MODE);
-                break;
-            case R.id.p4:
-                if (checked)
-                    Setting.setModeValue(TESTER_MODE);
-                break;
-
-                /*
-            case R.id.p5:
-                if (checked)
-                    Setting.setTurnOnOK(false);
-                break;
-            case R.id.p6:
-                if (checked)
-                    Setting.setTurnOnOK(true);
-                break;*/
-        }
-    }
-
-
-    public void startDownload(View view){
-
-        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customView = inflater.inflate(R.layout.popup, null);
-
-        popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-
-        Button popupButton = (Button) customView.findViewById(R.id.popupButton);
-        TextView popupText = (TextView) customView.findViewById(R.id.popupText);
-
-
-        popupButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                String url = "https://drive.google.com/open?id=1c3-OGr3sgWk_uRjVJwXUtn4t92BgC6F4";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-                popupWindow.dismiss();
-            }
-        });
-
-        popupText.setText("按確認前往下載地圖，並於下載完畢後解壓縮");
-
-        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
-
-    }
 
     public void exitProgram(View view){
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -317,6 +270,176 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
     }
+
+    public void onClick(View view){
+        switch (view.getId()) {
+            case R.id.btn_stethoscope:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("各科門診")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "各科門診");
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+
+            case R.id.btn_exit:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("檢查室")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "檢查室");
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+
+            case R.id.btn_shop:
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "其他");
+                    startActivity(intent);
+                    finish();
+                break;
+
+            case R.id.btn_bill:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("批價櫃檯")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "批價櫃檯");
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+
+            case R.id.btn_medicent:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("領藥處")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "領藥處");
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+
+            case R.id.btn_wc:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("廁所")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "廁所");
+                    startActivity(intent);
+                    finish();
+                }
+                break;
+
+        }
+    }
+
+    public void loadLocationDatafromRegionGraph() {
+        Log.i("xxx_List","loadLocationDatafromRegionGraph");
+        //A HashMap to store region data, use region name as key to retrieve data
+        RegionGraph regionGraph = DataParser.getRegionDataFromRegionGraph(this);
+
+
+
+        //Get all category names of POI(point of interest) of the test building
+        categoryList = DataParser.getCategoryList();
+
+        //Retrieve all location information from regionData and store it as a list of vertice
+        for(Region r : regionGraph.regionData.values()){
+            listForStoringAllNodes.addAll(r._locationsOfRegion);
+        }
+
+        //Categorize Vertices into data list,
+        //the Vertices in the same data list have the same category
+        for(int i = 0; i< categoryList.size(); i++){
+
+            List<Node> tmpDataList = new ArrayList<>();
+
+            for(Node v : listForStoringAllNodes){
+
+                if(v._category.equals(categoryList.get(i)))
+                    tmpDataList.add(v);
+            }
+
+            categorizedDataList.put(categoryList.get(i),tmpDataList);
+        }
+
+        for(int i = 0; i < listForStoringAllNodes.size(); i++){
+            Log.i("xxx_List","all node = " + listForStoringAllNodes.get(i)._waypointName);
+        }
+
+    }
+
+
 
 
 }

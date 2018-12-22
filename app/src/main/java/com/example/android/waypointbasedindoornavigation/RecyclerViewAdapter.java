@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     Context context;
 
     public RecyclerViewAdapter(Context context, List<Node> data){
-
+        Log.i("xxx_List","RecyclerViewAdapter");
         inflater = LayoutInflater.from(context);
         this.data = data;
         this.context = context;
@@ -49,7 +50,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     @Override
 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+        Log.i("xxx_List","onCreateViewHolder");
         View view = inflater.inflate(R.layout.rowitem, null);
         MyViewHolder holder = new MyViewHolder(view);
 
@@ -58,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-
+        Log.i("xxx_List","onBindViewHolder");
         final Node current = data.get(position);
 
         // determine which of location information to be displayed on UI
@@ -72,10 +73,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
                 // send Name, ID and Region of the selected location
                 //to MainActivity
-                Intent i = new Intent(context, MainActivity.class);
-                i.putExtra("name", current.getName());
-                i.putExtra("id", current.getID());
-                i.putExtra("region", current.get_regionID());
+                Intent i = new Intent(context, NavigationActivity.class);
+                i.putExtra("destinationID", current.getID());
+                i.putExtra("destinationRegion", current.get_regionID());
                 context.startActivity(i);
                 ((Activity)context).finish();
             }
@@ -89,7 +89,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-
         TextView title, region;
 
         public MyViewHolder(View itemView) {

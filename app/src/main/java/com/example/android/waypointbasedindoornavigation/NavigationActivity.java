@@ -54,6 +54,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -106,6 +108,8 @@ import static com.example.android.waypointbasedindoornavigation.GeoCalulation.ge
 import static com.example.android.waypointbasedindoornavigation.R.id.beginning;
 import static com.example.android.waypointbasedindoornavigation.R.id.imageView;
 import static com.example.android.waypointbasedindoornavigation.Setting.getPreferenceValue;
+
+
 
 
 public class NavigationActivity extends AppCompatActivity implements BeaconConsumer {
@@ -2242,5 +2246,30 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             finish();
         }
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_navigation,menu);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_home || item.getItemId() == R.id.menu_home2){
+            Intent intent = new Intent();
+            intent = new Intent(NavigationActivity.this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+        if(item.getItemId() == R.id.menu_previous_page || item.getItemId() == R.id.menu_previous_page2){
+            Intent intent = new Intent();
+            intent = new Intent(NavigationActivity.this, ListViewActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

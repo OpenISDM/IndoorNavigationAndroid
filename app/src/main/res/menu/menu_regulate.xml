@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@+id/gear"
+        android:title="訊號校正"
+        android:icon="@drawable/gear"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="50" />
+
+    <item android:id="@+id/gear2"
+        android:title="訊號校正"
+        android:orderInCategory="51" />
+
+    <item android:id="@+id/menu_author"
+        android:title="圖片作者"
+        android:orderInCategory="100" />
+</menu>

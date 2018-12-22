@@ -1,184 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#BDBDBD"
-    android:id="@+id/mainActivityLayout"
-    tools:context="com.example.android.waypointbasedindoornavigation.MainActivity">
+    android:background="@drawable/background_white"
+    android:icon="@drawable/navigater"
+    android:label="台大雲林分院 - 室內導航系統"
+    tools:context=".MainActivity">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="目的地"
-        android:textSize="40dp"
-        android:textColor="@android:color/white"
-        android:paddingTop="40sp"
-        android:gravity="center_horizontal"/>
-
-    <Button
-        android:id="@+id/destination"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:textSize="30sp"
-        android:ems="10"
-        android:onClick="switchToListView"
-        android:background="@drawable/edittext"
-        android:gravity="center"
-        android:hint="請選擇目的地"/>
-
-    <!--
-        <EditText
-            android:id="@+id/destination"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:textSize="30sp"
-            android:ems="10"
-            android:onClick="switchToListView"
-            android:background="@drawable/edittext"
-            android:gravity="center_horizontal"
-            android:hint="請選擇目的地"/>
-    -->
-
-    <!--<Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="startScanning"
-        android:text="scan"/>-->
-
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="104dp">
-
-        <Button
-            android:id="@+id/initButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:onClick="signalInit"
-            android:text="初始化調整" />
-
-
-        <Button
-            android:id="@+id/navigation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="#1976D2"
-            android:onClick="startNavigation"
-            android:text="開始導航"
-            android:textColor="@android:color/white"
-            android:textSize="50dp"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/resetButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginBottom="4dp"
-            android:onClick="resetSignal"
-            android:text="恢復預設值" />
-
-    </RelativeLayout>
+        android:layout_height="150dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_alignParentTop="true">
+    </android.support.v4.view.ViewPager>
 
     <TextView
+        android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="偏好設定"
-        android:textSize="20dp"/>
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="5dip"
+        android:text="【點選圖片選擇目的地】"
+        android:textSize="25dp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <RadioButton android:id="@+id/p3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="UserMode"
-                android:paddingRight="40sp"
-                android:onClick="onPreferenceButtonClicked"
-                android:textSize="15dp"/>
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="0.5">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
-            <RadioButton android:id="@+id/p4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TesterMode"
-                android:paddingRight="40sp"
-                android:onClick="onPreferenceButtonClicked"
-                android:textSize="15dp"/>
+                <Button
+                    android:id="@+id/btn_stethoscope"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:singleLine="false"
+                    android:text="各科門診"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
 
+                <ImageView
+                    android:id="@+id/im_stethoscope"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="35dip"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
 
-        </RadioGroup>
+                    android:src="@drawable/stethoscope2" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                <Button
+                    android:id="@+id/btn_bill"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+
+                    android:singleLine="false"
+                    android:text="批價櫃臺"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/im_bill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/cash" />
+            </RelativeLayout>
+        </TableRow>
+
+        <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="0.5">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
+                <Button
+                    android:id="@+id/btn_exit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:text="檢查室"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
 
-            <RadioButton android:id="@+id/p1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="電梯"
-                android:paddingRight="40sp"
-                android:onClick="onPreferenceButtonClicked"
-                android:textSize="15dp"/>
+                <ImageView
+                    android:id="@+id/im_exit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/examination" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
-            <RadioButton android:id="@+id/p2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="樓梯"
-                android:paddingRight="40sp"
-                android:onClick="onPreferenceButtonClicked"
-                android:textSize="15dp"/>
+                <Button
+                    android:id="@+id/btn_medicent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:text="領藥處"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
 
+                <ImageView
+                    android:id="@+id/im_medicent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/pill" />
+            </RelativeLayout>
+        </TableRow>
 
-        </RadioGroup>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="0.5">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
+                <Button
+                    android:id="@+id/btn_shop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:text="其它"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
 
+                <ImageView
+                    android:id="@+id/im_shop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/route" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
 
+                <Button
+                    android:id="@+id/btn_wc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:text="廁所"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
 
+                <ImageView
+                    android:id="@+id/im_wc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/bathroom" />
+            </RelativeLayout>
+        </TableRow>
 
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/download_navigation_graoh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="startDownload"
-        android:text="下載導航地圖"
-        android:textSize="20dp"/>
-
-    <Button
-        android:id="@+id/ExitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:onClick="exitProgram"
-        android:text="離開"
-        android:textSize="20sp"
-        android:visibility="visible" />
-
-
+    </TableLayout>
 
 </LinearLayout>

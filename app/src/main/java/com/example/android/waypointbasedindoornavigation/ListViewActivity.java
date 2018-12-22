@@ -24,27 +24,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
 
-public class ListViewActivity extends AppCompatActivity
-        implements AdapterView.OnItemSelectedListener{
+public class ListViewActivity extends AppCompatActivity implements Serializable{
 
-    //A spinner at the top of ListViewActivity, showing categories of location information
-    Spinner spinner;
 
     //A string list to store all the categories names
     List<String> categoryList = new ArrayList<>();
+
+    //List of vertice for storing location data from regionData
+    List<Node> listForStoringAllNodes = new ArrayList<>();
+    List<Node> tmpList1 = new ArrayList<>();
+    List<Node> tmpList2 = new ArrayList<>();
+    List<Node> tmpList3 = new ArrayList<>();
+    List<Node> sortList = new ArrayList<>();
+    List<List<Node>> segment = new ArrayList<>();
 
     //A HashMap which has String as key and list of vertice as value to be retrieved
     HashMap<String, List<Node>> categorizedDataList = new HashMap<>();
@@ -59,9 +64,13 @@ public class ListViewActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listview);
         setTitle("台大雲林分院室內導航系統");
+        List<Node> ReceivedList = new ArrayList<>();
+
+        List<String> ReceivedListID = new ArrayList<String>();
+        Bundle bundle = getIntent().getExtras();
+        String x = bundle.getString("Category");
 
         //Find UI objects by IDs
-        spinner = (Spinner) findViewById(R.id.spinner);
         recyclerView = (RecyclerView) findViewById(R.id.displayList);
 
         loadLocationDatafromRegionGraph();
@@ -75,10 +84,24 @@ public class ListViewActivity extends AppCompatActivity
         //Feed category list data to spinner
         ArrayAdapter<String> categoryList =
                 new ArrayAdapter<String>(this, R.layout.spinner_item, stringArray);
-        spinner.setAdapter(categoryList);
 
-        //Set an OnItemSelected listener to spinner
-        spinner.setOnItemSelectedListener(this);
+       // Log.i("123123","comein");
+
+        if(!x.equals("其他"))
+            adapter = new RecyclerViewAdapter(this, categorizedDataList.get(x));
+        else
+            adapter = new RecyclerViewAdapter(this, sortList);
+
+        //Separate every selectable item with divider line
+        DividerItemDecoration divider = new
+                DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.divider));
+
+        //RecyclerView set with an adapter with selected data list,
+        //then feed the data list into UI display
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(divider);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         //Clear current category list in case
         //that other Region Graph is to be loaded
@@ -87,20 +110,35 @@ public class ListViewActivity extends AppCompatActivity
 
     //Load location data from Region graph
     public void loadLocationDatafromRegionGraph() {
-
+        Log.i("xxx_List","loadLocationDatafromRegionGraph");
         //A HashMap to store region data, use region name as key to retrieve data
         RegionGraph regionGraph = DataParser.getRegionDataFromRegionGraph(this);
 
-        //List of vertice for storing location data from regionData
-        List<Node> listForStoringAllNodes = new ArrayList<>();
 
         //Get all category names of POI(point of interest) of the test building
         categoryList = DataParser.getCategoryList();
-
+        int index = 0;
         //Retrieve all location information from regionData and store it as a list of vertice
         for(Region r : regionGraph.regionData.values()){
             listForStoringAllNodes.addAll(r._locationsOfRegion);
+            if(index == 0)
+                tmpList1.addAll(listForStoringAllNodes);
+            else if (index == 1)
+                tmpList2.addAll(listForStoringAllNodes);
+            else if (index == 2)
+                tmpList3.addAll(listForStoringAllNodes);
+            index++;
         }
+        for(int i = 0 ; i < tmpList2.size();i++) {
+            tmpList3.removeAll(tmpList2);
+        }
+        for(int i = 0 ; i < tmpList1.size();i++) {
+            tmpList2.removeAll(tmpList1);
+        }
+        sortList.addAll(tmpList3);
+        sortList.addAll(tmpList2);
+        sortList.addAll(tmpList1);
+
 
         //Categorize Vertices into data list,
         //the Vertices in the same data list have the same category
@@ -118,34 +156,6 @@ public class ListViewActivity extends AppCompatActivity
         }
     }
 
-
-    @Override
-    //Onclick listener for a category is selected on spinner
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        TextView textView = (TextView) view;
-        String selectedCategory = (String) textView.getText();
-
-        //Create an object of RecyclerViewAdapter with input of data list in same category
-        adapter = new RecyclerViewAdapter(this, categorizedDataList.get(selectedCategory));
-
-        //Separate every selectable item with divider line
-        DividerItemDecoration divider = new
-                DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.divider));
-
-        //RecyclerView set with an adapter with selected data list,
-        //then feed the data list into UI display
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(divider);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
@@ -157,4 +167,22 @@ public class ListViewActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_home || item.getItemId() == R.id.menu_home2){
+            Intent intent = new Intent();
+            intent = new Intent(ListViewActivity.this, MainActivity.class);
+            startActivity(intent);
+
+            this.finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
