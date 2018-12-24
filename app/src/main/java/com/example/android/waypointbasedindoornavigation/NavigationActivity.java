@@ -122,6 +122,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final int MAKETURN_NOTIFIER = 2;
 
     private static final String FRONT = "front";
+    private static final String FRONT_RIGHTSIDE = "frontRightSide";
+    private static final String FRONT_LEFTSIDE = "frontLeftSide";
     private static final String LEFT = "left";
     private static final String FRONT_LEFT = "frontLeft";
     private static final String REAR_LEFT = "rearLeft";
@@ -136,6 +138,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     private static final String GO_STRAIGHT_ABOUT = "直走約";
     private static final String THEN_GO_STRAIGHT = "然後直走";
+    private static final String THEN_GO_STRAIGHT_RIGHTSIDE = "然後靠右直走";
+    private static final String THEN_GO_STRAIGHT_LEFTSIDE = "然後靠左直走";
     private static final String THEN_TURN_LEFT = "然後向左轉";
     private static final String THEN_TURN_RIGHT = "然後向右轉";
     private static final String THEN_TURN_FRONT_LEFT = "然後向左前方轉";
@@ -152,6 +156,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String GET_LOST = "糟糕，你走錯路了";
     private static final String METERS = "公尺";
     private static final String PLEASE_GO_STRAIGHT = "請直走";
+    private static final String PLEASE_GO_STRAIGHT_RIGHTSIDE = "請靠右直走";
+    private static final String PLEASE_GO_STRAIGHT_LEFTSIDE = "請靠左直走";
     private static final String PLEASE_TURN_LEFT = "請左轉";
     private static final String PLEASE_TURN_RIGHT = "請右轉";
     private static final String PLEASE_TURN_FRONT_LEFT = "請向左前方轉";
@@ -192,6 +198,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     Node endNode;
     Node lastNode;
     Node wrongWaypoint;
+    Node currentNode;
 
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
@@ -806,7 +813,111 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 imageTurnIndicator.setImageResource(R.drawable.up_now);
                 turnNotificationForPopup = FRONT;
                 break;
+//--------------------
+            case FRONT_RIGHTSIDE:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                if (navigationPath.size() > 1) {
+                    //判斷下個目的地是否有LandMark
+                    if (NextLandMarkisEnglish == false)
+                        howFarToMove.setText("" + distance + " " + METERS + "至" + navigationPath.get(1)._waypointName);
+                    else
+                        howFarToMove.setText("" + distance + " " + METERS);
+                }
+                Log.i("bbb", navigationPath.get(1)._waypointName);
+                switch (navigationPath.get(1)._nodeType) {
 
+                    case ELEVATOR_WAYPOINT:
+                        if (navigationPath.size() == 2) {
+                            howFarToMove.setText("" + distance + " " + METERS);
+                            nextTurnMovement.setText("抵達目的地");
+                        } else {
+                            if (!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT_RIGHTSIDE);
+                        }
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+                        if (navigationPath.size() == 2) {
+                            howFarToMove.setText("" + distance + " " + METERS);
+                            nextTurnMovement.setText("抵達目的地");
+                        } else {
+                            if (!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT_RIGHTSIDE);
+                        }
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        if (navigationPath.size() == 2) {
+                            howFarToMove.setText("" + distance + " " + METERS);
+                            nextTurnMovement.setText("抵達目的地");
+                        } else
+                            nextTurnMovement.setText(THEN_GO_STRAIGHT_RIGHTSIDE);
+                        break;
+
+                }
+                if (turnNotificationForPopup != null)
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+
+                imageTurnIndicator.setImageResource(R.drawable.up_now);
+                turnNotificationForPopup = FRONT_RIGHTSIDE;
+                break;
+//-----------------
+            case FRONT_LEFTSIDE:
+                firstMovement.setText(GO_STRAIGHT_ABOUT);
+                if (navigationPath.size() > 1) {
+                    //判斷下個目的地是否有LandMark
+                    if (NextLandMarkisEnglish == false)
+                        howFarToMove.setText("" + distance + " " + METERS + "至" + navigationPath.get(1)._waypointName);
+                    else
+                        howFarToMove.setText("" + distance + " " + METERS);
+                }
+                Log.i("bbb", navigationPath.get(1)._waypointName);
+                switch (navigationPath.get(1)._nodeType) {
+
+                    case ELEVATOR_WAYPOINT:
+                        if (navigationPath.size() == 2) {
+                            howFarToMove.setText("" + distance + " " + METERS);
+                            nextTurnMovement.setText("抵達目的地");
+                        } else {
+                            if (!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT_LEFTSIDE);
+                        }
+                        break;
+
+                    case STAIRWELL_WAYPOINT:
+                        if (navigationPath.size() == 2) {
+                            howFarToMove.setText("" + distance + " " + METERS);
+                            nextTurnMovement.setText("抵達目的地");
+                        } else {
+                            if (!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                            else
+                                nextTurnMovement.setText(THEN_GO_STRAIGHT_LEFTSIDE);
+                        }
+                        break;
+
+                    case NORMAL_WAYPOINT:
+                        if (navigationPath.size() == 2) {
+                            howFarToMove.setText("" + distance + " " + METERS);
+                            nextTurnMovement.setText("抵達目的地");
+                        } else
+                            nextTurnMovement.setText(THEN_GO_STRAIGHT_LEFTSIDE);
+                        break;
+
+                }
+                if (turnNotificationForPopup != null)
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+
+                imageTurnIndicator.setImageResource(R.drawable.up_now);
+                turnNotificationForPopup = FRONT_LEFTSIDE;
+                break;
+//------------------
             case STAIR:
                 turnNotificationForPopup = STAIR;
                 if(navigationPath.size() > 2) {
@@ -881,23 +992,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Log.i("wrong", "Out");
                 List<Node> newPath = new ArrayList<>();
                 List<Node> wrongPath = new ArrayList<>();
-
                 //walkedWaypoint = 0;
                 Log.i("xxx_wrong","allWaypointData.get(currentLBeaconID) = " + allWaypointData.get(currentLBeaconID)._waypointID);
                 wrongWaypoint = allWaypointData.get(currentLBeaconID);
                 Log.i("xxx_wrong","wrongWaypoint = " + wrongWaypoint._waypointID);
                 currentLocationReminder.setText("目前位置 : " + currentLocationName);
                 Log.i("xxx_wrong","LocationName" + currentLocationName);
+
+                if(wrongWaypoint._waypointID.equals(endNode._waypointID))
+                    showHintAtWaypoint(ARRIVED_NOTIFIER);
+
                 Boolean isLongerPath = false;
                     //----------wrong way test------------------
-
                 JumpNode = true;
                 for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
                     if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
                         JumpNode = false;
                     }
                 }
-
+                Log.i("xxx_jumpNode","JumpNode = "+ JumpNode);
                 if(JumpNode == true) {
                     Log.i("789456","inJumpNode");
                     Log.i("In","destinationID = " + destinationID + "endNode = " + endNode._waypointID + "wrong = " + wrongWaypoint._waypointID);
@@ -1253,6 +1366,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             if (receiveNode != null)
                 currentLocationReminder.setText("目前位置 : " + receiveNode._waypointName);
 
+
             Log.i("beaconManager", "receiveID: " + receivebeacon);
 
             if (isFirstBeacon && receiveNode != null) {
@@ -1280,7 +1394,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }
                     break;
                 }
-
                 if(startNode._waypointID.equals(endNode._waypointID)) {
                     Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
@@ -1336,6 +1449,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("renavigate", "CurrentID: " + currentLBeaconID);
             // block the Lbeacon ID the navigator just received
             if (pass) {
+
                 appendLog(navigationPath.get(0)._waypointName);
 
                  if (popupWindow != null)
@@ -1813,6 +1927,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     image.setImageResource(R.drawable.up_now);
                     Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
+                case FRONT_RIGHTSIDE:
+                    turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
+                    image.setImageResource(R.drawable.up_now);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case FRONT_LEFTSIDE:
+                    turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
+                    image.setImageResource(R.drawable.up_now);
+                    Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
+                    break;
                 case ELEVATOR:
                     turnDirection = PLEASE_TAKE_ELEVATOR;
                     image.setImageResource(R.drawable.elevator);
@@ -1844,7 +1968,38 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             }
         }
+        //currentID = end
+        currentNode = allWaypointData.get(currentLBeaconID);
+        for (int i = 0;i < currentNode._attachIDs.size();i++) {
+            if ((endNode._mainID != 0 && endNode._mainID == currentNode._attachIDs.get(i))) {
+                turnDirection = YOU_HAVE_ARRIVE;
+                image.setImageResource(R.drawable.arrived_image);
+                //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
+                initToast(toast);
+                myVibrator.vibrate(800);
+                beaconManager.removeAllMonitorNotifiers();
+                beaconManager.removeAllRangeNotifiers();
+                beaconManager.unbind(NavigationActivity.this);
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+            break;
+        }
 
+        if(currentNode._waypointID.equals(endNode._waypointID)) {
+            turnDirection = YOU_HAVE_ARRIVE;
+            image.setImageResource(R.drawable.arrived_image);
+            //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
+            initToast(toast);
+            myVibrator.vibrate(800);
+            beaconManager.removeAllMonitorNotifiers();
+            beaconManager.removeAllRangeNotifiers();
+            beaconManager.unbind(NavigationActivity.this);
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
 
         tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
 
@@ -1897,7 +2052,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 // if the received ID matches the ID of the next waypoint in the navigation path
                 if (navigationPath.get(0)._waypointID.equals(currentLBeaconID)) {
-
                     // three message objects send messages to corresponding handlers
                     Message messageFromInstructionHandler = instructionHandler.obtainMessage();
                     Message messageFromCurrentPositionHandler = currentPositiontHandler.obtainMessage();
@@ -1991,6 +2145,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Message messageFromInstructionHandler = instructionHandler.obtainMessage();
                     messageFromInstructionHandler.obj = WRONG;
                     instructionHandler.sendMessage(messageFromInstructionHandler);
+
                 }
             }
         }
@@ -2088,6 +2243,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
         if (pass) {
+
             appendLog(navigationPath.get(0)._waypointName);
             synchronized (sync) {
 
