@@ -28,12 +28,14 @@ public class GeoCalulation {
     private static final int RADIUS_OF_EARTH = 6371;
     private static final int FRONT_DIRECTION_SMALL_LOWER_BOUND = 0;
     private static final int FRONT_DIRECTION_SMALL_UPPER_BOUND = 10;
+    private static final int FRONT_RIGHTSIDE_DIRECTION_BOUND = 40;
     private static final int RIGHT_DIRECTION_LOWER_BOUND = 70;
     private static final int RIGHT_DIRECTION_UPPER_BOUND = 110;
     private static final int BACK_DIRECTION_LOWER_BOUND = 160;
     private static final int BACK_DIRECTION_UPPER_BOUND = 200;
     private static final int LEFT_DIRECTION_LOWER_BOUND = 250;
     private static final int LEFT_DIRECTION_UPPER_BOUND = 290;
+    private static final int FRONT_LEFTSIDE_DIRECTION_BOUND = 320;
     private static final int FRONT_DIRECTION_BIG_LOWER_BOUND = 350;
     private static final int FRONT_DIRECTION_BIG_UPPER_BOUND = 360;
 
@@ -90,7 +92,9 @@ public class GeoCalulation {
         // Difference interval to determine the turn direction
         if(delta >= FRONT_DIRECTION_SMALL_LOWER_BOUND && delta <= FRONT_DIRECTION_SMALL_UPPER_BOUND)
             direction = "front";
-        else if(delta >= FRONT_DIRECTION_SMALL_UPPER_BOUND && delta <= RIGHT_DIRECTION_LOWER_BOUND)
+        else if(delta >= FRONT_DIRECTION_SMALL_UPPER_BOUND && delta <= FRONT_RIGHTSIDE_DIRECTION_BOUND)
+            direction = "frontRightSide";
+        else if(delta >= FRONT_RIGHTSIDE_DIRECTION_BOUND && delta <= RIGHT_DIRECTION_LOWER_BOUND)
             direction = "frontRight";
         else if(delta >= RIGHT_DIRECTION_LOWER_BOUND && delta <= RIGHT_DIRECTION_UPPER_BOUND)
             direction = "right";
@@ -102,8 +106,10 @@ public class GeoCalulation {
             direction = "rearLeft";
         else if(delta >= LEFT_DIRECTION_LOWER_BOUND && delta <= LEFT_DIRECTION_UPPER_BOUND)
             direction = "left";
-        else if(delta >= LEFT_DIRECTION_UPPER_BOUND && delta <= FRONT_DIRECTION_BIG_LOWER_BOUND)
+        else if(delta >= LEFT_DIRECTION_UPPER_BOUND && delta <= FRONT_LEFTSIDE_DIRECTION_BOUND)
             direction = "frontLeft";
+        else if(delta >= FRONT_LEFTSIDE_DIRECTION_BOUND && delta <= FRONT_DIRECTION_BIG_LOWER_BOUND)
+            direction = "frontLeftSide";
         else if(delta >= FRONT_DIRECTION_BIG_LOWER_BOUND && delta <= FRONT_DIRECTION_BIG_UPPER_BOUND)
             direction = "front";
 
