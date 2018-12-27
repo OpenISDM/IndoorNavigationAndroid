@@ -257,8 +257,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     public void resetSignal(View view){
+        Setting.setModeValue(TESTER_MODE);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        float offset = pref.getFloat("offset",1);
+        float offset = pref.getFloat("offset",(float) 1.155);
         AlertDialog.Builder dialogBuilder =  new AlertDialog.Builder(this);
         dialogBuilder.setMessage(String.format("%.2f ", Float.valueOf(offset)));
         dialogBuilder.setPositiveButton("確定", new DialogInterface.OnClickListener() {

@@ -18,7 +18,7 @@
 		<node id='0xc43af3420x00000000' name='核子醫學部' region='region1' category='檢查室'/>
 		<node id='0xde57c8410x0721f342' name='抽血' region='region1' category='檢查室'/>
 		<node id='0x0800b8410x0200f042' name='病歷室' region='region1' category='舊大樓一樓'/>
-		<node id='0x0d93bd410x530df142' name='X光' region='region1' category='檢查室'/>
+		<node id='0x3519b8410x4d06f042' name='X光' region='region1' category='檢查室'/>
 		<node id='0x300000000x48d2b060' name='後門' region='region1' category='出口'/>
 	
 	</region>

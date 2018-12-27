@@ -32,6 +32,12 @@
         android:text="【點選圖片選擇目的地】"
         android:textSize="25dp" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:onClick="resetSignal"/>
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

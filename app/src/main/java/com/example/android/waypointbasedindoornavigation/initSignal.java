@@ -343,7 +343,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                     countOffset(maxUuid,3);
                     showtxt.append(" "+'\n');
                     SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    float offset = offsetPref.getFloat("offset",1);
+                    float offset = offsetPref.getFloat("offset",(float) 1.155);
                     showtxt.append("調整比率 = "+String.format("%.2f ", Float.valueOf(offset)));
                     showtxt.append("調整完成"+'\n');
                     showtxt.append(" "+'\n');
@@ -391,7 +391,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 
         }
         else {
-            editor.putFloat("offset", (float) 1.0);
+            editor.putFloat("offset", (float) 1.155);
             editor.commit();
         }
     }
