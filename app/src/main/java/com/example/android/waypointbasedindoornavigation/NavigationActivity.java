@@ -325,7 +325,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         setContentView(R.layout.activity_navigation);
         setTitle("台大雲林分院室內導航系統");
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        offset = (double) pref.getFloat("offset",1);
+        offset = (double) pref.getFloat("offset",(float)1.155);
         Log.i("xxx_wrong", "onCreate");
 
 
@@ -339,7 +339,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         positionOfPopup = (LinearLayout) findViewById(R.id.navigationLayout);
         waypointIDInput = (EditText) findViewById(R.id.inputID);
         waypointIDInputButton = (Button) findViewById(R.id.inputButton);
-        exitButton = (Button) findViewById(R.id.exitButton);
         //drawPanel = (ImageView) findViewById(R.id.drawpanel);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressNumber = (TextView) findViewById(R.id.progressNumber);
@@ -997,11 +996,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 List<Node> newPath = new ArrayList<>();
                 List<Node> wrongPath = new ArrayList<>();
                 //walkedWaypoint = 0;
-                Log.i("xxx_wrong","allWaypointData.get(currentLBeaconID) = " + allWaypointData.get(currentLBeaconID)._waypointID);
-                wrongWaypoint = allWaypointData.get(currentLBeaconID);
-                Log.i("xxx_wrong","wrongWaypoint = " + wrongWaypoint._waypointID);
-                currentLocationReminder.setText("目前位置 : " + currentLocationName);
-                Log.i("xxx_wrong","LocationName" + currentLocationName);
+               wrongWaypoint = allWaypointData.get(currentLBeaconID);
+               currentLocationReminder.setText("目前位置 : " + currentLocationName);
 
                 if(wrongWaypoint._waypointID.equals(endNode._waypointID))
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
@@ -1014,8 +1010,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         JumpNode = false;
                     }
                 }
-                Log.i("xxx_jumpNode","JumpNode = "+ JumpNode);
-                if(JumpNode == true) {
+               if(JumpNode == true) {
                     Log.i("789456","inJumpNode");
                     Log.i("In","destinationID = " + destinationID + "endNode = " + endNode._waypointID + "wrong = " + wrongWaypoint._waypointID);
 
@@ -1042,7 +1037,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     sourceID = wrongWaypoint._waypointID;
                     sourceRegion = wrongWaypoint._regionID;
 
-                     Log.i("xxx_path","wrongWay newpath :  sourceID = " + sourceID + "destinationID = " + destinationID);
 
                     loadNavigationGraph();
                     newPath = startNavigation();
@@ -1194,7 +1188,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
-
+/*
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -1203,7 +1197,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Log.i("xxx_timer", "Timercomplete");
             }
         }, 1000);
-
+*/
     }
 
 
@@ -1393,14 +1387,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 //sourceID = destination
                 for (int i = 0;i < startNode._attachIDs.size();i++) {
                     if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i))) {
-                        Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
                         showHintAtWaypoint(ARRIVED_NOTIFIER);
                     }
                     break;
                 }
                 if(startNode._waypointID.equals(endNode._waypointID)) {
-                    Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
-                    showHintAtWaypoint(ARRIVED_NOTIFIER);
+                   showHintAtWaypoint(ARRIVED_NOTIFIER);
                 }
 
                 appendLog("StartNavigation");
@@ -1498,7 +1490,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         startNode = navigationGraph.get(0).nodesInSubgraph.get(sourceID);
         endNode = navigationGraph.get(navigationGraph.size() - 1).nodesInSubgraph.get(destinationID);
 
-        Log.i("xxx_path","in load navigationGraph : StartNode =" + startNode._waypointName + " EndNode =" + endNode._waypointName);
 
 
     }
@@ -1523,8 +1514,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-        Log.i("xxx_path", "startNode = " + startNode._waypointName + " endNode = " + endNode._waypointName);
-        int startNodeType = startNode._nodeType;
+       int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
         int connectPointID;
@@ -1836,9 +1826,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if(navigationPath.size()>=2)
             DistanceForShowHint = (int) GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1));
 
-        Log.i("xxx_showhint","navigationPath(0) = " +navigationPath.get(0)._waypointName );
-      //  Log.i("xxx_showhint","LastNode = " +lastNode._waypointName);
-
 
         //image.setImageResource(R.drawable.img_compass);
         String turnDirection = null;
@@ -1875,7 +1862,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         } else if (instruction == MAKETURN_NOTIFIER) {
             //處理空白跳框情形
             image.setImageResource(R.drawable.turn_back);
-            Log.i("xxx_LastSlash","LastisSlash = " + LastisSlash);
             switch (turnNotificationForPopup) {
 
                 case RIGHT:
@@ -1973,6 +1959,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
         }
         //currentID = end
+        /*
         currentNode = allWaypointData.get(currentLBeaconID);
         for (int i = 0;i < currentNode._attachIDs.size();i++) {
             if ((endNode._mainID != 0 && endNode._mainID == currentNode._attachIDs.get(i))) {
@@ -1984,8 +1971,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 beaconManager.removeAllMonitorNotifiers();
                 beaconManager.removeAllRangeNotifiers();
                 beaconManager.unbind(NavigationActivity.this);
-                Intent i = new Intent(this, MainActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
             break;
@@ -2004,7 +1991,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             startActivity(i);
             finish();
         }
-
+*/
         tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
 
         Log.i("showHint", "showHint");
@@ -2414,12 +2401,18 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_home || item.getItemId() == R.id.menu_home2){
+            beaconManager.removeAllMonitorNotifiers();
+            beaconManager.removeAllRangeNotifiers();
+            beaconManager.unbind(NavigationActivity.this);
             Intent intent = new Intent();
             intent = new Intent(NavigationActivity.this, MainActivity.class);
             startActivity(intent);
             this.finish();
         }
         if(item.getItemId() == R.id.menu_previous_page || item.getItemId() == R.id.menu_previous_page2){
+            beaconManager.removeAllMonitorNotifiers();
+            beaconManager.removeAllRangeNotifiers();
+            beaconManager.unbind(NavigationActivity.this);
             Intent intent = new Intent();
             intent = new Intent(NavigationActivity.this, ListViewActivity.class);
             startActivity(intent);
