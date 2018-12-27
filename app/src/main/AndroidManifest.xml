@@ -44,9 +44,7 @@
             android:name=".initSignal"
             android:label="@string/title_activity_init_signal"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".author_list"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".author_list"/>
     </application>
 
 </manifest>

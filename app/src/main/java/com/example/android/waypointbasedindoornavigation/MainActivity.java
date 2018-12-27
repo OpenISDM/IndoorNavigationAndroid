@@ -141,11 +141,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.gear || item.getItemId() == R.id.gear2){
+        if(item.getItemId() == R.id.gear){
             Intent intent = new Intent();
             intent = new Intent(MainActivity.this, initSignal.class);
             startActivity(intent);
-        }else if(item.getItemId() == R.id.menu_author){
+        }else if(item.getItemId() == R.id.information){
             Intent intent = new Intent();
             intent = new Intent(MainActivity.this, author_list.class);
             startActivity(intent);

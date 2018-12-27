@@ -2415,6 +2415,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             beaconManager.unbind(NavigationActivity.this);
             Intent intent = new Intent();
             intent = new Intent(NavigationActivity.this, ListViewActivity.class);
+            intent.putExtra("Category", "各科門診");
             startActivity(intent);
             this.finish();
         }
