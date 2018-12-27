@@ -257,11 +257,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     public void resetSignal(View view){
-        Setting.setModeValue(TESTER_MODE);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        float offset = pref.getFloat("offset",(float) 1.155);
+        //取得目前offset設定值
+        //SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //float offset = pref.getFloat("offset",1);
+
+        //寫入offset初始值至內存
+        double offset = 1.155;
+        SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = offsetPref.edit();
+        editor.putFloat("offset", (float) offset);
+        editor.commit();
+
+        //印出目前offset值
         AlertDialog.Builder dialogBuilder =  new AlertDialog.Builder(this);
-        dialogBuilder.setMessage(String.format("%.2f ", Float.valueOf(offset)));
+        dialogBuilder.setMessage(String.format("%.2f ", Float.valueOf((float)offset)));
         dialogBuilder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -270,6 +279,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         });
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
+        //Tester MODE
+        Setting.setModeValue(TESTER_MODE);
+
     }
 
     public void onClick(View view){
