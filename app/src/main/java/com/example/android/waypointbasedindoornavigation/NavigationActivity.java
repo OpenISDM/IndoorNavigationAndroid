@@ -1188,7 +1188,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
-/*
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -1197,7 +1197,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 Log.i("xxx_timer", "Timercomplete");
             }
         }, 1000);
-*/
+
     }
 
 
@@ -1661,12 +1661,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("path", path.get(i)._waypointName);
 
         //防止連續接收
-        Handler handler = new Handler();
+       /* Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
             }
-        }, 1000);
+        }, 1000);*/
 
         return path;
 
@@ -1861,7 +1861,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             myVibrator.vibrate(1000);
         } else if (instruction == MAKETURN_NOTIFIER) {
             //處理空白跳框情形
-            image.setImageResource(R.drawable.turn_back);
+           // image.setImageResource(R.drawable.turn_back);
             switch (turnNotificationForPopup) {
 
                 case RIGHT:
@@ -1919,12 +1919,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 case FRONT_RIGHTSIDE:
                     turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
-                    image.setImageResource(R.drawable.up_now);
+                    image.setImageResource(R.drawable.up_rightside);
                     Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case FRONT_LEFTSIDE:
                     turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
-                    image.setImageResource(R.drawable.up_now);
+                    image.setImageResource(R.drawable.up_leftside);
                     Log.i("xxx_Direction","跳出指令方向 = " + turnNotificationForPopup);
                     break;
                 case ELEVATOR:
@@ -2007,8 +2007,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         initToast(toast);
                     }
                 }, 1000);
-                myVibrator.vibrate(new long[]{50, 100, 50}, -1);
             }
+            myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
 
     }
