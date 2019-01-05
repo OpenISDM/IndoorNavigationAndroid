@@ -479,7 +479,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         Log.i("123456","navigationpath(0) = " + navigationPath.get(0)._waypointName);
 
 
-
         //判斷下個地點是否有LandMark
         if (navigationPath.size() > 1) {
             NextLandMarkisEnglish = hasEnglish(navigationPath.get(1)._waypointName);
@@ -1003,8 +1002,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
 
                 Boolean isLongerPath = false;
-                    //----------wrong way test------------------
-                JumpNode = true;
+                //----------wrong way 從路線搜尋上個點------------------
+              /*  JumpNode = true;
                 for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
                     if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
                         JumpNode = false;
@@ -1032,7 +1031,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     DirectCompute = false;
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
-                }
+                }*/
                     //---------------------------------------------
                     sourceID = wrongWaypoint._waypointID;
                     sourceRegion = wrongWaypoint._regionID;
@@ -1113,13 +1112,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
                     }*/
 
+
                     imageTurnIndicator.setImageResource(R.drawable.up_now);
                     if (navigationPath.size() >= 3) {
 
                         turnNotificationForPopup = getDirectionFromBearing
                                 (navigationPath.get(0), navigationPath.get(1), navigationPath.get(2));
+                        Log.i("xxx_Direction","navigationPath(0) = " + navigationPath.get(0)._waypointName);
+                        Log.i("xxx_Direction","navigationPath(1) = " + navigationPath.get(1)._waypointName);
+                        Log.i("xxx_Direction","navigationPath(2) = " + navigationPath.get(2)._waypointName);
+                        //錯誤路線，若下個點只有單一方向，往直走
+                        if(navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._nodeType == 0){
+                            turnNotificationForPopup = FRONT;
+                            nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                            imageTurnIndicator.setImageResource(R.drawable.up_now);
+                        }
 
-                        switch (turnNotificationForPopup) {
+
+
+                            switch (turnNotificationForPopup) {
 
                             case RIGHT:
                                 nextTurnMovement.setText(THEN_TURN_RIGHT);
@@ -1159,6 +1170,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 break;
 
                         }
+
+
 
                     } else {
 
@@ -1915,31 +1928,37 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                    case FRONT:
                        turnDirection = PLEASE_GO_STRAIGHT;
                        image.setImageResource(R.drawable.up_now);
+                       LastisSlash = false;
                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                        break;
                    case FRONT_RIGHTSIDE:
                        turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
                        image.setImageResource(R.drawable.up_rightside);
+                       LastisSlash = false;
                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                        break;
                    case FRONT_LEFTSIDE:
                        turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
                        image.setImageResource(R.drawable.up_leftside);
+                       LastisSlash = false;
                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                        break;
                    case ELEVATOR:
                        turnDirection = PLEASE_TAKE_ELEVATOR;
                        image.setImageResource(R.drawable.elevator);
+                       LastisSlash = false;
                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                        break;
                    case STAIR:
                        turnDirection = PLEASE_WALK_UP_STAIR;
                        image.setImageResource(R.drawable.stair);
+                       LastisSlash = false;
                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                        break;
                    case "goback":
                        turnDirection = " ";
                        image.setImageResource(R.drawable.turn_back);
+                       LastisSlash = false;
                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                       // setNowPostition();
                        break;
