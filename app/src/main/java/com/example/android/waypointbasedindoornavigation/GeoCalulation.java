@@ -31,8 +31,7 @@ public class GeoCalulation {
     private static final int FRONT_RIGHTSIDE_DIRECTION_BOUND = 40;
     private static final int RIGHT_DIRECTION_LOWER_BOUND = 70;
     private static final int RIGHT_DIRECTION_UPPER_BOUND = 110;
-    private static final int BACK_DIRECTION_LOWER_BOUND = 160;
-    private static final int BACK_DIRECTION_UPPER_BOUND = 200;
+    private static final int BACK_DIRECTION_BOUND = 180;
     private static final int LEFT_DIRECTION_LOWER_BOUND = 250;
     private static final int LEFT_DIRECTION_UPPER_BOUND = 290;
     private static final int FRONT_LEFTSIDE_DIRECTION_BOUND = 320;
@@ -98,11 +97,9 @@ public class GeoCalulation {
             direction = "frontRight";
         else if(delta >= RIGHT_DIRECTION_LOWER_BOUND && delta <= RIGHT_DIRECTION_UPPER_BOUND)
             direction = "right";
-        else if(delta >= RIGHT_DIRECTION_UPPER_BOUND && delta <= BACK_DIRECTION_LOWER_BOUND)
+        else if(delta >= RIGHT_DIRECTION_UPPER_BOUND && delta <= BACK_DIRECTION_BOUND)
             direction = "rearRight";
-        else if(delta >= BACK_DIRECTION_LOWER_BOUND && delta <= BACK_DIRECTION_UPPER_BOUND)
-            direction = "rear";
-        else if(delta >= BACK_DIRECTION_UPPER_BOUND && delta <= LEFT_DIRECTION_LOWER_BOUND)
+        else if(delta >= BACK_DIRECTION_BOUND && delta <= LEFT_DIRECTION_LOWER_BOUND)
             direction = "rearLeft";
         else if(delta >= LEFT_DIRECTION_LOWER_BOUND && delta <= LEFT_DIRECTION_UPPER_BOUND)
             direction = "left";
