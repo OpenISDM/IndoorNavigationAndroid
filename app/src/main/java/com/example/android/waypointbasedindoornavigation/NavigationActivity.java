@@ -1250,7 +1250,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                    }
                     //showHintAtWaypoint(MAKETURN_NOTIFIER);
                     passedGroupID = navigationPath.get(0)._groupID;
-                    navigationPath.remove(0);
+                    //navigationPath.remove(0);
                 }
 
                 break;
@@ -1261,34 +1261,54 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         readNavigationInstruction();
 if(navigationPath.size() > 1) {
-        if (!passedRegionID.equals(navigationPath.get(0)._regionID))
-            regionIndex++;
-        passedRegionID = navigationPath.get(0)._regionID;
-        passedGroupID = navigationPath.get(0)._groupID;
-        lastNode = navigationPath.get(0);
+    if (!passedRegionID.equals(navigationPath.get(0)._regionID))
+        regionIndex++;
+    passedRegionID = navigationPath.get(0)._regionID;
+    passedGroupID = navigationPath.get(0)._groupID;
+    lastNode = navigationPath.get(0);
 
-        //強制轉換直走的Case in 台大醫院
+    //強制轉換的Case in 台大醫院
 
     //判斷下個Node鄰居數與是否為電/樓梯()
-    if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._nodeType == 0 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(0)._nodeType != 0) {
+    Log.i("xxx_Slash","" + navigationPath.get(0)._waypointName);
+    if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(1)._nodeType == 0) {
         Log.i("xxx_Slash", "強制轉為直走");
+        turnNotificationForPopup = FRONT;
         turnDirection = FRONT;
         nextTurnMovement.setText(THEN_GO_STRAIGHT);
         LastisSlash = true;
     } else if (navigationPath.get(0)._waypointID.equals("0x300000000x48d2b060") && navigationPath.get(1)._waypointID.equals("0x030000430x00000000")) {
-        Log.i("xxx_Slash", "強制轉為直走2"); //D08至C39
+        Log.i("xxx_Slash", "強制轉為直走2(D08至C39)"); //D08至C39
+        turnNotificationForPopup = FRONT;
         turnDirection = FRONT;
         nextTurnMovement.setText(THEN_GO_STRAIGHT);
         LastisSlash = true;
     } else if (navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x8193bd410x540df142")) {
-        Log.i("xxx_Slash", "強制轉為直走3");//核子醫學至樓梯1
+        Log.i("xxx_Slash", "強制轉為直走3(核子醫學至樓梯1)");//核子醫學至樓梯1
+        turnNotificationForPopup = FRONT;
         turnDirection = FRONT;
         nextTurnMovement.setText(THEN_GO_STRAIGHT);
         LastisSlash = true;
-    }
+    } else if (navigationPath.get(0)._waypointID.equals("0xff14f0420x00000000") && navigationPath.get(1)._waypointID.equals("0x5d74b9410x175df042")) {
+        Log.i("xxx_Slash", "強制轉為直走4(B10到心臟血管)");//B10到心臟血管
+        turnDirection = FRONT;
+        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+        LastisSlash = true;
+    }/* else if (navigationPath.get(0)._waypointID.equals("0xff14f0420x00000000") && navigationPath.get(1)._waypointID.equals("0x3219b8410x4d06f042")) {
+        imageTurnIndicator.setImageResource(R.drawable.up_now);
+        turnDirection = FRONT;
+        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+    }*/
 }
+        //樓梯重新導航校正(ConnectID = 4)
+        if (navigationPath.get(0)._waypointID.equals("0xff14f0420x00000000") && navigationPath.get(1)._waypointID.equals("0x3219b8410x4d06f042")) {
+            Log.i("xxx_Slash","B10 to D3");
+            imageTurnIndicator.setImageResource(R.drawable.up_now);
+            turnDirection = FRONT;
+            turnNotificationForPopup = FRONT;
+            nextTurnMovement.setText(THEN_GO_STRAIGHT);
+        }
 
-        if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
 
         Handler handler = new Handler();
@@ -2128,69 +2148,6 @@ if(navigationPath.size() > 1) {
             myVibrator.vibrate(new long[]{50, 100, 50}, -1);
         }
 
-    }
-
-    private void setNowPostition() {
-        if (popupWindow != null)
-            popupWindow.dismiss();
-
-        Log.i("1227test","navigationPath(0) = " + navigationPath.get(0)._waypointName);
-        Log.i("1227test","receivebeacon ="+ receivebeacon);
-
-
-
-
-        String nameOFWaypoint = navigationPath.get(0)._waypointName;
-        String receiveID = null;
-        Node receiveNode;
-        Boolean pass = false;
-
-
-
-        receiveID = mappingOfRegionNameAndID.get(navigationPath.get(0)._waypointName);
-        receiveNode = allWaypointData.get(receiveID);
-
-        currentLocationReminder.setText("目前位置 : " + receiveNode._waypointName);
-        Log.i("receiveInfo", "ID: " + receiveNode._waypointID + " Region: " + receiveNode._regionID);
-
-        Log.i("receiveInfo", "navigationPath Size " + navigationPath.size());
-
-        if (!receiveID.equals(currentLBeaconID)) {
-
-            if (receiveNode._groupID == navigationPath.get(0)._groupID &&
-                    receiveNode._groupID != 0) {
-                //收到相同GroupID 強制將currentLBeaconID設成即將要收到的GroupID
-                Log.i("enter", "1");
-                currentLBeaconID = navigationPath.get(0)._waypointID;
-                pass = true;
-            } else if (receiveNode._groupID == passedGroupID && receiveNode._groupID != 0) {
-                Log.i("enter", "2");
-                pass = false;
-            } else {
-
-                Log.i("enter", "3");
-                currentLBeaconID = receiveID;
-                pass = true;
-            }
-
-
-        } else {
-
-            Log.i("enter", "4");
-            pass = false;
-
-        }
-
-        if (pass) {
-
-            appendLog(navigationPath.get(0)._waypointName);
-            synchronized (sync) {
-
-                Log.i("enter", "sync");
-                sync.notify();
-
-            }
-        }
     }
 
     // voice engine read the navigation instruction shown on the screen

@@ -285,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     public void onClick(View view){
+        System.gc();
         switch (view.getId()) {
             case R.id.btn_stethoscope:
                 for(int i = 0; i < listForStoringAllNodes.size(); i++) {
