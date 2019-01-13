@@ -70,23 +70,24 @@ public class author_list extends AppCompatActivity {
         listDataHeader = new ArrayList<>();
         listDataHeader.add("版本資訊");
         listDataHeader.add("計畫名稱");
-        listDataHeader.add("合作單位");
+        listDataHeader.add("參與團隊");
         listDataHeader.add("圖片作者");
 
         listHash = new HashMap<>();
 
 
         List<String> version = new ArrayList<>();
-        version.add("版本:1.0.0.0   ( 2018.12.27 )");
+        version.add("版本:1.0.0.0   ( 2018.12.26 )");
 
         List<String> profect_name = new ArrayList<>();
-        profect_name.add("室內導引佈建與場域測試");
+        profect_name.add("台大醫院雲林分院跨學界計畫");
+        profect_name.add("科技部萌芽計畫");
+        profect_name.add("中央研究院主題計畫");
 
         List<String> cooperation = new ArrayList<>();
-        cooperation.add("臺大醫院雲林分院斗六院區");
-        cooperation.add("中華民國科技部");
-        cooperation.add("中央研究院");
-        cooperation.add("國立雲林科技大學");
+        cooperation.add("雲科大朱宗賢老師實驗室 (張肇浚、王士嘉、黃柏晨、黃子哲、陳楷捷)");
+        cooperation.add("台大醫院雲林分院資訊室 (許鈞主任、吳惠美組長)");
+        cooperation.add("中研院資訊所張韻詩老師實驗室");
 
         List<String> author = new ArrayList<>();
         for(int i=0; i<listviewTitle.length;i++){

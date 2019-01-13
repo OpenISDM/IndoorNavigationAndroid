@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.android.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 
+import java.lang.ref.WeakReference;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -77,12 +79,14 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
     private ArrayList<Double> list = new ArrayList<Double>();
     int max = 0;
     //    flash screen
-    private static Handler mHandler;
+    //private static Handler mHandler;
     //    time when receive beacon
     private DateFormat df = new SimpleDateFormat("h:mm:ss.SSS");
     //    UI text
+    private ProgressBar pBar;
+    private TextView textView;
     private TextView showtxt,showlocation;
-    private ScrollView scrollView;
+    //private ScrollView scrollView;
     private String researchdata,get_location="";
     private Button turnBack;
     private int i = 0;
@@ -110,6 +114,9 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
     //DeviceParameter
     private static DeviceParameter dp = new DeviceParameter();
 
+    //-------------UI---------------------
+
+    //-----------------------------------
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +124,13 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         setContentView(R.layout.activity_init_signal);
         dp.setupDeviceParameter(this);
 //        init UI objects
-        showtxt = (TextView)findViewById(R.id.textView1);
-        showlocation = (TextView)findViewById(R.id.locationtext);
-        scrollView = (ScrollView) findViewById(R.id.scrollview1);
-        turnBack = (Button) findViewById(R.id.back);
-        mHandler = new Handler(); //UI text flash
+        showtxt = (TextView)findViewById(R.id.textView2);
+        pBar = (ProgressBar)findViewById(R.id.progressBar);
+        textView=(TextView)findViewById(R.id.textView);
+       // showlocation = (TextView)findViewById(R.id.locationtext);
+       // scrollView = (ScrollView) findViewById(R.id.scrollview1);
+        //turnBack = (Button) findViewById(R.id.back);
+       // mHandler = new Handler(); UI text flash
 //        Beacon manager setup
         beaconManager =  BeaconManager.getInstanceForApplication(this);
 //        Detect the LBeacon frame:
@@ -163,10 +172,13 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         beaconManager.setBackgroundBetweenScanPeriod(0);
         beaconManager.setBackgroundScanPeriod(1100);
         beaconManager.bind(initSignal.this);
-        showtxt.setText("");
-        write_location_index = 0;
-        beaconManager.bind(initSignal.this);
+        //write_location_index = 0;
+        //beaconManager.bind(initSignal.this);
 //        beaconManager.bind(this);
+
+        //-------------UI-----------------
+
+
 
     }
     @Override
@@ -206,9 +218,9 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             switch (msg.what){
                 case 1:
                     //showtxt.append(researchdata+"\n");
-                    showlocation.setText("Now at :"+trtoid.trUUID(get_location));
+                    // showlocation.setText("Now at :"+trtoid.trUUID(get_location));
                     Log.i("Beacon UUID", trtoid.trUUID(get_location).toString());
-                    scrollView.fullScroll(View.FOCUS_DOWN);
+                   // scrollView.fullScroll(View.FOCUS_DOWN);
 
                     /*
                     i++;
@@ -224,6 +236,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             }
         }
     };
+
 
     //    Parser Beacon data
     private void logBeaconData(Beacon beacon) {
@@ -282,7 +295,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 //        Log.i("AAA","beacon:"+researchdata);
         Log.e("endTime",endT+"");
         Log.e("startTime",startT+"");
-        if ((endT-startT)>5000){
+        if ((endT-startT)>3000){
             startT = System.currentTimeMillis();
             runOnUiThread(new Runnable() {
                 @Override
@@ -295,8 +308,8 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 
                     //print the uuid and rssi
                     beaconManager.unbind(initSignal.this);
-                    showtxt.setText("");
-                    showtxt.append("-----------------------------------------RSSI----------------------------------------- "+'\n');
+                    //showtxt.setText("");
+                  //  showtxt.append("-----------------------------------------RSSI----------------------------------------- "+'\n');
                     for (Object key : rssimap.keySet()) {
                         Log.e("*RSSI / count",Double.valueOf(rssimap.get(key))+"");
                         Log.e("RSSI / *count",Double.valueOf(map.get(key))+"");
@@ -318,7 +331,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                             Log.e("rssimap / count  = ", String.valueOf(Math.abs(Double.valueOf(rssimap.get(key)))+"   /   "+ Double.valueOf(map.get(key))) +" = " +Math.abs(Double.valueOf(rssimap.get(key)) / Double.valueOf(map.get(key))));
                             Log.e("list.get(i)", String.valueOf(list.get(i)));
                             if(Math.abs(Double.valueOf(rssimap.get(key)) / Double.valueOf(map.get(key))) == list.get(i)){
-                                showtxt.append("UUID =  " + key + " RSSI  = " + String.format("%.2f ", Double.valueOf(rssimap.get(key)) / Double.valueOf(map.get(key))) + '\n');
+                                //showtxt.append("UUID =  " + key + " RSSI  = " + String.format("%.2f ", Double.valueOf(rssimap.get(key)) / Double.valueOf(map.get(key))) + '\n');
 
                                 if(i==0) //get the uuid of highest rssi
                                     maxUuid = key.toString();
@@ -327,13 +340,13 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                         }
                     }
 
-                    showtxt.append("MaxUUID =  " + maxUuid + '\n');
-                    showtxt.append(" "+'\n');
-                    showtxt.append("--------------------------------Paclage Count---------------------------------- "+'\n');
+                 //   showtxt.append("MaxUUID =  " + maxUuid + '\n');
+                  //  showtxt.append(" "+'\n');
+                   // showtxt.append("--------------------------------Paclage Count---------------------------------- "+'\n');
                     for(int i=max; i >= 0; i--) {
                         for (Object key : map.keySet()) {
                             if (map.get(key) == i) {
-                                showtxt.append("UUID =  " + key + " count  = " + map.get(key).toString() + '\n');
+                                //showtxt.append("UUID =  " + key + " count  = " + map.get(key).toString() + '\n');
                                 Log.i("UUID", key + "");
                                 Log.i("count", map.get(key) + "");
                             }
@@ -341,17 +354,15 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                     }
 
                     countOffset(maxUuid,3);
-                    showtxt.append(" "+'\n');
+                   // showtxt.append(" "+'\n');
                     SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     float offset = offsetPref.getFloat("offset",(float) 1.155);
-                    showtxt.append("調整比率 = "+String.format("%.2f ", Float.valueOf(offset)));
-                    showtxt.append("調整完成"+'\n');
-                    showtxt.append(" "+'\n');
+                    showtxt.append("\n調整比率 = "+String.format("%.2f ", Float.valueOf(offset)));
                     list.clear();
                     rssimap.clear();
                     map.clear();
                     max = 0;
-
+                    textView.setText("調整完成");
                    // turnBack.setVisibility(View.VISIBLE);
                     Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
@@ -362,7 +373,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                             beaconManager.unbind(initSignal.this);
                             finish();
                         }
-                    },8000);
+                    },1000);
 
                 }
             });
@@ -395,13 +406,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             editor.commit();
         }
     }
-    public void Clickevent(View view){
-        switch (view.getId()){
-            case R.id.back:
-                this.finish();
-                break;
-        }
-    }
+
     public void wrtieFileOnInternalStorage(String sFileName, String sBody){
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         file = new File(path,sFileName);

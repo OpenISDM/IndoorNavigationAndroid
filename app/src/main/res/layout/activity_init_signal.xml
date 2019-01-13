@@ -6,72 +6,36 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.waypointbasedindoornavigation.initSignal">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="101dp">
-
-        <!--<lecho.lib.hellocharts.view.ColumnChartView-->
-        <!--android:id="@+id/chart"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="206dp"-->
-        <!--android:layout_centerHorizontal="true" />-->
-
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/locationtext"
-            android:layout_width="match_parent"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Now at :"
-            android:textSize="20dp" />
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="200dp"
+            android:text="訊號調整中"
+            android:textSize="30dp" />
 
-        <ScrollView
-            android:id="@+id/scrollview1"
-            android:layout_width="match_parent"
-            android:layout_height="489dp"
-            android:layout_alignParentBottom="true">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="26dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="" />
-
-            </LinearLayout>
-        </ScrollView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="103dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="213dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/back"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="Clickevent"
-                    android:text="返回"
-                    android:visibility="invisible" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
