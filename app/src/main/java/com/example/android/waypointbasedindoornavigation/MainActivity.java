@@ -42,6 +42,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -132,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     ViewPager viewPager;
     Button btn_stethoscope, btn_bill, btn_exit, btn_medicent, btn_shop, btn_wc;
     TextView tv_description;
+    //UI Image
+    ImageView icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -195,6 +198,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         btn_shop = (Button)findViewById(R.id.btn_shop);
         btn_wc = (Button)findViewById(R.id.btn_wc);
         tv_description = (TextView)findViewById(R.id.tv_description);
+        icon_1 = (ImageView)findViewById(R.id.im_stethoscope);
+        icon_2 = (ImageView)findViewById(R.id.im_exit);
+        icon_3 = (ImageView)findViewById(R.id.im_shop);
+        icon_4 = (ImageView)findViewById(R.id.im_bill);
+        icon_5 = (ImageView)findViewById(R.id.im_medicent);
+        icon_6 = (ImageView)findViewById(R.id.im_wc);
+
 
         //Decide which search bar to be set value
         if(searchBarClicked == true) {
@@ -214,6 +224,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        icon_1.setImageDrawable(null);
+        icon_2.setImageDrawable(null);
+        icon_3.setImageDrawable(null);
+        icon_4.setImageDrawable(null);
+        icon_5.setImageDrawable(null);
+        icon_6.setImageDrawable(null);
+
+    }
+
     // Switch to ListView Activity when one of the search bars is clicked
     public void switchToListView(View v){
 

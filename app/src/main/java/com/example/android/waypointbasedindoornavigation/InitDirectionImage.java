@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 
 public class InitDirectionImage extends AppCompatActivity{
+    private ImageView image;
     int passedDegree;
     String nowWaypointID;
     String nextWaypointID;
@@ -42,6 +43,7 @@ public class InitDirectionImage extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.init_direction_image);
+        image = (ImageView) findViewById(R.id.init_image);
         //getpassDegree
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
@@ -51,7 +53,7 @@ public class InitDirectionImage extends AppCompatActivity{
         }
         Log.i("degree","degree = " + passedDegree);
         //find ID
-        ImageView image = (ImageView) findViewById(R.id.init_image);
+
 
     switch (nowWaypointID) {
         //C23
@@ -84,6 +86,7 @@ public class InitDirectionImage extends AppCompatActivity{
     }
 
     public void goNavigation(View view) {
+       image.setImageDrawable(null);
        finish();
     }
 
