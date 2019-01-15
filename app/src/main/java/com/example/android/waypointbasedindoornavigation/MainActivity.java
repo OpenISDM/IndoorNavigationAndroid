@@ -228,13 +228,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        icon_1.setImageDrawable(null);
-        icon_2.setImageDrawable(null);
-        icon_3.setImageDrawable(null);
-        icon_4.setImageDrawable(null);
-        icon_5.setImageDrawable(null);
-        icon_6.setImageDrawable(null);
-
+        /*icon_1 = null;
+        icon_2 = null;
+        icon_3 = null;
+        icon_4 = null;
+        icon_5 = null;
+        icon_6 = null;*/
+        System.gc();
     }
 
     // Switch to ListView Activity when one of the search bars is clicked
@@ -308,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     public void onClick(View view){
-        System.gc();
         switch (view.getId()) {
             case R.id.btn_stethoscope:
                 for(int i = 0; i < listForStoringAllNodes.size(); i++) {

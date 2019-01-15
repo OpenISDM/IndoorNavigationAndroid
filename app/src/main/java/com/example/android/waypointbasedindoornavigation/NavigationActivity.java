@@ -203,6 +203,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     Node lastNode;
     Node wrongWaypoint;
     Node currentNode;
+    private long startT;
+    private long endT;
 
     // integer to record how many waypoints have been traveled
     int walkedWaypoint = 0;
@@ -326,6 +328,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         setTitle("台大雲林分院室內導航系統");
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         offset = (double) pref.getFloat("offset",(float)1.155);
+        startT = System.currentTimeMillis();
         Log.i("xxx_wrong", "onCreate");
 
 
@@ -537,7 +540,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 if (turnNotificationForPopup != null)
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
 
-                //showHintAtWaypoint();}
+                //showHintAtWaypoint();
                 imageTurnIndicator.setImageResource(R.drawable.straight_left);
                 turnNotificationForPopup = LEFT;
                 break;
@@ -1260,41 +1263,39 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
        // readNavigationInstruction();
-if(navigationPath.size() > 1) {
-    if (!passedRegionID.equals(navigationPath.get(0)._regionID))
-        regionIndex++;
-    passedRegionID = navigationPath.get(0)._regionID;
-    passedGroupID = navigationPath.get(0)._groupID;
-    lastNode = navigationPath.get(0);
-
-    //強制轉換的Case in 台大醫院
-
-    //判斷下個Node鄰居數與是否為電/樓梯()
-    if(!turnDirection.equals(WRONG)) {
-        Log.i("xxx_Slash", "" + navigationPath.get(0)._waypointName);
-        if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(0)._connectPointID != navigationPath.get(1)._connectPointID && navigationPath.get(1)._nodeType == 0) {
-            Log.i("xxx_Slash", "強制轉為直走");
-            turnNotificationForPopup = FRONT;
-            turnDirection = FRONT;
-            nextTurnMovement.setText(THEN_GO_STRAIGHT);
-            imageTurnIndicator.setImageResource(R.drawable.up_now);
-            LastisSlash = true;
-            if (navigationPath.get(1)._waypointID.equals(endNode._waypointID))
-                nextTurnMovement.setText("然後抵達目的地");
+        if(navigationPath.size() > 1) {
+            if (!passedRegionID.equals(navigationPath.get(0)._regionID))
+                regionIndex++;
+                passedRegionID = navigationPath.get(0)._regionID;
+                passedGroupID = navigationPath.get(0)._groupID;
+                lastNode = navigationPath.get(0);
+         //強制轉換的Case in 台大醫院
+         //判斷下個Node鄰居數與是否為電/樓梯()
+        if(!turnDirection.equals(WRONG)) {
+            Log.i("xxx_Slash", "" + navigationPath.get(0)._waypointName);
+            if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(0)._connectPointID != navigationPath.get(1)._connectPointID && navigationPath.get(1)._nodeType == 0) {
+                Log.i("xxx_Slash", "強制轉為直走");
+                turnNotificationForPopup = FRONT;
+                turnDirection = FRONT;
+                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                imageTurnIndicator.setImageResource(R.drawable.up_now);
+                LastisSlash = true;
+                if (navigationPath.get(1)._waypointID.equals(endNode._waypointID))
+                    nextTurnMovement.setText("然後抵達目的地");
+            }
+        }else if (turnDirection.equals(WRONG)) {
+             //WRONG 後移
+            if(navigationPath.get(0)._adjacentWaypoints.size() <= 2 && !navigationPath.get(0)._waypointID.equals("0x3219b8410xfc3ef042") && lastNode._connectPointID != navigationPath.get(0)._connectPointID && lastNode._nodeType == 0) {
+                Log.i("xxx_Slash", "強制轉為直走");
+                turnNotificationForPopup = FRONT;
+                turnDirection = FRONT;
+                imageTurnIndicator.setImageResource(R.drawable.up_now);
+                nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                LastisSlash = true;
+                if (navigationPath.get(0)._waypointID.equals(endNode._waypointID))
+                    nextTurnMovement.setText("然後抵達目的地");
+            }
         }
-    }else if (turnDirection.equals(WRONG)) {
-        //WRONG 後移
-        if(navigationPath.get(0)._adjacentWaypoints.size() <= 2 && !navigationPath.get(0)._waypointID.equals("0x3219b8410xfc3ef042") && lastNode._connectPointID != navigationPath.get(0)._connectPointID && lastNode._nodeType == 0) {
-            Log.i("xxx_Slash", "強制轉為直走");
-            turnNotificationForPopup = FRONT;
-            turnDirection = FRONT;
-            imageTurnIndicator.setImageResource(R.drawable.up_now);
-            nextTurnMovement.setText(THEN_GO_STRAIGHT);
-            LastisSlash = true;
-            if (navigationPath.get(0)._waypointID.equals(endNode._waypointID))
-                nextTurnMovement.setText("然後抵達目的地");
-        }
-    }
     /* else if (navigationPath.get(0)._waypointID.equals("0x300000000x48d2b060") && navigationPath.get(1)._waypointID.equals("0x030000430x00000000")) {
         Log.i("xxx_Slash", "強制轉為直走2(D08至C39)"); //D08至C39
         turnNotificationForPopup = FRONT;
@@ -1324,6 +1325,13 @@ if(navigationPath.size() > 1) {
         }*/
 
         readNavigationInstruction();
+
+        endT = System.currentTimeMillis();
+        if(endT - startT > 10000){
+            startT = endT;
+            endT = 0;
+            System.gc();
+        }
 
         if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
@@ -1445,8 +1453,11 @@ if(navigationPath.size() > 1) {
     protected void onDestroy() {
         Log.i("beaconManager", "onDestroy called");
         super.onDestroy();
+        beaconManager.removeAllMonitorNotifiers();
+        beaconManager.removeAllRangeNotifiers();
         beaconManager.unbind(this);
-        imageTurnIndicator.setImageDrawable(null);
+        //imageTurnIndicator = null;
+        System.gc();
     }
 
     @Override
