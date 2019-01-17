@@ -131,10 +131,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     //UI design
     Intent intent;
     ViewPager viewPager;
-    Button btn_stethoscope, btn_bill, btn_exit, btn_medicent, btn_shop, btn_wc;
+    Button btn_stethoscope, btn_bill, btn_exit, btn_medicent, btn_convenience_store, btn_wc,btn_exsanguinate,btn_examination_room,btn_other;
     TextView tv_description;
-    //UI Image
-    ImageView icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
         //Get the position of popupwindow (center of phone screen)
-       // positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
+        // positionOfPopup = (LinearLayout) findViewById(R.id.mainActivityLayout);
 
         //Receive location information passed from ListViewActivity
         Bundle bundle = getIntent().getExtras();
@@ -195,15 +193,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         btn_bill = (Button)findViewById(R.id.btn_bill);
         btn_exit = (Button)findViewById(R.id.btn_exit);
         btn_medicent = (Button)findViewById(R.id.btn_medicent);
-        btn_shop = (Button)findViewById(R.id.btn_shop);
+        btn_convenience_store = (Button)findViewById(R.id.btn_convenience_store);
         btn_wc = (Button)findViewById(R.id.btn_wc);
+        btn_examination_room = (Button)findViewById(R.id.btn_examination_room);
+        btn_other = (Button)findViewById(R.id.btn_other);
+        btn_exsanguinate = (Button)findViewById(R.id.btn_exsanguinate);
         tv_description = (TextView)findViewById(R.id.tv_description);
-        icon_1 = (ImageView)findViewById(R.id.im_stethoscope);
-        icon_2 = (ImageView)findViewById(R.id.im_exit);
-        icon_3 = (ImageView)findViewById(R.id.im_shop);
-        icon_4 = (ImageView)findViewById(R.id.im_bill);
-        icon_5 = (ImageView)findViewById(R.id.im_medicent);
-        icon_6 = (ImageView)findViewById(R.id.im_wc);
+
 
 
         //Decide which search bar to be set value
@@ -228,12 +224,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*icon_1 = null;
-        icon_2 = null;
-        icon_3 = null;
-        icon_4 = null;
-        icon_5 = null;
-        icon_6 = null;*/
         System.gc();
     }
 
@@ -252,20 +242,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     //Press "Start" button to start navigation
     public void startNavigation(View view){
         //Start NavigationActivity and pass IDs and Regions of source and destination to it
-            Intent i = new Intent(this, NavigationActivity.class);
-            i.putExtra("destinationID", destinationID);
-            i.putExtra("destinationRegion", destinationRegion);
-            //Initialize values of static variables
-            searchBarClicked = false;
-            namePassedFromListView = null;
-            IDPassedFromListView = null;
-            regionPassedFromListView = null;
-            destinationName = null;
-            destinationID = null;
-            destinationRegion = null;
+        Intent i = new Intent(this, NavigationActivity.class);
+        i.putExtra("destinationID", destinationID);
+        i.putExtra("destinationRegion", destinationRegion);
+        //Initialize values of static variables
+        searchBarClicked = false;
+        namePassedFromListView = null;
+        IDPassedFromListView = null;
+        regionPassedFromListView = null;
+        destinationName = null;
+        destinationID = null;
+        destinationRegion = null;
 
-            startActivity(i);
-            finish();
+        startActivity(i);
+        finish();
     }
 
 
@@ -333,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
                 break;
 
-            case R.id.btn_exit:
+            case R.id.btn_examination_room:
                 for(int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
                     if(listForStoringAllNodes.get(i)._category.equals("檢查室")) {
@@ -357,11 +347,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
                 break;
 
-            case R.id.btn_shop:
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
-                    intent.putExtra("Category", "其他");
-                    startActivity(intent);
-                    finish();
+            case R.id.btn_other:
+                intent = new Intent(MainActivity.this,ListViewActivity.class);
+                intent.putExtra("Category", "其他");
+                startActivity(intent);
+                finish();
                 break;
 
             case R.id.btn_bill:
@@ -434,6 +424,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     startActivity(intent);
                     finish();
                 }
+                break;
+            //出口
+            case R.id.btn_exit:
+                break;
+            //萊爾富
+            case R.id.btn_convenience_store:
+                break;
+            //抽血處
+            case R.id.btn_exsanguinate:
                 break;
 
         }

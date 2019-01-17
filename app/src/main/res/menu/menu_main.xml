@@ -9,11 +9,4 @@
         app:showAsAction="ifRoom"
         android:orderInCategory="50" />
 
-    <item android:id="@+id/menu_home2"
-        android:title="首頁"
-        android:orderInCategory="51" />
-
-
-
-
 </menu>

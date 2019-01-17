@@ -50,7 +50,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.33">
 
                 <Button
                     android:id="@+id/btn_stethoscope"
@@ -77,7 +77,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.33">
 
                 <Button
                     android:id="@+id/btn_bill"
@@ -101,17 +101,10 @@
                     android:layout_marginBottom="35dip"
                     android:src="@drawable/cash" />
             </RelativeLayout>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:weightSum="1"
-            android:layout_weight="0.5">
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.33">
 
                 <Button
                     android:id="@+id/btn_exit"
@@ -120,7 +113,9 @@
                     android:background="@drawable/background"
                     android:gravity="center|bottom"
                     android:paddingBottom="10dp"
-                    android:text="檢查室"
+
+                    android:singleLine="false"
+                    android:text="出口"
                     android:onClick="onClick"
                     android:textSize="18sp" />
 
@@ -131,12 +126,44 @@
                     android:layout_centerInParent="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="35dip"
+                    android:src="@drawable/exit3" />
+            </RelativeLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="0.5">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33">
+
+                <Button
+                    android:id="@+id/btn_examination_room"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:onClick="onClick"
+                    android:paddingBottom="10dp"
+                    android:text="檢查室"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/im_examination_room"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="35dip"
                     android:src="@drawable/examination" />
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.33">
 
                 <Button
                     android:id="@+id/btn_medicent"
@@ -158,6 +185,31 @@
                     android:layout_marginBottom="35dip"
                     android:src="@drawable/pill" />
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33">
+
+                <Button
+                    android:id="@+id/btn_convenience_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:text="萊爾富"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/im_convenience_store"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/convenience_store" />
+            </RelativeLayout>
         </TableRow>
 
         <TableRow
@@ -168,32 +220,32 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.33">
 
                 <Button
-                    android:id="@+id/btn_shop"
+                    android:id="@+id/btn_other"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background"
                     android:gravity="center|bottom"
+                    android:onClick="onClick"
                     android:paddingBottom="10dp"
                     android:text="其它"
-                    android:onClick="onClick"
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/im_shop"
+                    android:id="@+id/im_other"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
                     android:layout_marginBottom="35dip"
                     android:src="@drawable/route" />
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.33">
 
                 <Button
                     android:id="@+id/btn_wc"
@@ -214,6 +266,31 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="35dip"
                     android:src="@drawable/bathroom" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33">
+
+                <Button
+                    android:id="@+id/btn_exsanguinate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background"
+                    android:gravity="center|bottom"
+                    android:paddingBottom="10dp"
+                    android:text="抽血處"
+                    android:onClick="onClick"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/im_exsanguinate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="35dip"
+                    android:src="@drawable/exsanguinate" />
             </RelativeLayout>
         </TableRow>
 

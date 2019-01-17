@@ -10,7 +10,7 @@
         android:orderInCategory="50"
         />
     <item android:id="@+id/information"
-        android:title="訊號校正"
+        android:title="相關資訊"
         android:icon="@drawable/info"
         app:showAsAction="always"
         android:orderInCategory="51"

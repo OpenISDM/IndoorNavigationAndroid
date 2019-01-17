@@ -6,11 +6,7 @@
 
 
     <item android:id="@+id/menu_previous_page"
-        android:title="上一頁"
-        android:icon="@drawable/stethoscope"
-        android:orderInCategory="100" />
-    <item android:id="@+id/menu_previous_page2"
-        android:title="上一頁"
+        android:title="各科門診"
         android:icon="@drawable/stethoscope"
         android:orderInCategory="101"
         app:showAsAction="always" />
@@ -21,7 +17,4 @@
         android:orderInCategory="50"
         app:showAsAction="always" />
 
-    <item android:id="@+id/menu_home2"
-        android:title="首頁"
-        android:orderInCategory="51" />
 </menu>

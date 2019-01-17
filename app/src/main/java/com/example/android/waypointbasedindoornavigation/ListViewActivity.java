@@ -175,7 +175,7 @@ public class ListViewActivity extends AppCompatActivity implements Serializable{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_home || item.getItemId() == R.id.menu_home2){
+        if(item.getItemId() == R.id.menu_home){
             Intent intent = new Intent();
             intent = new Intent(ListViewActivity.this, MainActivity.class);
             startActivity(intent);

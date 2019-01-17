@@ -231,7 +231,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // hashmap for storing region data
     RegionGraph regionGraph = new RegionGraph();
-    //HashMap<String, com.example.android.waypointbasedindoornavigation.Region> regionData = new HashMap<>();
+    //HashMap<String, .android.waypointbasedindoornavigation.Region> regionData = new HashMap<>();
 
     // a list of Node object representing a navigation path
     List<Node> navigationPath = new ArrayList<Node>();
@@ -999,8 +999,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 List<Node> newPath = new ArrayList<>();
                 List<Node> wrongPath = new ArrayList<>();
                 //walkedWaypoint = 0;
-               wrongWaypoint = allWaypointData.get(currentLBeaconID);
-               currentLocationReminder.setText("目前位置 : " + currentLocationName);
+                wrongWaypoint = allWaypointData.get(currentLBeaconID);
+                currentLocationReminder.setText("目前位置 : " + currentLocationName);
 
 
                 //WrongID = destination
@@ -1045,88 +1045,88 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
                 }*/
-                    //---------------------------------------------
-                    sourceID = wrongWaypoint._waypointID;
-                    sourceRegion = wrongWaypoint._regionID;
+                //---------------------------------------------
+                sourceID = wrongWaypoint._waypointID;
+                sourceRegion = wrongWaypoint._regionID;
 
 
-                    loadNavigationGraph();
-                    newPath = startNavigation();
+                loadNavigationGraph();
+                newPath = startNavigation();
 
-                    Log.i("renavigate", "renavigate");
+                Log.i("renavigate", "renavigate");
 
-                    for (int i = 0; i < newPath.size(); i++)
-                        Log.i("renavigate", "path node " + newPath.get(i)._waypointName);
+                for (int i = 0; i < newPath.size(); i++)
+                    Log.i("renavigate", "path node " + newPath.get(i)._waypointName);
 
-                    for (int i = 0; i < newPath.size(); i++) {
+                for (int i = 0; i < newPath.size(); i++) {
 
-                        if (newPath.get(i)._waypointName.equals(lastNode._waypointName)) {
+                    if (newPath.get(i)._waypointName.equals(lastNode._waypointName)) {
 
-                            isLongerPath = true;
-                            break;
-                        }
-
-                        isLongerPath = false;
+                        isLongerPath = true;
+                        break;
                     }
-                    //Log.i("renavigate", "newPath next "+newPath.get(1)._waypointName);
-                    //Log.i("renavigate", "lastWaypoint "+lastNode._waypointName);
+
+                    isLongerPath = false;
+                }
+                //Log.i("renavigate", "newPath next "+newPath.get(1)._waypointName);
+                //Log.i("renavigate", "lastWaypoint "+lastNode._waypointName);
 
 
-                    if (isLongerPath) {
-                        String gobackDirection = null;
-                        appendLog("重新規劃路線，且是返回走");
-                        currentLBeaconID = "EmptyString";
-                        //navigationPath.add(0, lastNode);
-                        //navigationPath.add(0, wrongWaypoint);
+                if (isLongerPath) {
+                    String gobackDirection = null;
+                    appendLog("重新規劃路線，且是返回走");
+                    currentLBeaconID = "EmptyString";
+                    //navigationPath.add(0, lastNode);
+                    //navigationPath.add(0, wrongWaypoint);
 
-                        navigationPath = newPath;
-                        progressBar.setMax(navigationPath.size());
-                        progressStatus = 0;
-                        firstMovement.setText("請往回轉");
-                        howFarToMove.setText("");
-                        nextTurnMovement.setText(" ");
-                        turnNotificationForPopup = "goback";
-                        imageTurnIndicator.setImageResource(R.drawable.turn_back);
+                    navigationPath = newPath;
+                    progressBar.setMax(navigationPath.size());
+                    progressStatus = 0;
+                    firstMovement.setText("請往回轉");
+                    howFarToMove.setText("");
+                    nextTurnMovement.setText(" ");
+                    turnNotificationForPopup = "goback";
+                    imageTurnIndicator.setImageResource(R.drawable.turn_back);
 
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    turnNotificationForPopup = null;
+
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT + "等待指示");
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+
+
+                    // Show New Path
+                    for(int xx = 0;xx < navigationPath.size();xx++) {
+                        Log.i("xxx_recompute","1 - navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
+                    }
+
+
+                } else {
+                    appendLog("重新規劃路線");
+                    showHintAtWaypoint(WRONGWAY_NOTIFIER);
+
+                    navigationPath = newPath;
+                    progressBar.setMax(navigationPath.size());
+                    progressStatus = 1;
+                    progressNumber.setText(progressStatus + "/" + progressBar.getMax());
+
+                    turnNotificationForPopup = null;
+
+                    firstMovement.setText(GO_STRAIGHT_ABOUT);
+                    if(navigationPath.size() >= 2) {
+                        howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
+
+
+                        turnNotificationForPopup = getDirectionFromBearing
+                                (lastNode, navigationPath.get(0), navigationPath.get(1));
+
+                        Log.i("renavigate", "lastNode, 0, 1: " + lastNode._waypointName + ", "
+                                + navigationPath.get(0)._waypointName + ", " + navigationPath.get(1)._waypointName);
+                    }
+                    currentLocationReminder.setText("目前位置:" + currentLocationName);
+
+                    if(!wrongWaypoint._waypointID.equals(endNode._waypointID))
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
-                        turnNotificationForPopup = null;
-
-                        nextTurnMovement.setText(THEN_GO_STRAIGHT + "等待指示");
-                        imageTurnIndicator.setImageResource(R.drawable.up_now);
-
-
-                        // Show New Path
-                        for(int xx = 0;xx < navigationPath.size();xx++) {
-                            Log.i("xxx_recompute","1 - navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
-                        }
-
-
-                    } else {
-                        appendLog("重新規劃路線");
-                        showHintAtWaypoint(WRONGWAY_NOTIFIER);
-
-                        navigationPath = newPath;
-                        progressBar.setMax(navigationPath.size());
-                        progressStatus = 1;
-                        progressNumber.setText(progressStatus + "/" + progressBar.getMax());
-
-                        turnNotificationForPopup = null;
-
-                        firstMovement.setText(GO_STRAIGHT_ABOUT);
-                        if(navigationPath.size() >= 2) {
-                            howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
-
-
-                            turnNotificationForPopup = getDirectionFromBearing
-                                    (lastNode, navigationPath.get(0), navigationPath.get(1));
-
-                            Log.i("renavigate", "lastNode, 0, 1: " + lastNode._waypointName + ", "
-                                    + navigationPath.get(0)._waypointName + ", " + navigationPath.get(1)._waypointName);
-                        }
-                        currentLocationReminder.setText("目前位置:" + currentLocationName);
-
-                        if(!wrongWaypoint._waypointID.equals(endNode._waypointID))
-                            showHintAtWaypoint(MAKETURN_NOTIFIER);
 
                     /*firstMovement.setText(GO_STRAIGHT_ABOUT);
                     if(navigationPath.size() > 1) {
@@ -1154,7 +1154,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             imageTurnIndicator.setImageResource(R.drawable.up_now);
                         }
 
-                            switch (turnNotificationForPopup) {
+                        switch (turnNotificationForPopup) {
 
                             case RIGHT:
                                 nextTurnMovement.setText(THEN_TURN_RIGHT);
@@ -1248,9 +1248,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }
 
                     // Show New Path
-                   for(int xx = 0;xx < navigationPath.size();xx++) {
-                       Log.i("xxx_recompute","navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
-                   }
+                    for(int xx = 0;xx < navigationPath.size();xx++) {
+                        Log.i("xxx_recompute","navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
+                    }
                     //showHintAtWaypoint(MAKETURN_NOTIFIER);
                     passedGroupID = navigationPath.get(0)._groupID;
                     navigationPath.remove(0);
@@ -1262,40 +1262,40 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //the waypoint is removed from the top of the navigationPath
 
 
-       // readNavigationInstruction();
+        // readNavigationInstruction();
         if(navigationPath.size() > 1) {
             if (!passedRegionID.equals(navigationPath.get(0)._regionID))
                 regionIndex++;
-                passedRegionID = navigationPath.get(0)._regionID;
-                passedGroupID = navigationPath.get(0)._groupID;
-                lastNode = navigationPath.get(0);
-         //強制轉換的Case in 台大醫院
-         //判斷下個Node鄰居數與是否為電/樓梯()
-        if(!turnDirection.equals(WRONG)) {
-            Log.i("xxx_Slash", "" + navigationPath.get(0)._waypointName);
-            if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(0)._connectPointID != navigationPath.get(1)._connectPointID && navigationPath.get(1)._nodeType == 0) {
-                Log.i("xxx_Slash", "強制轉為直走");
-                turnNotificationForPopup = FRONT;
-                turnDirection = FRONT;
-                nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                imageTurnIndicator.setImageResource(R.drawable.up_now);
-                LastisSlash = true;
-                if (navigationPath.get(1)._waypointID.equals(endNode._waypointID))
-                    nextTurnMovement.setText("然後抵達目的地");
+            passedRegionID = navigationPath.get(0)._regionID;
+            passedGroupID = navigationPath.get(0)._groupID;
+            lastNode = navigationPath.get(0);
+            //強制轉換的Case in 台大醫院
+            //判斷下個Node鄰居數與是否為電/樓梯()
+            if(!turnDirection.equals(WRONG)) {
+                Log.i("xxx_Slash", "" + navigationPath.get(0)._waypointName);
+                if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(0)._connectPointID != navigationPath.get(1)._connectPointID && navigationPath.get(1)._nodeType == 0) {
+                    Log.i("xxx_Slash", "強制轉為直走");
+                    turnNotificationForPopup = FRONT;
+                    turnDirection = FRONT;
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                    LastisSlash = true;
+                    if (navigationPath.get(1)._waypointID.equals(endNode._waypointID))
+                        nextTurnMovement.setText("然後抵達目的地");
+                }
+            }else if (turnDirection.equals(WRONG)) {
+                //WRONG 後移
+                if(navigationPath.get(0)._adjacentWaypoints.size() <= 2 && !navigationPath.get(0)._waypointID.equals("0x3219b8410xfc3ef042") && lastNode._connectPointID != navigationPath.get(0)._connectPointID && lastNode._nodeType == 0) {
+                    Log.i("xxx_Slash", "強制轉為直走");
+                    turnNotificationForPopup = FRONT;
+                    turnDirection = FRONT;
+                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                    LastisSlash = true;
+                    if (navigationPath.get(0)._waypointID.equals(endNode._waypointID))
+                        nextTurnMovement.setText("然後抵達目的地");
+                }
             }
-        }else if (turnDirection.equals(WRONG)) {
-             //WRONG 後移
-            if(navigationPath.get(0)._adjacentWaypoints.size() <= 2 && !navigationPath.get(0)._waypointID.equals("0x3219b8410xfc3ef042") && lastNode._connectPointID != navigationPath.get(0)._connectPointID && lastNode._nodeType == 0) {
-                Log.i("xxx_Slash", "強制轉為直走");
-                turnNotificationForPopup = FRONT;
-                turnDirection = FRONT;
-                imageTurnIndicator.setImageResource(R.drawable.up_now);
-                nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                LastisSlash = true;
-                if (navigationPath.get(0)._waypointID.equals(endNode._waypointID))
-                    nextTurnMovement.setText("然後抵達目的地");
-            }
-        }
     /* else if (navigationPath.get(0)._waypointID.equals("0x300000000x48d2b060") && navigationPath.get(1)._waypointID.equals("0x030000430x00000000")) {
         Log.i("xxx_Slash", "強制轉為直走2(D08至C39)"); //D08至C39
         turnNotificationForPopup = FRONT;
@@ -1314,7 +1314,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         nextTurnMovement.setText(THEN_GO_STRAIGHT);
         LastisSlash = true;
     }*/
-}
+        }
         //樓梯重新導航校正(ConnectID = 4)
         /*if (navigationPath.get(0)._waypointID.equals("0xff14f0420x00000000") && navigationPath.get(1)._waypointID.equals("0x3219b8410x4d06f042")) {
             Log.i("xxx_Slash","B10 to D3");
@@ -1543,7 +1543,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 }
                 if(startNode._waypointID.equals(endNode._waypointID)) {
-                   showHintAtWaypoint(ARRIVED_NOTIFIER);
+                    showHintAtWaypoint(ARRIVED_NOTIFIER);
                 }
 
                 appendLog("StartNavigation");
@@ -1599,7 +1599,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 appendLog(navigationPath.get(0)._waypointName);
 
-                 if (popupWindow != null)
+                if (popupWindow != null)
                     popupWindow.dismiss();
 
                 whichWaypointOnProgressBar += 1;
@@ -1665,7 +1665,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     public List<Node> startNavigation() {
 
         List<Node> path = new ArrayList<>();
-       int startNodeType = startNode._nodeType;
+        int startNodeType = startNode._nodeType;
 
         // temporary variable to record connectPointID
         int connectPointID;
@@ -2012,117 +2012,117 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             myVibrator.vibrate(1000);
         } else if (instruction == MAKETURN_NOTIFIER) {
             //處理空白跳框情形
-           // image.setImageResource(R.drawable.turn_back);
+            // image.setImageResource(R.drawable.turn_back);
             Log.i("1227","turnNotififorPop = " + turnNotificationForPopup);
-               switch (turnNotificationForPopup) {
+            switch (turnNotificationForPopup) {
 
-                   case RIGHT:
-                       turnDirection = PLEASE_TURN_RIGHT;
-                       image.setImageResource(R.drawable.right_now);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case LEFT:
-                       turnDirection = PLEASE_TURN_LEFT;
-                       image.setImageResource(R.drawable.left_now);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case FRONT_RIGHT:
-                       turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                       if (LastisSlash == false) {
-                           image.setImageResource(R.drawable.rightup_now);
-                           LastisSlash = true;
-                       } else {
-                           image.setImageResource(R.drawable.up_now);
-                           LastisSlash = false;
-                       }
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case FRONT_LEFT:
-                       turnDirection = PLEASE_TURN_FRONT_LEFT;
-                       if (LastisSlash == false) {
-                           image.setImageResource(R.drawable.leftup_now);
-                           LastisSlash = true;
-                       } else {
-                           image.setImageResource(R.drawable.up_now);
-                           LastisSlash = false;
-                       }
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case REAR_RIGHT:
-                       turnDirection = PLEASE_TURN__REAR_RIGHT;
-                       image.setImageResource(R.drawable.rightdown_now);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case REAR_LEFT:
-                       turnDirection = PLEASE_TURN_REAR_LEFT;
-                       image.setImageResource(R.drawable.leftdown_now);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case FRONT:
-                       turnDirection = PLEASE_GO_STRAIGHT;
-                       image.setImageResource(R.drawable.up_now);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case FRONT_RIGHTSIDE:
-                       turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
-                       if (LastisSlash == false) {
-                           image.setImageResource(R.drawable.up_rightside);
-                           LastisSlash = true;
-                       } else {
-                           image.setImageResource(R.drawable.up_now);
-                           LastisSlash = false;
-                       }
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case FRONT_LEFTSIDE:
-                       turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
-                       if (LastisSlash == false) {
-                           image.setImageResource(R.drawable.up_leftside);
-                           LastisSlash = true;
-                       } else {
-                           image.setImageResource(R.drawable.up_now);
-                           LastisSlash = false;
-                       }
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case ELEVATOR:
-                       turnDirection = PLEASE_TAKE_ELEVATOR;
-                       image.setImageResource(R.drawable.elevator);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case STAIR:
-                       turnDirection = PLEASE_WALK_UP_STAIR;
-                       image.setImageResource(R.drawable.stair);
-                       LastisSlash = false;
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
-                   case "goback":
-                       turnDirection = " ";
-                       image.setImageResource(R.drawable.turn_back);
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                      // setNowPostition();
-                       break;
+                case RIGHT:
+                    turnDirection = PLEASE_TURN_RIGHT;
+                    image.setImageResource(R.drawable.right_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case LEFT:
+                    turnDirection = PLEASE_TURN_LEFT;
+                    image.setImageResource(R.drawable.left_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case FRONT_RIGHT:
+                    turnDirection = PLEASE_TURN__FRONT_RIGHT;
+                    if (LastisSlash == false) {
+                        image.setImageResource(R.drawable.rightup_now);
+                        LastisSlash = true;
+                    } else {
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case FRONT_LEFT:
+                    turnDirection = PLEASE_TURN_FRONT_LEFT;
+                    if (LastisSlash == false) {
+                        image.setImageResource(R.drawable.leftup_now);
+                        LastisSlash = true;
+                    } else {
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case REAR_RIGHT:
+                    turnDirection = PLEASE_TURN__REAR_RIGHT;
+                    image.setImageResource(R.drawable.rightdown_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case REAR_LEFT:
+                    turnDirection = PLEASE_TURN_REAR_LEFT;
+                    image.setImageResource(R.drawable.leftdown_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case FRONT:
+                    turnDirection = PLEASE_GO_STRAIGHT;
+                    image.setImageResource(R.drawable.up_now);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case FRONT_RIGHTSIDE:
+                    turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
+                    if (LastisSlash == false) {
+                        image.setImageResource(R.drawable.up_rightside);
+                        LastisSlash = true;
+                    } else {
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case FRONT_LEFTSIDE:
+                    turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
+                    if (LastisSlash == false) {
+                        image.setImageResource(R.drawable.up_leftside);
+                        LastisSlash = true;
+                    } else {
+                        image.setImageResource(R.drawable.up_now);
+                        LastisSlash = false;
+                    }
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case ELEVATOR:
+                    turnDirection = PLEASE_TAKE_ELEVATOR;
+                    image.setImageResource(R.drawable.elevator);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case STAIR:
+                    turnDirection = PLEASE_WALK_UP_STAIR;
+                    image.setImageResource(R.drawable.stair);
+                    LastisSlash = false;
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
+                case "goback":
+                    turnDirection = " ";
+                    image.setImageResource(R.drawable.turn_back);
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    // setNowPostition();
+                    break;
 
-                   case "C04":
-                       turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                       image.setImageResource(R.drawable.rightup_now);
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
+                case "C04":
+                    turnDirection = PLEASE_TURN__FRONT_RIGHT;
+                    image.setImageResource(R.drawable.rightup_now);
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
 
-                   case "C11":
-                       turnDirection = PLEASE_TURN_FRONT_LEFT;
-                       image.setImageResource(R.drawable.leftup_now);
-                       Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                       break;
+                case "C11":
+                    turnDirection = PLEASE_TURN_FRONT_LEFT;
+                    image.setImageResource(R.drawable.leftup_now);
+                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                    break;
 
 
-               }
+            }
         }
         //currentID = end
         /*
@@ -2357,7 +2357,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             appendLog("StartNavigation");
 
             //初始方向顯示圖片
-           if ((startNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
+            if ((startNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
                 Log.i("initPic","初始圖片顯示");
                 Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                 intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
@@ -2366,7 +2366,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 startActivity(intent);
             }
 
-           // Log.i("xxx_des","attachID1 = " + startNode._attachIDs.get(0));
+            // Log.i("xxx_des","attachID1 = " + startNode._attachIDs.get(0));
 
 
         }
@@ -2454,7 +2454,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNode.get(i));
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
                         isInVirtualNode = true;
-                      }else if(virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == true){
+                    }else if(virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == true){
                         turnNotificationForPopup = getDirectionFromBearing(wrongWaypoint, navigationPath.get(0), virtualNode.get(i));
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
                         isInVirtualNode = true;
@@ -2566,7 +2566,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_home || item.getItemId() == R.id.menu_home2){
+        if(item.getItemId() == R.id.menu_home){
             beaconManager.removeAllMonitorNotifiers();
             beaconManager.removeAllRangeNotifiers();
             beaconManager.unbind(NavigationActivity.this);
@@ -2575,7 +2575,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             startActivity(intent);
             this.finish();
         }
-        if(item.getItemId() == R.id.menu_previous_page || item.getItemId() == R.id.menu_previous_page2){
+        if(item.getItemId() == R.id.menu_previous_page){
             beaconManager.removeAllMonitorNotifiers();
             beaconManager.removeAllRangeNotifiers();
             beaconManager.unbind(NavigationActivity.this);

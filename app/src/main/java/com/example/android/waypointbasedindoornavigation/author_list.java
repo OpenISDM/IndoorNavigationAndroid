@@ -1,13 +1,15 @@
 package com.example.android.waypointbasedindoornavigation;
-        import android.content.Intent;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.view.KeyEvent;
-        import android.widget.ExpandableListView;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ExpandableListView;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class author_list extends AppCompatActivity {
     // Array of strings for ListView Title
@@ -32,9 +34,25 @@ public class author_list extends AppCompatActivity {
     private List<String> listDataHeader;
     private HashMap<String,List<String>> listHash;
 
+    //--------------------------------------------------------------------------------------------- 1/15 information 返回健
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_home){
+            Intent intent = new Intent();
+            intent = new Intent(author_list.this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author_list);
