@@ -1,0 +1,122 @@
+package eos.waypointbasedindoornavigation.Find_loc;
+
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.os.Environment;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class ReadWrite_File {
+    private File file;
+    private static String file_name = "Log";
+    private static boolean sb = false;
+    private final File path  =  new File(Environment.getExternalStoragePublicDirectory
+            (Environment.DIRECTORY_DOWNLOADS)+File.separator+"WGRAPH_雲林台大醫院地圖");
+
+    //    設定固定檔案名稱
+    public ReadWrite_File(){
+        if(!path.exists()) path.mkdir();
+    }
+    public void setFile_name (String s){
+        Log.i("Msg", "set name "+s);
+        this.file_name = s;
+    }
+//    以固定名稱寫入
+    public void writeFile(String sBody){
+        file = new File(path,file_name+".txt");
+        writefunction(file,sBody,1);
+    }
+//    自定名稱寫入
+    public void writeFile(String sFileName, String sBody){
+        file = new File(path,sFileName+".txt");
+        writefunction(file,sBody,1);
+    }
+    public void writejson(String j){
+        file = new File(path,"DeviceParamation.json");
+        boolean tmp_sb = sb;
+        sb = true;
+        writefunction(file,j,0);
+        sb = tmp_sb;
+    }
+//    寫入含式
+    private void writefunction(File file, String sBody, int T){
+        if(sb) {
+            Log.i("Msg0", String.valueOf(file.exists()));
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                    file.setExecutable(true, false);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            try {
+                if (T == 0) {
+                    BufferedWriter buf = new BufferedWriter(new FileWriter(file, false));
+                    buf.write(sBody);
+                    buf.close();
+                } else if (T == 1) {
+                    BufferedWriter buf = new BufferedWriter(new FileWriter(file, true));
+                    buf.append(sBody);
+                    buf.newLine();
+                    buf.close();
+                }
+                Log.i("Msg2", "success" + file.getAbsolutePath());
+            } catch (Exception e) {
+                Log.i("Msg3", "fail" + file.getAbsolutePath());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public JSONArray ReadJsonFile(Context context) {
+        JSONArray jarray = null;
+        AssetManager assetManager = context.getAssets();
+            try {
+                InputStream is = assetManager.open("DeviceParamation.json");
+                int tmp_size = is.available();
+                byte[] buffer = new byte[tmp_size];
+                is.read(buffer);
+                is.close();
+                String jsonText = new String(buffer, "UTF-8");
+                jarray = new JSONArray(jsonText);
+                Log.i("JSON","load json success");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        return jarray;
+    }
+    /*public JSONArray ReadJsonFile() {
+        file = new File(path, "DeviceParamation.json");
+        JSONArray jarray = null;
+        if(file.exists()) {
+            try {
+                FileInputStream is = new FileInputStream(file);
+                int tmp_size = is.available();
+                byte[] buffer = new byte[tmp_size];
+                is.read(buffer);
+                is.close();
+                String jsonText = new String(buffer, "UTF-8");
+                jarray = new JSONArray(jsonText);
+                Log.i("JSON","load json success");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else   Log.i("JSON","don't have file");
+        return jarray;
+    }*/
+}
