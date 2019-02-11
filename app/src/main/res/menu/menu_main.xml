@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:id="@+id/menu_home"
-        android:title="首頁"
+    <item
+        android:id="@+id/menu_home"
         android:icon="@drawable/home"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="50" />
+        android:orderInCategory="50"
+        android:title="首頁"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -3,23 +3,24 @@
 
     <region id='1' name='region1' neighbor1='region2' neighbor2='region3' neighbor3='' neighbor4='' elevation='1'>
  
-	    <node id='0xfa53bd410xff54f142' name='前門大廳' region='region1' category='出口'/>
+	    <node id='0xfa53bd410xff54f142' name='前門出口' region='region1' category='出口'/>
 		<node id='0xcf90b8410x3424f042' name='批價掛號櫃臺' region='region1' category='批價櫃檯'/>
 		<node id='0x0054bd410x0055f142' name='領藥處' region='region1' category='領藥處'/>
-		<node id='0x4993bd410x640df142' name='超商' region='region1' category='新大樓一樓'/>	  
+		<node id='0x4993bd410x640df142' name='萊爾富' region='region1' category='超商'/>	  
 		<node id='0x6029b8410x580af042' name='心臟內科/內科/體檢區(1~10診)' region='region1' category='各科門診'/>
 		<node id='0x3ef8b8410x0f3ef042' name='耳鼻喉科/小兒科/婦產科(11~20診)' region='region1' category='各科門診'/>
-        <node id='0xed4cc8410x0e21f342' name='腎臟科/腎膽腸內科/新陳代謝分泌科(21~25診)' region='region1' category='新大樓一樓'/>
+        <node id='0xed4cc8410x0e21f342' name='腎臟科/腎膽腸內科/新陳代謝分泌科(21~25診)' region='region1' category='各科門診'/>
 		<node id='0x2ebab8410x8c2ef042' name='精神科/神經內科(26~29診)' region='region1' category='各科門診'/> 
         <node id='0x0254bd410x0055f142' name='外科/骨科/牙科(30~41診)' region='region1' category='各科門診'/>
         <node id='0x2c05ba410x4b81f042' name='眼科/皮膚科(42~49診)' region='region1' category='各科門診'/>
 		<node id='0xf853bd410xfe54f142' name='女廁' region='region1' category='廁所'/>
 		<node id='0x8b2eba410xa38bf042' name='男廁' region='region1' category='廁所'/>
+		<node id='0x283ff0420x00000000' name='中央出口' region='region1' category='出口'/>
 		<node id='0xc43af3420x00000000' name='核子醫學部' region='region1' category='檢查室'/>
-		<node id='0xde57c8410x0721f342' name='抽血' region='region1' category='檢查室'/>
+		<node id='0xde57c8410x0721f342' name='抽血' region='region1' category='抽血處'/>
 		<node id='0x0800b8410x0200f042' name='病歷室' region='region1' category='舊大樓一樓'/>
 		<node id='0x3519b8410x4d06f042' name='X光' region='region1' category='檢查室'/>
-		<node id='0x300000000x48d2b060' name='後門' region='region1' category='出口'/>
+		<node id='0x300000000x48d2b060' name='後門出口' region='region1' category='出口'/>
 	
 	</region>
 	

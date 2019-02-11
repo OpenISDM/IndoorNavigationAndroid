@@ -19,6 +19,7 @@ Author:
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -64,6 +65,9 @@ public class ListViewActivity extends AppCompatActivity implements Serializable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listview);
         setTitle("台大雲林分院室內導航系統");
+        Log.i("List_Create_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
+
+
         List<Node> ReceivedList = new ArrayList<>();
 
         List<String> ReceivedListID = new ArrayList<String>();

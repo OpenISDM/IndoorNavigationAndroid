@@ -309,7 +309,7 @@ public class DataParser {
     }
 //-------------------------------VittualNode test-------------------------------------
 // Parse data from Navigation Graph
-public static List<Node> getVirtualNode(Context context) {
+public static List<Node> getVirtualNode(Context context,int UpOrDown) {
 
 
     // create a list of navigation subgraph used as routing data
@@ -325,7 +325,10 @@ public static List<Node> getVirtualNode(Context context) {
         InputStream is;
 
         try {
-            is = assetManager.open("virtual_node.xml");
+            if (UpOrDown ==1)
+                is = assetManager.open("virtual_node_up.xml");
+            else
+                is = assetManager.open("virtual_node_down.xml");
             pullParser.setInput(is, "utf-8");
             int eventType = pullParser.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {

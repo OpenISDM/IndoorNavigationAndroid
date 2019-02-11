@@ -25,6 +25,7 @@ Author:
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -39,9 +40,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
@@ -125,6 +129,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final int WRONGWAY_NOTIFIER = 1;
     private static final int MAKETURN_NOTIFIER = 2;
 
+    private static final int VIRTUAL_UP = 1;
+    private static final int VIRTUAL_DOWN = 2;
+
+
     private static final String FRONT = "front";
     private static final String FRONT_RIGHTSIDE = "frontRightSide";
     private static final String FRONT_LEFTSIDE = "frontLeftSide";
@@ -151,9 +159,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String THEN_TURN_REAR_LEFT = "然後向左後方轉";
     private static final String THEN_TURN__REAR_RIGHT = "然後向右後方轉";
     private static final String THEN_TAKE_ELEVATOR = "然後搭電梯";
-    private static final String THEN_WALK_UP_STAIR = "然後走樓梯";
+    private static final String THEN_WALK_UP_STAIR = "然後爬樓梯";
+    private static final String THEN_WALK_DOWN_STAIR = "然後下樓梯";
     private static final String WAIT_FOR_ELEVATOR = "電梯中請稍候";
     private static final String WALKING_UP_STAIR = "爬樓梯";
+    private static final String WALKING_DOWN_STAIR = "下樓梯";
 
 
     private static final String YOU_HAVE_ARRIVE = "抵達目的地";
@@ -192,17 +202,18 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     String currentLocationName;
 
     boolean isFirstBeacon = true;
+    boolean FirstTurn = true;
     boolean NextLandMarkisEnglish = false;
     boolean isInVirtualNode = false;
+    boolean StairGoUp = false;
     boolean LastisRecalculate = false;
     boolean LastisSlash = false;
-    boolean JumpNode = false;
     boolean DirectCompute = false;
     Node startNode;
     Node endNode;
     Node lastNode;
     Node wrongWaypoint;
-    Node currentNode;
+    Node chosestartNode;
     private long startT;
     private long endT;
 
@@ -235,7 +246,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // a list of Node object representing a navigation path
     List<Node> navigationPath = new ArrayList<Node>();
-    List<Node> virtualNode = new ArrayList<Node>();
+    List<Node> virtualNodeUp = new ArrayList<Node>();
+    List<Node> virtualNodeDown = new ArrayList<Node>();
     HashMap<String, String> navigationPath_ID_to_Name_Mapping = new HashMap<>();
 
     HashMap<String, String> mappingOfRegionNameAndID = new HashMap<>();
@@ -330,6 +342,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         offset = (double) pref.getFloat("offset",(float)1.155);
         startT = System.currentTimeMillis();
         Log.i("xxx_wrong", "onCreate");
+        Log.i("Navi_Create_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
+
+
 
 
         // find UI objects by IDs
@@ -394,8 +409,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         navigationPath.add(new Node("empty", "empty", "empty", "empty"));
         //load all waypoint data for precise positioning
         loadAllWaypointData();
-        virtualNode = DataParser.getVirtualNode(this);
-        Log.i("virtualtest","VirtualInfo: " + virtualNode.get(0)._waypointID + "/" + virtualNode.size());
+        virtualNodeUp = DataParser.getVirtualNode(this,VIRTUAL_UP);
+        virtualNodeDown = DataParser.getVirtualNode(this,VIRTUAL_DOWN);
         destinationReminder.setText("目的地 : " + allWaypointData.get(destinationID)._waypointName);
 
         // Lbeacon Manager setup
@@ -489,9 +504,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("xyz", "navigationnPath.get(1) = " + NextLandMarkisEnglish);
         }
         //樓梯或電梯方向顯示
-        if(turnDirection != WRONG && navigationPath.size() >= 2)
+        if(turnDirection != WRONG && navigationPath.size() >= 2 && FirstTurn == false)
             ShowDirectionFromConnectPoint();
 
+        FirstTurn = true;
         LastisRecalculate = false;
         switch (turnDirection) {
 
@@ -634,7 +650,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     nextTurnMovement.setText(THEN_GO_STRAIGHT);
                 }
                 else
-                    imageTurnIndicator.setImageResource(R.drawable.left_down);
+                    imageTurnIndicator.setImageResource(R.drawable.leftdown_now);
                 turnNotificationForPopup = REAR_LEFT;
                 break;
 
@@ -758,7 +774,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     nextTurnMovement.setText(THEN_GO_STRAIGHT);
                 }
                 else
-                    imageTurnIndicator.setImageResource(R.drawable.right_down);
+                    imageTurnIndicator.setImageResource(R.drawable.rightdown_now);
                 turnNotificationForPopup = REAR_RIGHT;
                 break;
 
@@ -792,7 +808,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nextTurnMovement.setText("抵達目的地");
                         } else {
                             if (!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                                elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                             else
                                 nextTurnMovement.setText(THEN_GO_STRAIGHT);
                         }
@@ -844,7 +860,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nextTurnMovement.setText("抵達目的地");
                         } else {
                             if (!navigationPath.get(1)._regionID.equals(navigationPath.get(2)._regionID))
-                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(2)._elevation);
+                                elevationDisplay(STAIRWELL_WAYPOINT, navigationPath.get(2)._elevation);
                             else
                                 nextTurnMovement.setText(THEN_GO_STRAIGHT_RIGHTSIDE);
                         }
@@ -927,34 +943,70 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             case STAIR:
                 turnNotificationForPopup = STAIR;
                 if(navigationPath.size() > 2) {
-                    switch (navigationPath.get(2)._elevation) {
-                        case 0:
-                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                            break;
-                        case 1:
-                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                            break;
-                        case 2:
-                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                            break;
-                        case 3:
-                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                            break;
+                    //上樓
+                    if(navigationPath.get(2)._elevation > navigationPath.get(0)._elevation) {
+                        switch (navigationPath.get(2)._elevation) {
+                            case 0:
+                                firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                                break;
+                            case 1:
+                                firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                                break;
+                            case 2:
+                                firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                                break;
+                            case 3:
+                                firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                                break;
+                        }
+                    }else if(navigationPath.get(2)._elevation < navigationPath.get(0)._elevation){
+                        switch (navigationPath.get(2)._elevation) {
+                            case 0:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
+                                break;
+                            case 1:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
+                                break;
+                            case 2:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
+                                break;
+                            case 3:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
+                                break;
+                        }
                     }
                 }else if (navigationPath.size() == 2) {
-                    switch (navigationPath.get(1)._elevation) {
-                        case 0:
-                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                            break;
-                        case 1:
-                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                            break;
-                        case 2:
-                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                            break;
-                        case 3:
-                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                            break;
+                    //上樓
+                    if (navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {
+                        switch (navigationPath.get(1)._elevation) {
+                            case 0:
+                                firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                                break;
+                            case 1:
+                                firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                                break;
+                            case 2:
+                                firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                                break;
+                            case 3:
+                                firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                                break;
+                        }
+                    } else if (navigationPath.get(1)._elevation < navigationPath.get(0)._elevation) {
+                        switch (navigationPath.get(1)._elevation) {
+                            case 0:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
+                                break;
+                            case 1:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
+                                break;
+                            case 2:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
+                                break;
+                            case 3:
+                                firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
+                                break;
+                        }
                     }
                 }
                 howFarToMove.setText("");
@@ -963,7 +1015,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 walkedWaypoint = 0;
                 sourceID = navigationPath.get(1)._waypointID;
-                imageTurnIndicator.setImageResource(R.drawable.stair);
+                if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
+                    imageTurnIndicator.setImageResource(R.drawable.stairs_up);
+                else
+                    imageTurnIndicator.setImageResource(R.drawable.stairs_down);
                 break;
 
             case ELEVATOR:
@@ -1125,9 +1180,35 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }
                     currentLocationReminder.setText("目前位置:" + currentLocationName);
 
+                    boolean arriveinwrong = false;
+
+                    for (int i = 0;i < wrongWaypoint._attachIDs.size();i++) {
+                        if ((endNode._mainID != 0 && endNode._mainID == wrongWaypoint._attachIDs.get(i))) {
+                            arriveinwrong = true;
+                            break;
+                        }
+                    }
+
+                    if(wrongWaypoint._waypointID.equals(endNode._waypointID))
+                        arriveinwrong = true;
+
+                    if(arriveinwrong == false)
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
+  /*
                     if(!wrongWaypoint._waypointID.equals(endNode._waypointID))
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
-
+//---------------------------------------------
+                    for (int i = 0;i < chosestartNode._attachIDs.size();i++) {
+                        if ((endNode._mainID != 0 && endNode._mainID == chosestartNode._attachIDs.get(i))) {
+                            showHintAtWaypoint(ARRIVED_NOTIFIER);
+                            break;
+                        }
+                    }
+                    if(chosestartNode._waypointID.equals(endNode._waypointID)) {
+                        showHintAtWaypoint(ARRIVED_NOTIFIER);
+                    }
+//-------------------------------------------
+    */
                     /*firstMovement.setText(GO_STRAIGHT_ABOUT);
                     if(navigationPath.size() > 1) {
                         //判斷下個目的地是否有LandMark
@@ -1203,34 +1284,70 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             //----------------
                             turnNotificationForPopup = STAIR;
                             if(navigationPath.size() > 2) {
-                                switch (navigationPath.get(2)._elevation) {
-                                    case 0:
-                                        firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                                        break;
-                                    case 1:
-                                        firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                                        break;
-                                    case 2:
-                                        firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                                        break;
-                                    case 3:
-                                        firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                                        break;
+                                //上樓
+                                if(navigationPath.get(2)._elevation > navigationPath.get(0)._elevation) {
+                                    switch (navigationPath.get(2)._elevation) {
+                                        case 0:
+                                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                                            break;
+                                        case 1:
+                                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                                            break;
+                                        case 2:
+                                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                                            break;
+                                        case 3:
+                                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                                            break;
+                                    }
+                                }else if(navigationPath.get(2)._elevation < navigationPath.get(0)._elevation){
+                                    switch (navigationPath.get(2)._elevation) {
+                                        case 0:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
+                                            break;
+                                        case 1:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
+                                            break;
+                                        case 2:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
+                                            break;
+                                        case 3:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
+                                            break;
+                                    }
                                 }
                             }else if (navigationPath.size() == 2) {
-                                switch (navigationPath.get(1)._elevation) {
-                                    case 0:
-                                        firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                                        break;
-                                    case 1:
-                                        firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                                        break;
-                                    case 2:
-                                        firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                                        break;
-                                    case 3:
-                                        firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                                        break;
+                                //上樓
+                                if (navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {
+                                    switch (navigationPath.get(1)._elevation) {
+                                        case 0:
+                                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                                            break;
+                                        case 1:
+                                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                                            break;
+                                        case 2:
+                                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                                            break;
+                                        case 3:
+                                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                                            break;
+                                    }
+                                } else if (navigationPath.get(1)._elevation < navigationPath.get(0)._elevation) {
+                                    switch (navigationPath.get(1)._elevation) {
+                                        case 0:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
+                                            break;
+                                        case 1:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
+                                            break;
+                                        case 2:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
+                                            break;
+                                        case 3:
+                                            firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
+                                            break;
+                                    }
                                 }
                             }
                             howFarToMove.setText("");
@@ -1239,7 +1356,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 showHintAtWaypoint(MAKETURN_NOTIFIER);
                             walkedWaypoint = 0;
                             sourceID = navigationPath.get(1)._waypointID;
-                            imageTurnIndicator.setImageResource(R.drawable.stair);
+                            if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
+                                imageTurnIndicator.setImageResource(R.drawable.stairs_up);
+                            else
+                                imageTurnIndicator.setImageResource(R.drawable.stairs_down);
+                            Log.i("xxx_stair","stairCase神經部 in WRONG");
                         }
 
                     } else {
@@ -1326,12 +1447,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         readNavigationInstruction();
 
-        endT = System.currentTimeMillis();
-        if(endT - startT > 10000){
-            startT = endT;
-            endT = 0;
-            System.gc();
-        }
+
 
         if (!turnDirection.equals(WRONG))
             navigationPath.remove(0);
@@ -1355,13 +1471,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             switch (elevation) {
                 //修改TAKE_TAKE_ELEVATOR 成 THEN_WALK_UP_STAIR
                 case 0:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toBasement);
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR + toBasement);
                     break;
                 case 1:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toFirstFloor);
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR + toFirstFloor);
                     break;
                 case 2:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toSecondFloor);
+                    nextTurnMovement.setText(THEN_TAKE_ELEVATOR + toSecondFloor);
                     break;
                 case 3:
                     nextTurnMovement.setText(THEN_TAKE_ELEVATOR + toThirdFloor);
@@ -1369,23 +1485,41 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
 
         } else if (transferPointType == STAIRWELL_WAYPOINT) {
+            Log.i("xxx_stair","n(0)_e = " + navigationPath.get(0)._elevation + "n(1)_e =" + navigationPath.get(1)._elevation);
+            if(navigationPath.get(2)._elevation > navigationPath.get(0)._elevation) {
+                switch (elevation) {
 
-            switch (elevation) {
+                    case 0:
+                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toBasement);
+                        break;
+                    case 1:
+                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toFirstFloor);
+                        break;
+                    case 2:
+                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toSecondFloor);
+                        break;
+                    case 3:
+                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toThirdFloor);
+                        break;
+                }
+            }else{
+                switch (elevation) {
 
-                case 0:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toBasement);
-                    break;
-                case 1:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toFirstFloor);
-                    break;
-                case 2:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toSecondFloor);
-                    break;
-                case 3:
-                    nextTurnMovement.setText(THEN_WALK_UP_STAIR + toThirdFloor);
-                    break;
+                    case 0:
+                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toBasement);
+                        break;
+                    case 1:
+                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toFirstFloor);
+                        break;
+                    case 2:
+                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toSecondFloor);
+                        break;
+                    case 3:
+                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toThirdFloor);
+                        break;
+                }
+
             }
-
 
         }
 
@@ -1456,8 +1590,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();
         beaconManager.unbind(this);
-        //imageTurnIndicator = null;
+        recycleImageView(imageTurnIndicator);
+        //imageTurnIndicator.setImageDrawable(null);
         System.gc();
+        Log.i("Navi_Destroy_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
     }
 
     @Override
@@ -1489,7 +1625,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
-
+        endT = System.currentTimeMillis();
+        if(endT - startT > 1000){
+            startT = endT;
+            endT = 0;
+            System.gc();
+        }
 
         if (beacon.size() > 2) {
 
@@ -1520,6 +1661,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
             if (isFirstBeacon && receiveNode != null) {
                 isFirstBeacon = false;
+                chosestartNode = receiveNode;
                 sourceID = receiveNode._waypointID;
                 sourceRegion = receiveNode._regionID;
                 passedRegionID = sourceRegion;
@@ -1527,29 +1669,29 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 navigationPath = startNavigation();
                 progressBar.setMax(navigationPath.size());
                 //門口Special case顯示方向
-                if ((startNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
+                if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
                     turnNotificationForPopup = "C04";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
-                } else if ((startNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))) {
+                } else if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))) {
                     turnNotificationForPopup = "C11";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 }
 
                 //sourceID = destination
-                for (int i = 0;i < startNode._attachIDs.size();i++) {
-                    if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i))) {
+                for (int i = 0;i < chosestartNode._attachIDs.size();i++) {
+                    if ((endNode._mainID != 0 && endNode._mainID == chosestartNode._attachIDs.get(i))) {
                         showHintAtWaypoint(ARRIVED_NOTIFIER);
                     }
                     break;
                 }
-                if(startNode._waypointID.equals(endNode._waypointID)) {
+                if(chosestartNode._waypointID.equals(endNode._waypointID)) {
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
                 }
 
                 appendLog("StartNavigation");
 
                 //初始方向顯示圖片
-                if ((startNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >=2 ){
+                if ((chosestartNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >=2 ){
                     Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                     intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
                     intent.putExtra("nowID", navigationPath.get(0)._waypointID);
@@ -2098,7 +2240,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     break;
                 case STAIR:
                     turnDirection = PLEASE_WALK_UP_STAIR;
-                    image.setImageResource(R.drawable.stair);
+                    if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
+                        image.setImageResource(R.drawable.stairs_up);
+                    else
+                        image.setImageResource(R.drawable.stairs_down);
                     LastisSlash = false;
                     Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                     break;
@@ -2327,6 +2472,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if (isFirstBeacon && receiveNode != null) {
             Log.i("isFirst","isFirst");
+            chosestartNode = receiveNode;
             sourceID = receiveNode._waypointID;
             sourceRegion = receiveNode._regionID;
             passedRegionID = sourceRegion;
@@ -2336,20 +2482,19 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             isFirstBeacon = false;
 
             //sourceID = destination
-            for (int i = 0;i < startNode._attachIDs.size();i++) {
-                if ((endNode._mainID != 0 && endNode._mainID == startNode._attachIDs.get(i))) {
+           for (int i = 0;i < chosestartNode._attachIDs.size();i++) {
+                if ((endNode._mainID != 0 && endNode._mainID == chosestartNode._attachIDs.get(i))) {
                     Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
                 }
                 break;
             }
 
-            if(startNode._waypointID.equals(endNode._waypointID)) {
-                Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
+            if(chosestartNode._waypointID.equals(endNode._waypointID)) {
+                Log.i("xxx_group","startNode = " + chosestartNode._waypointName + "endNode =" + endNode._waypointName);
                 showHintAtWaypoint(ARRIVED_NOTIFIER);
             }
 
-            Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName + "Start size =" + startNode._attachIDs.size());
 
 
 
@@ -2357,7 +2502,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             appendLog("StartNavigation");
 
             //初始方向顯示圖片
-            if ((startNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
+            if ((chosestartNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
                 Log.i("initPic","初始圖片顯示");
                 Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                 intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
@@ -2441,44 +2586,64 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     private void ShowDirectionFromConnectPoint(){
-        if(navigationPath.get(0)._nodeType == 0)
+        if(navigationPath.get(0)._connectPointID == 0)
             isInVirtualNode = false;
 
-        Log.i("xxx_virtualNodeTest","startNode = " + startNode._waypointName);
-        if(startNode._waypointID != navigationPath.get(0)._waypointID) {
+        Log.i("xxx_stair","LastNode = " + lastNode._waypointName);
+
+        if(chosestartNode._waypointID != navigationPath.get(0)._waypointID) {
             //收到的ConnectID != 0 目前與下個點的conectID相同
             if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._connectPointID == navigationPath.get(0)._connectPointID) {
-                for (int i = 0; i < virtualNode.size(); i++) {
+                for (int i = 0; i < virtualNodeUp.size(); i++) {
                     //第i個connectID = navigationPath(0) & 進入
-                    if (virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == false) {
-                        turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNode.get(i));
-                        showHintAtWaypoint(MAKETURN_NOTIFIER);
-                        isInVirtualNode = true;
-                    }else if(virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == true){
-                        turnNotificationForPopup = getDirectionFromBearing(wrongWaypoint, navigationPath.get(0), virtualNode.get(i));
+                    if (virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == false) {
+                        if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {//上樓
+                            StairGoUp = true;
+                            turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeDown.get(i));
+                            Log.i("xxx_Stair","DownNode");
+                        }else{//下樓
+                            StairGoUp = false;
+                            turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
+                            Log.i("xxx_Stair","UpNode");
+                        }
+                            showHintAtWaypoint(MAKETURN_NOTIFIER);
+                            isInVirtualNode = true;
+                    }else if(virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == true){
+                        if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {//上樓
+                            StairGoUp = true;
+                            turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeDown.get(i));
+                            Log.i("xxx_Stair","DownNode");
+                        }else{//下樓
+                            StairGoUp = false;
+                            turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
+                            Log.i("xxx_Stair","UpNode");
+                        }
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
                         isInVirtualNode = true;
                     }
                 }
             } else if (navigationPath.get(0)._connectPointID != 0 && lastNode._connectPointID == navigationPath.get(0)._connectPointID) {
-                for (int i = 0; i < virtualNode.size(); i++) {
-                    if (virtualNode.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
-                        turnNotificationForPopup = getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1));
-                        Log.i("xxx_virtualNodeTest","" + getDirectionFromBearing(virtualNode.get(i), navigationPath.get(0), navigationPath.get(1)));
-                        // showHintAtWaypoint(MAKETURN_NOTIFIER);
-                        Log.i("xxx_virtualNodeTest", "Show in down");
-                        Log.i("xxx_virtualNodeTest","v =" + virtualNode.get(i)._waypointID + "p(0) =" + navigationPath.get(0)._waypointName + "p(1)= " + navigationPath.get(1)._waypointName);
+                for (int i = 0; i < virtualNodeUp.size(); i++) {
+                    if (virtualNodeUp.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
+                        if(StairGoUp == true) {
+                            StairGoUp = false;
+                            turnNotificationForPopup = getDirectionFromBearing(virtualNodeUp.get(i), navigationPath.get(0), navigationPath.get(1));
+                            Log.i("xxx_Stair","UpNode");
+                        }
+                        else {
+                            StairGoUp = false;
+                            turnNotificationForPopup = getDirectionFromBearing(virtualNodeDown.get(i), navigationPath.get(0), navigationPath.get(1));
+                            Log.i("xxx_Stair","DownNode");
+                        }
                     }
                 }
             }
-        }else if(startNode._connectPointID != 0 && startNode._waypointID == navigationPath.get(0)._waypointID && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
+        }else if(chosestartNode._connectPointID != 0 && chosestartNode._waypointID == navigationPath.get(0)._waypointID && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
             isInVirtualNode = true;
-            Log.i("xxx_virtualNodeTest", "isInvirtualNodeSetup out");
         }
-        Log.i("xxx_virtualNodeTest", "isInVirtualNode = " +isInVirtualNode);
-
-
     }
+
+
     public void appendLog(String text)
     {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss - ");
@@ -2587,5 +2752,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void recycleImageView(View view){
+        if(view==null) return;
+        if(view instanceof ImageView){
+            Drawable drawable=((ImageView) view).getDrawable();
+            if(drawable instanceof BitmapDrawable){
+                Bitmap bmp = ((BitmapDrawable)drawable).getBitmap();
+                if (bmp != null && !bmp.isRecycled()){
+                    ((ImageView) view).setImageBitmap(null);
+                    bmp.recycle();
+                    bmp=null;
+                }
+            }
+        }
     }
 }

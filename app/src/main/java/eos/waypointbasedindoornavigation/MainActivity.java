@@ -17,18 +17,22 @@ Author:
 --*/
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -130,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             Manifest.permission.ACCESS_COARSE_LOCATION};
     //UI design
     Intent intent;
-    ViewPager viewPager;
     Button btn_stethoscope, btn_bill, btn_exit, btn_medicent, btn_convenience_store, btn_wc,btn_exsanguinate,btn_examination_room,btn_other;
     TextView tv_description;
 
@@ -161,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("台大雲林分院室內導航系統");
+        Log.i("Main_Create_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
         BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if(!mBtAdapter.isEnabled()) {
             Intent enableIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_ENABLE );
@@ -168,10 +172,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
 
-
-        viewPager = (ViewPager)findViewById(R.id.viewPager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager.setAdapter(viewPagerAdapter);
 
 
 
@@ -221,10 +221,25 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        btn_stethoscope.setBackground(null);
+        btn_bill.setBackground(null);
+        btn_exit.setBackground(null);
+        btn_medicent.setBackground(null);
+        btn_convenience_store.setBackground(null);
+        btn_wc.setBackground(null);
+        btn_examination_room.setBackground(null);
+        btn_other.setBackground(null);
+        btn_exsanguinate.setBackground(null);
+        tv_description.setBackground(null);
+        Log.i("Memory", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
+        ActivityManager.MemoryInfo memoryInfo = getAvailableMemory();
+        Log.i("Memory", "MemInfo "+ memoryInfo);
         System.gc();
+        Log.i("Main_Destroy_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
     }
 
     // Switch to ListView Activity when one of the search bars is clicked
@@ -258,6 +273,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         finish();
     }
 
+    private ActivityManager.MemoryInfo getAvailableMemory() {
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        return memoryInfo;
+    }
 
     public void exitProgram(View view){
         android.os.Process.killProcess(android.os.Process.myPid());
@@ -427,12 +448,75 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
             //出口
             case R.id.btn_exit:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("出口")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "出口");
+                    startActivity(intent);
+                    finish();
+                }
                 break;
             //萊爾富
             case R.id.btn_convenience_store:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("超商")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "超商");
+                    startActivity(intent);
+                    finish();
+                }
                 break;
             //抽血處
             case R.id.btn_exsanguinate:
+                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                    Log.i("asdd", listForStoringAllNodes.get(i)._category);
+                    if(listForStoringAllNodes.get(i)._category.equals("抽血處")) {
+                        Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
+                        CList.add(listForStoringAllNodes.get(i));
+                    }
+                }
+                if(CList.size() == 1){
+                    destinationID = CList.get(0)._waypointID;
+                    destinationRegion = CList.get(0)._regionID;
+                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationID", destinationID);
+                    i.putExtra("destinationRegion", destinationRegion);
+                    startActivity(i);
+                    finish();
+                }else if (CList.size() > 1){
+                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                    intent.putExtra("Category", "抽血處");
+                    startActivity(intent);
+                    finish();
+                }
                 break;
 
         }
