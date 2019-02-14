@@ -203,13 +203,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
 
         //Decide which search bar to be set value
-        if(searchBarClicked == true) {
+      /*  if(searchBarClicked == true) {
             destinationName = namePassedFromListView;
             destinationID = IDPassedFromListView;
             destinationRegion = regionPassedFromListView;
             searchBarForDestination.setText(destinationName);
             StartButton.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         loadLocationDatafromRegionGraph();
         List<Node> data = Collections.emptyList();
@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         btn_stethoscope.setBackground(null);
         btn_bill.setBackground(null);
         btn_exit.setBackground(null);
@@ -237,10 +236,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         tv_description.setBackground(null);
         System.gc();
         Log.i("Main_Destroy_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
+        super.onDestroy();
     }
 
     // Switch to ListView Activity when one of the search bars is clicked
-    public void switchToListView(View v){
+    /*public void switchToListView(View v){
 
         //Create Intent variable to switch to ListViewActivity
         Intent i = new Intent(this, ListViewActivity.class);
@@ -248,11 +248,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         //start ListViewActivity
         startActivity(i);
         finish();
-    }
+    }*/
 
 
     //Press "Start" button to start navigation
-    public void startNavigation(View view){
+    /*public void startNavigation(View view){
         //Start NavigationActivity and pass IDs and Regions of source and destination to it
         Intent i = new Intent(this, NavigationActivity.class);
         i.putExtra("destinationID", destinationID);
@@ -268,16 +268,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         startActivity(i);
         finish();
-    }
+    }*/
 
-    private ActivityManager.MemoryInfo getAvailableMemory() {
-        ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
-        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(memoryInfo);
-        return memoryInfo;
-    }
 
-    public void exitProgram(View view){
+  /*  public void exitProgram(View view){
         android.os.Process.killProcess(android.os.Process.myPid());
         Log.i("xxx", "InexitProgram");
     }
@@ -285,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     public  void signalInit(View view){
         Intent i = new Intent(this, initSignal.class);
         startActivity(i);
-    }
+    }*/
 
     public void resetSignal(View view){
         //取得目前offset設定值
@@ -318,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     public void onClick(View view){
         switch (view.getId()) {
             case R.id.btn_stethoscope:
+                //取出listForStoringAllNodes中的Category與各科門診相同的Node加至CList
                 for(int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
                     if(listForStoringAllNodes.get(i)._category.equals("各科門診")) {
@@ -325,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
+                //如果該種類只有一種，直接導入導航頁面，否則導入目的地選單
                 if(CList.size() == 1){
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
