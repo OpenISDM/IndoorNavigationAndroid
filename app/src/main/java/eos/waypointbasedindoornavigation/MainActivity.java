@@ -235,9 +235,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         btn_other.setBackground(null);
         btn_exsanguinate.setBackground(null);
         tv_description.setBackground(null);
-        Log.i("Memory", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
-        ActivityManager.MemoryInfo memoryInfo = getAvailableMemory();
-        Log.i("Memory", "MemInfo "+ memoryInfo);
         System.gc();
         Log.i("Main_Destroy_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
     }

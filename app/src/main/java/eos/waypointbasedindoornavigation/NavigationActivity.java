@@ -209,6 +209,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean LastisRecalculate = false;
     boolean LastisSlash = false;
     boolean DirectCompute = false;
+    boolean JumpNode = false;
     Node startNode;
     Node endNode;
     Node lastNode;
@@ -503,11 +504,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("xyz", "NextLandMarkisEnglish = " + NextLandMarkisEnglish);
             Log.i("xyz", "navigationnPath.get(1) = " + NextLandMarkisEnglish);
         }
+
+        if(FirstTurn == true) {
+            lastNode = navigationPath.get(0);
+            FirstTurn = false;
+        }
         //樓梯或電梯方向顯示
-        if(turnDirection != WRONG && navigationPath.size() >= 2 && FirstTurn == false)
+        if(LastisRecalculate == false && navigationPath.size() >= 2)
             ShowDirectionFromConnectPoint();
 
-        FirstTurn = true;
         LastisRecalculate = false;
         switch (turnDirection) {
 
@@ -1049,7 +1054,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 break;
 
             case WRONG:
-                LastisRecalculate = true;
                 Log.i("wrong", "Out");
                 List<Node> newPath = new ArrayList<>();
                 List<Node> wrongPath = new ArrayList<>();
@@ -1071,7 +1075,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 Boolean isLongerPath = false;
                 //----------wrong way 從路線搜尋上個點------------------
-              /*  JumpNode = true;
+                JumpNode = true;
                 for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
                     if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
                         JumpNode = false;
@@ -1099,7 +1103,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     DirectCompute = false;
                     destinationID = tmpdestinationID;
                     destinationRegion = tmpdestinationRegion;
-                }*/
+                }
                 //---------------------------------------------
                 sourceID = wrongWaypoint._waypointID;
                 sourceRegion = wrongWaypoint._regionID;
@@ -1277,9 +1281,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         Log.i("xxx_wrong","navigationPath(0) & (1) = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
                         if(navigationPath.get(0)._connectPointID != 0 && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID){
                             Log.i("xxx_wrong","navigationPath(0) & (1) -2  = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
-                            isInVirtualNode = true;
-                            LastisRecalculate = false;
                             ShowDirectionFromConnectPoint();
+                            LastisRecalculate = true;
                             elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(1)._elevation);
                             //----------------
                             turnNotificationForPopup = STAIR;
@@ -1394,7 +1397,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             //判斷下個Node鄰居數與是否為電/樓梯()
             if(!turnDirection.equals(WRONG)) {
                 Log.i("xxx_Slash", "" + navigationPath.get(0)._waypointName);
-                if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && !navigationPath.get(1)._waypointID.equals("0x3219b8410xfc3ef042") && navigationPath.get(0)._connectPointID != navigationPath.get(1)._connectPointID && navigationPath.get(1)._nodeType == 0) {
+                if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(0)._connectPointID != navigationPath.get(1)._connectPointID && navigationPath.get(1)._nodeType == 0) {
                     Log.i("xxx_Slash", "強制轉為直走");
                     turnNotificationForPopup = FRONT;
                     turnDirection = FRONT;
@@ -1406,7 +1409,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }else if (turnDirection.equals(WRONG)) {
                 //WRONG 後移
-                if(navigationPath.get(0)._adjacentWaypoints.size() <= 2 && !navigationPath.get(0)._waypointID.equals("0x3219b8410xfc3ef042") && lastNode._connectPointID != navigationPath.get(0)._connectPointID && lastNode._nodeType == 0) {
+                if(navigationPath.get(0)._adjacentWaypoints.size() <= 2 && lastNode._connectPointID != navigationPath.get(0)._connectPointID && lastNode._nodeType == 0) {
                     Log.i("xxx_Slash", "強制轉為直走");
                     turnNotificationForPopup = FRONT;
                     turnDirection = FRONT;
@@ -1590,7 +1593,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();
         beaconManager.unbind(this);
-        recycleImageView(imageTurnIndicator);
+        //recycleImageView(imageTurnIndicator);
         //imageTurnIndicator.setImageDrawable(null);
         System.gc();
         Log.i("Navi_Destroy_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
@@ -2589,57 +2592,68 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if(navigationPath.get(0)._connectPointID == 0)
             isInVirtualNode = false;
 
-        Log.i("xxx_stair","LastNode = " + lastNode._waypointName);
 
+        Log.i("xxx_stair","LastNode = " + lastNode._waypointName);
+        //選擇的起始點不是目前位置
         if(chosestartNode._waypointID != navigationPath.get(0)._waypointID) {
-            //收到的ConnectID != 0 目前與下個點的conectID相同
-            if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._connectPointID == navigationPath.get(0)._connectPointID) {
+            //收到的ConnectID != 0 目前與下個點的conectID相同，進入樓梯階段
+            if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(1)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false) {
+                //判斷上下樓
+                if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {
+                    StairGoUp = true;
+                }else{
+                    StairGoUp = false;
+                }//找到對應VirtualNode
                 for (int i = 0; i < virtualNodeUp.size(); i++) {
-                    //第i個connectID = navigationPath(0) & 進入
-                    if (virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == false) {
-                        if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {//上樓
-                            StairGoUp = true;
+                    if((virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID)){
+                        if(StairGoUp == true){
                             turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeDown.get(i));
-                            Log.i("xxx_Stair","DownNode");
-                        }else{//下樓
-                            StairGoUp = false;
+                        }else {
                             turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
-                            Log.i("xxx_Stair","UpNode");
-                        }
-                            showHintAtWaypoint(MAKETURN_NOTIFIER);
-                            isInVirtualNode = true;
-                    }else if(virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false && LastisRecalculate == true){
-                        if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {//上樓
-                            StairGoUp = true;
-                            turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeDown.get(i));
-                            Log.i("xxx_Stair","DownNode");
-                        }else{//下樓
-                            StairGoUp = false;
-                            turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
-                            Log.i("xxx_Stair","UpNode");
                         }
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
                         isInVirtualNode = true;
                     }
                 }
-            } else if (navigationPath.get(0)._connectPointID != 0 && lastNode._connectPointID == navigationPath.get(0)._connectPointID) {
+            }//離開樓梯階段
+            else if (navigationPath.get(0)._connectPointID != 0 && lastNode._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
+                //判斷上下樓
+                if(navigationPath.get(0)._elevation > lastNode._elevation) {
+                    StairGoUp = true;
+                }else{
+                    StairGoUp = false;
+                }
                 for (int i = 0; i < virtualNodeUp.size(); i++) {
-                    if (virtualNodeUp.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == true) {
-                        if(StairGoUp == true) {
-                            StairGoUp = false;
+                    if((virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID)) {
+                        if(StairGoUp == true){
                             turnNotificationForPopup = getDirectionFromBearing(virtualNodeUp.get(i), navigationPath.get(0), navigationPath.get(1));
-                            Log.i("xxx_Stair","UpNode");
-                        }
-                        else {
-                            StairGoUp = false;
+                        }else {
                             turnNotificationForPopup = getDirectionFromBearing(virtualNodeDown.get(i), navigationPath.get(0), navigationPath.get(1));
-                            Log.i("xxx_Stair","DownNode");
                         }
+                       // showHintAtWaypoint(MAKETURN_NOTIFIER);
                     }
                 }
             }
-        }else if(chosestartNode._connectPointID != 0 && chosestartNode._waypointID == navigationPath.get(0)._waypointID && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
-            isInVirtualNode = true;
+        }//選擇起始點是目前位置，且進入樓梯
+        else if(chosestartNode._connectPointID != 0 && chosestartNode._waypointID == navigationPath.get(0)._waypointID && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
+                 //判斷是往上或往下走
+                if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {
+                    StairGoUp = true;
+                }else{
+                    StairGoUp = false;
+                }
+            for (int i = 0; i < virtualNodeUp.size(); i++) {
+                //找到與目前位置相同ConnectID
+                if (virtualNodeDown.get(i)._connectPointID == navigationPath.get(0)._connectPointID && isInVirtualNode == false) {
+                    if(StairGoUp == true){
+                        turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeDown.get(i));
+                    }else{
+                        turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
+                    }
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    isInVirtualNode = true;
+                }
+            }
         }
     }
 

@@ -33,6 +33,9 @@ import android.widget.Toast;
 
 import eos.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.Comparator;
 import java.util.Date;
@@ -276,10 +279,14 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 
         if(rssimap.containsKey(UUID)){
             rssimap.put(UUID,rssimap.get(UUID)+Double.parseDouble(rssi));
+            Log.i("rssirecord",UUID + ":" + Double.parseDouble(rssi));
         }else{
             rssimap.put(UUID,Double.parseDouble(rssi));
+            Log.i("rssirecord",UUID + ":" + Double.parseDouble(rssi));
         }
-
+        String logRecord = null;
+        logRecord = UUID + " = " + Double.parseDouble(rssi);
+        appendLog(logRecord);
         // Log.i("map UUID",map.get(UUID).toString());
 
 
@@ -461,6 +468,39 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         } else {
             double accuracy = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
             return accuracy;
+        }
+    }
+
+    public void appendLog(String text)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss - ");
+        Date date = new Date(System.currentTimeMillis());
+        simpleDateFormat.format(date);
+        File logFile = new File("sdcard/RssiRecord.txt");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            Writer buf = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile,true),"UTF-8"));
+            buf.append( simpleDateFormat.format(date).toString());
+            buf.append(text + "\n");
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
