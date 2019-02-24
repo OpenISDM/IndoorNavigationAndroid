@@ -70,13 +70,14 @@ public class ana_signal {
                             data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " " +
                             String.valueOf(data_list.get(1).countavg()));
                    if(data_list.get(0).countavg() > tmp_count_dif.get(1)) {
-                   //if (tmp_dif > tmp_count_dif.get(0) &&
-                       //        data_list.get(0).countavg() > tmp_count_dif.get(1)) {
-                        Log.i("def_range", "close " + data_list.get(0).getUuid());
-                        Log.i("tmp_count","threshold = " + tmp_count_dif.get(1));
-                        location_range.add("close");
-                        location_range.add(data_list.get(0).getUuid());
-                    }
+                       if (tmp_dif > tmp_count_dif.get(0) &&
+                               data_list.get(0).countavg() > tmp_count_dif.get(1)) {
+                           Log.i("def_range", "close " + data_list.get(0).getUuid());
+                           Log.i("tmp_count", "threshold = " + tmp_count_dif.get(1));
+                           location_range.add("close");
+                           location_range.add(data_list.get(0).getUuid());
+                       }
+                   }
 //                else if (tmp_dif < ana_signal_5(data_list,near_range) &&
 //                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
 //                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
@@ -397,6 +398,6 @@ public class ana_signal {
     private double count_Rd(String s,double range,double offset){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return (R0+(10*n_vlaue*Math.log10(range/1.5))) * offset - 3;
+        return (R0+(10*n_vlaue*Math.log10(range/1.5))) * offset;
     }
 }

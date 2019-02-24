@@ -206,7 +206,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean NextLandMarkisEnglish = false;
     boolean isInVirtualNode = false;
     boolean StairGoUp = false;
-    boolean LastisRecalculate = false;
     boolean LastisSlash = false;
     boolean DirectCompute = false;
     boolean JumpNode = false;
@@ -509,11 +508,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             lastNode = navigationPath.get(0);
             FirstTurn = false;
         }
+
         //樓梯或電梯方向顯示
-        if(LastisRecalculate == false && navigationPath.size() >= 2)
+       if(navigationPath.size() >= 2 && !turnDirection.equals(WRONG))
             ShowDirectionFromConnectPoint();
 
-        LastisRecalculate = false;
         switch (turnDirection) {
 
             case LEFT:
@@ -1282,7 +1281,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         if(navigationPath.get(0)._connectPointID != 0 && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID){
                             Log.i("xxx_wrong","navigationPath(0) & (1) -2  = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
                             ShowDirectionFromConnectPoint();
-                            LastisRecalculate = true;
                             elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(1)._elevation);
                             //----------------
                             turnNotificationForPopup = STAIR;
@@ -1561,6 +1559,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         beaconManager.setForegroundScanPeriod(50);
         beaconManager.setForegroundBetweenScanPeriod(0);
+
         beaconManager.removeAllMonitorNotifiers();
         //beaconManager.removeAllRangeNotifiers();
 
@@ -1628,12 +1627,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     // load beacon ID
     private void logBeaconData(List<String> beacon) {
-        endT = System.currentTimeMillis();
+       /* endT = System.currentTimeMillis();
         if(endT - startT > 1000){
             startT = endT;
             endT = 0;
             System.gc();
-        }
+        }*/
 
         if (beacon.size() > 2) {
 
@@ -1671,22 +1670,15 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 loadNavigationGraph();
                 navigationPath = startNavigation();
                 progressBar.setMax(navigationPath.size());
-                //門口Special case顯示方向
-                if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
-                    turnNotificationForPopup = "C04";
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                } else if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))) {
-                    turnNotificationForPopup = "C11";
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                }
 
                 //sourceID = destination
                 for (int i = 0;i < chosestartNode._attachIDs.size();i++) {
+                    Log.i("xxx_firstarrive","choseNodeattachID = " + chosestartNode._attachIDs.get(i) + "mainID = " + endNode._mainID);
                     if ((endNode._mainID != 0 && endNode._mainID == chosestartNode._attachIDs.get(i))) {
                         showHintAtWaypoint(ARRIVED_NOTIFIER);
                     }
-                    break;
                 }
+
                 if(chosestartNode._waypointID.equals(endNode._waypointID)) {
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
                 }
@@ -1701,6 +1693,17 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     intent.putExtra("nextID", navigationPath.get(1)._waypointID);
                     startActivity(intent);
                 }
+                //門口Special case顯示方向
+                if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
+                    turnNotificationForPopup = "C04";
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                } else if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))) {
+                    turnNotificationForPopup = "C11";
+                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                }
+                //跳出Dialog通知使用者面對方向
+                showInitMessage();
+
 
                 //羅盤校正
             /*        Intent intent = new Intent(NavigationActivity.this,
@@ -2490,7 +2493,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
                 }
-                break;
             }
 
             if(chosestartNode._waypointID.equals(endNode._waypointID)) {
@@ -2513,6 +2515,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 intent.putExtra("nextID", navigationPath.get(1)._waypointID);
                 startActivity(intent);
             }
+
+            //初始面對方向訊息
+            showInitMessage();
 
             // Log.i("xxx_des","attachID1 = " + startNode._attachIDs.get(0));
 
@@ -2592,8 +2597,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         if(navigationPath.get(0)._connectPointID == 0)
             isInVirtualNode = false;
 
-
-        Log.i("xxx_stair","LastNode = " + lastNode._waypointName);
+        Log.i("xxx_stair","nowAt = " + receivebeacon);
+        Log.i("xxx_stair","LastNode = " + lastNode._waypointName + "navigationPath(0) = " + navigationPath.get(0)._waypointName);
         //選擇的起始點不是目前位置
         if(chosestartNode._waypointID != navigationPath.get(0)._waypointID) {
             //收到的ConnectID != 0 目前與下個點的conectID相同，進入樓梯階段
@@ -2702,6 +2707,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         Log.i("xxx_tmpString", "isEnglish = " + hasEng);
 
         return hasEng;
+    }
+
+    private void showInitMessage(){
+
+        return;
     }
 
     public void exitProgram(View view) {
