@@ -431,6 +431,79 @@ public static List<Node> getVirtualNode(Context context,int UpOrDown) {
 
         return mappingOFIDAndName;
     }
+    //--------------------InitDirectionTest Start-----------------------------------------------
+    public static String getInitDirectionName(Context context, String StartUUID, String NextUUID) {
+
+
+        //creat a string store return Data
+        String DirectionName = null;
+
+        // create a navigationSubgraph object
+        NavigationSubgraph navigationSubgraph = new NavigationSubgraph();
+        XmlPullParser pullParser = Xml.newPullParser();
+        AssetManager assetManager = context.getAssets();
+        InputStream is;
+        try {
+            is = assetManager.open("init_direction.xml");
+            pullParser.setInput(is, "utf-8");
+            int eventType = pullParser.getEventType();
+            Log.i("xxx_initDirectionName", "Start  : " + StartUUID + "Next :" + NextUUID);
+            String DirectionUUID = null;
+            int base = 0, offset = 0;
+            boolean inD = false;
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+
+                String tag = null;
+                String id = null;
+                String name = null;
+                // get initDirectionData
+                if (eventType == XmlPullParser.START_TAG) {
+
+
+                    tag = pullParser.getName();
+
+                    if (tag.equals("node")) {
+
+                        id = pullParser.getAttributeValue(null, "id");
+                      //  Log.i("xxx_initDiretion","ID = " + id);
+                      // find the line of StartNode
+                        if(id.equals(StartUUID)) {
+                            for(int i=0; i<pullParser.getAttributeCount(); i++){
+
+                                String attributeName = pullParser.getAttributeName(i);
+                                //search neighbor which is next path in graph
+                                if(attributeName.length()>=8) {
+                                    if (attributeName.substring(0, 8).equals("neighbor")) {
+                                        if (!pullParser.getAttributeValue(i).isEmpty()) {
+                                            Log.i("xxx_initDirectionName", "Neighbor  : " + pullParser.getAttributeValue(i));
+                                            if (pullParser.getAttributeValue(i).equals(NextUUID))
+                                                offset = i - 2;
+                                        }
+                                    }
+                                   // find first direction destribe and move by the offset
+                                   if (attributeName.substring(0, 9).equals("direction") && inD == false) {
+                                        if (!pullParser.getAttributeValue(i).isEmpty()) {
+                                            inD = true;
+                                            base = i;
+                                            DirectionName = pullParser.getAttributeValue(base + offset);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+                eventType = pullParser.next();
+            }
+        } catch (IOException e) {
+        } catch (XmlPullParserException e) {
+        }
+        Log.i("xxx_initDirectionName","Exit DirectionName = " + DirectionName);
+        return DirectionName;
+    }
+
+    //--------------------InitDirectionTest End-----------------------------------------------
 
 
     // return a list of category

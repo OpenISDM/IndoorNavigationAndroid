@@ -39,6 +39,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -1662,7 +1663,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("beaconManager", "receiveID: " + receivebeacon);
 
             if (isFirstBeacon && receiveNode != null) {
-                isFirstBeacon = false;
                 chosestartNode = receiveNode;
                 sourceID = receiveNode._waypointID;
                 sourceRegion = receiveNode._regionID;
@@ -1676,33 +1676,44 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Log.i("xxx_firstarrive","choseNodeattachID = " + chosestartNode._attachIDs.get(i) + "mainID = " + endNode._mainID);
                     if ((endNode._mainID != 0 && endNode._mainID == chosestartNode._attachIDs.get(i))) {
                         showHintAtWaypoint(ARRIVED_NOTIFIER);
+                        isFirstBeacon = false;
                     }
                 }
 
                 if(chosestartNode._waypointID.equals(endNode._waypointID)) {
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
+                    isFirstBeacon = false;
                 }
 
                 appendLog("StartNavigation");
+                //顯示初始方向指令
+                String initDirectionName = null;
+                if(navigationPath.size() >= 1 && isFirstBeacon == true) {
+                    initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
+                    Log.i("xxx_initDirectionName", "" + initDirectionName);
+                    //顯示初始方向指令
+                    showPopupWindow(initDirectionName);
+                }
+
+                isFirstBeacon = false;
 
                 //初始方向顯示圖片
-                if ((chosestartNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >=2 ){
+              /*  if ((chosestartNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >=2 ){
                     Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                     intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
                     intent.putExtra("nowID", navigationPath.get(0)._waypointID);
                     intent.putExtra("nextID", navigationPath.get(1)._waypointID);
                     startActivity(intent);
-                }
+                }*/
                 //門口Special case顯示方向
-                if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
+               /* if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfa53bd410xfe54f142"))) {
                     turnNotificationForPopup = "C04";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 } else if ((chosestartNode._waypointID.equals("0xfa53bd410xff54f142")) && (navigationPath.get(1)._waypointID.equals("0xfe53bd410xff54f142"))) {
                     turnNotificationForPopup = "C11";
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
-                }
-                //跳出Dialog通知使用者面對方向
-                showInitMessage();
+                }*/
+
 
 
                 //羅盤校正
@@ -2107,6 +2118,32 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         return path;
     }
 
+    // popup window for turn direction notification
+    public void showPopupWindow(String popmsg){
+
+        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.popup, null);
+
+        popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        final Button popupButton = (Button) customView.findViewById(R.id.popupButton);
+        TextView popupText = (TextView) customView.findViewById(R.id.popupText);
+        TextView popupTitle = (TextView)customView.findViewById(R.id.popupText_waypointName);
+            popupTitle.setText("提醒");
+            popupTitle.setBackgroundColor(Color.BLUE);
+            popupText.setText("請面對" + popmsg + "開始導航");
+            tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+            popupButton.setText("OK");
+
+        popupButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                    popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
+    }
+
     public void showHintAtWaypoint(final int instruction) {
 
         LayoutInflater inflater = getLayoutInflater();
@@ -2485,19 +2522,21 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             loadNavigationGraph();
             navigationPath = startNavigation();
             progressBar.setMax(navigationPath.size());
-            isFirstBeacon = false;
+
 
             //sourceID = destination
            for (int i = 0;i < chosestartNode._attachIDs.size();i++) {
                 if ((endNode._mainID != 0 && endNode._mainID == chosestartNode._attachIDs.get(i))) {
                     Log.i("xxx_group","startNode = " + startNode._waypointName + "endNode =" + endNode._waypointName);
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
+                    isFirstBeacon = false;
                 }
             }
 
             if(chosestartNode._waypointID.equals(endNode._waypointID)) {
                 Log.i("xxx_group","startNode = " + chosestartNode._waypointName + "endNode =" + endNode._waypointName);
                 showHintAtWaypoint(ARRIVED_NOTIFIER);
+                isFirstBeacon = false;
             }
 
 
@@ -2507,17 +2546,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             appendLog("StartNavigation");
 
             //初始方向顯示圖片
-            if ((chosestartNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
+         /*   if ((chosestartNode._waypointID.equals("0x0454bd410x0155f142")) && navigationPath.size() >= 2){
                 Log.i("initPic","初始圖片顯示");
                 Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
                 intent.putExtra("degree", GeoCalulation.getBearingOfTwoPoints(navigationPath.get(0), navigationPath.get(1)));
                 intent.putExtra("nowID", navigationPath.get(0)._waypointID);
                 intent.putExtra("nextID", navigationPath.get(1)._waypointID);
                 startActivity(intent);
+            }*/
+            //初始設定
+            String initDirectionName = null;
+            if(navigationPath.size() >= 1 && isFirstBeacon == true) {
+                initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
+                Log.i("xxx_initDirectionName", "" + initDirectionName);
+                //顯示初始方向指令
+                showPopupWindow(initDirectionName);
             }
 
-            //初始面對方向訊息
-            showInitMessage();
+            isFirstBeacon = false;
+
 
             // Log.i("xxx_des","attachID1 = " + startNode._attachIDs.get(0));
 

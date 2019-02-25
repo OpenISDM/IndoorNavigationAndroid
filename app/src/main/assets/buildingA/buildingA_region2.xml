@@ -13,9 +13,6 @@
 		<node id='0x3219b8410x4d06f042' name='病理部' region='region2' lat='23.697850894139058' lon='120.527357418' neighbor1='0xff14f0420x00000000' neighbor2='0x3319b8410x4d06f042' neighbor3='' neighbor4='' category='舊大樓二樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='2'/>		
 		<node id='0x123456780x175df042' name='心臟血管右邊虛設點' region='region2' lat='23.697935616644298' lon='120.531357418' neighbor1='0x5d74b9410x175df042' neighbor2='' neighbor3='' neighbor4='' category='舊大樓二樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='2'/>
 		<node id='0x123456780x3050f642' name='神經部檢查室左邊虛設點' region='region2' lat='23.697935616644298' lon='120.525160861' neighbor1='0x2d57c2410x3050f642' neighbor2='' neighbor3='' neighbor4='' category='舊大樓二樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='2'/>
-		
-		
-		
     </region2>
 
 
