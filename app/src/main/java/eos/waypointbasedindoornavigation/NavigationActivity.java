@@ -210,6 +210,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean LastisSlash = false;
     boolean DirectCompute = false;
     boolean JumpNode = false;
+    boolean arriveinwrong = false;
     Node startNode;
     Node endNode;
     Node lastNode;
@@ -1061,142 +1062,132 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 wrongWaypoint = allWaypointData.get(currentLBeaconID);
                 currentLocationReminder.setText("目前位置 : " + currentLocationName);
 
-
                 //WrongID = destination
                 for (int i = 0;i < wrongWaypoint._attachIDs.size();i++) {
                     if ((endNode._mainID != 0 && endNode._mainID == wrongWaypoint._attachIDs.get(i))) {
                         showHintAtWaypoint(ARRIVED_NOTIFIER);
+                        arriveinwrong = true;
+                        break;
                     }
-                    break;
                 }
                 if(wrongWaypoint._waypointID.equals(endNode._waypointID)) {
                     showHintAtWaypoint(ARRIVED_NOTIFIER);
+                    arriveinwrong = true;
                 }
 
-                Boolean isLongerPath = false;
-                //----------wrong way 從路線搜尋上個點------------------
-                JumpNode = true;
-                for(int i=0;i<lastNode._adjacentWaypoints.size();i++) {
-                    if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)){
-                        JumpNode = false;
-                    }
-                }
-               if(JumpNode == true) {
-                    Log.i("789456","inJumpNode");
-                    Log.i("In","destinationID = " + destinationID + "endNode = " + endNode._waypointID + "wrong = " + wrongWaypoint._waypointID);
-
-                    DirectCompute = true;
-                    tmpdestinationID = destinationID;
-                    tmpdestinationRegion = destinationRegion;
-
-                    sourceID = startNode._waypointID;
-                    sourceRegion = startNode._regionID;
-                    destinationID = wrongWaypoint._waypointID;
-                    destinationRegion = wrongWaypoint._regionID;
-                    loadNavigationGraph();
-                    wrongPath = startNavigation();
-
-                    if(wrongPath.size() > 2)
-                        lastNode = wrongPath.get(wrongPath.size() - 2);
-
-                    Log.i("xxx_path", "wrongWay LastNode = " + lastNode._waypointName);
-                    DirectCompute = false;
-                    destinationID = tmpdestinationID;
-                    destinationRegion = tmpdestinationRegion;
-                }
-                //---------------------------------------------
-                sourceID = wrongWaypoint._waypointID;
-                sourceRegion = wrongWaypoint._regionID;
-
-
-                loadNavigationGraph();
-                newPath = startNavigation();
-
-                Log.i("renavigate", "renavigate");
-
-                for (int i = 0; i < newPath.size(); i++)
-                    Log.i("renavigate", "path node " + newPath.get(i)._waypointName);
-
-                for (int i = 0; i < newPath.size(); i++) {
-
-                    if (newPath.get(i)._waypointName.equals(lastNode._waypointName)) {
-
-                        isLongerPath = true;
-                        break;
-                    }
-
-                    isLongerPath = false;
-                }
-                //Log.i("renavigate", "newPath next "+newPath.get(1)._waypointName);
-                //Log.i("renavigate", "lastWaypoint "+lastNode._waypointName);
-
-
-                if (isLongerPath) {
-                    String gobackDirection = null;
-                    appendLog("重新規劃路線，且是返回走");
-                    currentLBeaconID = "EmptyString";
-                    //navigationPath.add(0, lastNode);
-                    //navigationPath.add(0, wrongWaypoint);
-
-                    navigationPath = newPath;
-                    progressBar.setMax(navigationPath.size());
-                    progressStatus = 0;
-                    firstMovement.setText("請往回轉");
-                    howFarToMove.setText("");
-                    nextTurnMovement.setText(" ");
-                    turnNotificationForPopup = "goback";
-                    imageTurnIndicator.setImageResource(R.drawable.turn_back);
-
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
-                    turnNotificationForPopup = null;
-
-                    nextTurnMovement.setText(THEN_GO_STRAIGHT + "等待指示");
-                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-
-
-                    // Show New Path
-                    for(int xx = 0;xx < navigationPath.size();xx++) {
-                        Log.i("xxx_recompute","1 - navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
-                    }
-
-
-                } else {
-                    appendLog("重新規劃路線");
-                    showHintAtWaypoint(WRONGWAY_NOTIFIER);
-
-                    navigationPath = newPath;
-                    progressBar.setMax(navigationPath.size());
-                    progressStatus = 1;
-                    progressNumber.setText(progressStatus + "/" + progressBar.getMax());
-
-                    turnNotificationForPopup = null;
-
-                    firstMovement.setText(GO_STRAIGHT_ABOUT);
-                    if(navigationPath.size() >= 2) {
-                        howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
-
-
-                        turnNotificationForPopup = getDirectionFromBearing
-                                (lastNode, navigationPath.get(0), navigationPath.get(1));
-
-                        Log.i("renavigate", "lastNode, 0, 1: " + lastNode._waypointName + ", "
-                                + navigationPath.get(0)._waypointName + ", " + navigationPath.get(1)._waypointName);
-                    }
-                    currentLocationReminder.setText("目前位置:" + currentLocationName);
-
-                    boolean arriveinwrong = false;
-
-                    for (int i = 0;i < wrongWaypoint._attachIDs.size();i++) {
-                        if ((endNode._mainID != 0 && endNode._mainID == wrongWaypoint._attachIDs.get(i))) {
-                            arriveinwrong = true;
-                            break;
+                if(arriveinwrong == false) {
+                    Boolean isLongerPath = false;
+                    //----------wrong way 從路線搜尋上個點------------------
+                    JumpNode = true;
+                    for (int i = 0; i < lastNode._adjacentWaypoints.size(); i++) {
+                        if (lastNode._adjacentWaypoints.get(i).equals(wrongWaypoint._waypointID)) {
+                            JumpNode = false;
                         }
                     }
+                    if (JumpNode == true) {
+                        Log.i("789456", "inJumpNode");
+                        Log.i("In", "destinationID = " + destinationID + "endNode = " + endNode._waypointID + "wrong = " + wrongWaypoint._waypointID);
 
-                    if(wrongWaypoint._waypointID.equals(endNode._waypointID))
-                        arriveinwrong = true;
+                        DirectCompute = true;
+                        tmpdestinationID = destinationID;
+                        tmpdestinationRegion = destinationRegion;
 
-                    if(arriveinwrong == false)
+                        sourceID = startNode._waypointID;
+                        sourceRegion = startNode._regionID;
+                        destinationID = wrongWaypoint._waypointID;
+                        destinationRegion = wrongWaypoint._regionID;
+                        loadNavigationGraph();
+                        wrongPath = startNavigation();
+
+                        if (wrongPath.size() > 2)
+                            lastNode = wrongPath.get(wrongPath.size() - 2);
+
+                        Log.i("xxx_path", "wrongWay LastNode = " + lastNode._waypointName);
+                        DirectCompute = false;
+                        destinationID = tmpdestinationID;
+                        destinationRegion = tmpdestinationRegion;
+                    }
+                    //---------------------------------------------
+                    sourceID = wrongWaypoint._waypointID;
+                    sourceRegion = wrongWaypoint._regionID;
+
+
+                    loadNavigationGraph();
+                    newPath = startNavigation();
+
+                    Log.i("renavigate", "renavigate");
+
+                    for (int i = 0; i < newPath.size(); i++)
+                        Log.i("renavigate", "path node " + newPath.get(i)._waypointName);
+
+                    for (int i = 0; i < newPath.size(); i++) {
+
+                        if (newPath.get(i)._waypointName.equals(lastNode._waypointName)) {
+
+                            isLongerPath = true;
+                            break;
+                        }
+
+                        isLongerPath = false;
+                    }
+                    //Log.i("renavigate", "newPath next "+newPath.get(1)._waypointName);
+                    //Log.i("renavigate", "lastWaypoint "+lastNode._waypointName);
+
+
+                    if (isLongerPath) {
+                        String gobackDirection = null;
+                        appendLog("重新規劃路線，且是返回走");
+                        currentLBeaconID = "EmptyString";
+                        //navigationPath.add(0, lastNode);
+                        //navigationPath.add(0, wrongWaypoint);
+
+                        navigationPath = newPath;
+                        progressBar.setMax(navigationPath.size());
+                        progressStatus = 0;
+                        firstMovement.setText("請往回轉");
+                        howFarToMove.setText("");
+                        nextTurnMovement.setText(" ");
+                        turnNotificationForPopup = "goback";
+                        imageTurnIndicator.setImageResource(R.drawable.turn_back);
+
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        turnNotificationForPopup = null;
+
+                        nextTurnMovement.setText(THEN_GO_STRAIGHT + "等待指示");
+                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+
+
+                        // Show New Path
+                        for (int xx = 0; xx < navigationPath.size(); xx++) {
+                            Log.i("xxx_recompute", "1 - navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
+                        }
+
+
+                    } else {
+                        appendLog("重新規劃路線");
+                        showHintAtWaypoint(WRONGWAY_NOTIFIER);
+
+                        navigationPath = newPath;
+                        progressBar.setMax(navigationPath.size());
+                        progressStatus = 1;
+                        progressNumber.setText(progressStatus + "/" + progressBar.getMax());
+
+                        turnNotificationForPopup = null;
+
+                        firstMovement.setText(GO_STRAIGHT_ABOUT);
+                        if (navigationPath.size() >= 2) {
+                            howFarToMove.setText("" + GeoCalulation.getDistance(navigationPath.get(0), navigationPath.get(1)) + " " + METERS);
+
+
+                            turnNotificationForPopup = getDirectionFromBearing
+                                    (lastNode, navigationPath.get(0), navigationPath.get(1));
+
+                            Log.i("renavigate", "lastNode, 0, 1: " + lastNode._waypointName + ", "
+                                    + navigationPath.get(0)._waypointName + ", " + navigationPath.get(1)._waypointName);
+                        }
+                        currentLocationReminder.setText("目前位置:" + currentLocationName);
+
+
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
   /*
                     if(!wrongWaypoint._waypointID.equals(endNode._waypointID))
@@ -1223,162 +1214,162 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }*/
 
 
-                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-                    if (navigationPath.size() >= 3) {
+                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                        if (navigationPath.size() >= 3) {
 
-                        turnNotificationForPopup = getDirectionFromBearing
-                                (navigationPath.get(0), navigationPath.get(1), navigationPath.get(2));
-                        Log.i("xxx_Direction","navigationPath(0) = " + navigationPath.get(0)._waypointName);
-                        Log.i("xxx_Direction","navigationPath(1) = " + navigationPath.get(1)._waypointName);
-                        Log.i("xxx_Direction","navigationPath(2) = " + navigationPath.get(2)._waypointName);
+                            turnNotificationForPopup = getDirectionFromBearing
+                                    (navigationPath.get(0), navigationPath.get(1), navigationPath.get(2));
+                            Log.i("xxx_Direction", "navigationPath(0) = " + navigationPath.get(0)._waypointName);
+                            Log.i("xxx_Direction", "navigationPath(1) = " + navigationPath.get(1)._waypointName);
+                            Log.i("xxx_Direction", "navigationPath(2) = " + navigationPath.get(2)._waypointName);
 
-                        //錯誤路線，若下個點只有單一方向，往直走
-                        if(navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._nodeType == 0){
-                            turnNotificationForPopup = FRONT;
-                            nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                            imageTurnIndicator.setImageResource(R.drawable.up_now);
-                        }
-
-                        switch (turnNotificationForPopup) {
-
-                            case RIGHT:
-                                nextTurnMovement.setText(THEN_TURN_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.straight_right);
-                                break;
-                            case LEFT:
-                                nextTurnMovement.setText(THEN_TURN_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.straight_left);
-                                break;
-                            case FRONT_RIGHT:
-                                nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.right_up);
-                                break;
-                            case FRONT_LEFT:
-                                nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.left_up);
-                                break;
-                            case REAR_RIGHT:
-                                nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                break;
-                            case REAR_LEFT:
-                                nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                break;
-                            case FRONT:
+                            //錯誤路線，若下個點只有單一方向，往直走
+                            if (navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._nodeType == 0) {
+                                turnNotificationForPopup = FRONT;
                                 nextTurnMovement.setText(THEN_GO_STRAIGHT);
                                 imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                break;
-                            case FRONT_LEFTSIDE:
-                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                break;
-                            case FRONT_RIGHTSIDE:
-                                nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                break;
-                        }
-                        Log.i("xxx_wrong","navigationPath(0) & (1) = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
-                        if(navigationPath.get(0)._connectPointID != 0 && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID){
-                            Log.i("xxx_wrong","navigationPath(0) & (1) -2  = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
-                            ShowDirectionFromConnectPoint();
-                            elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(1)._elevation);
-                            //----------------
-                            turnNotificationForPopup = STAIR;
-                            if(navigationPath.size() > 2) {
-                                //上樓
-                                if(navigationPath.get(2)._elevation > navigationPath.get(0)._elevation) {
-                                    switch (navigationPath.get(2)._elevation) {
-                                        case 0:
-                                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                                            break;
-                                        case 1:
-                                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                                            break;
-                                        case 2:
-                                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                                            break;
-                                        case 3:
-                                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                                            break;
-                                    }
-                                }else if(navigationPath.get(2)._elevation < navigationPath.get(0)._elevation){
-                                    switch (navigationPath.get(2)._elevation) {
-                                        case 0:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
-                                            break;
-                                        case 1:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
-                                            break;
-                                        case 2:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
-                                            break;
-                                        case 3:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
-                                            break;
-                                    }
-                                }
-                            }else if (navigationPath.size() == 2) {
-                                //上樓
-                                if (navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {
-                                    switch (navigationPath.get(1)._elevation) {
-                                        case 0:
-                                            firstMovement.setText(WALKING_UP_STAIR + toBasement);
-                                            break;
-                                        case 1:
-                                            firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
-                                            break;
-                                        case 2:
-                                            firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
-                                            break;
-                                        case 3:
-                                            firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
-                                            break;
-                                    }
-                                } else if (navigationPath.get(1)._elevation < navigationPath.get(0)._elevation) {
-                                    switch (navigationPath.get(1)._elevation) {
-                                        case 0:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
-                                            break;
-                                        case 1:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
-                                            break;
-                                        case 2:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
-                                            break;
-                                        case 3:
-                                            firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
-                                            break;
-                                    }
-                                }
                             }
-                            howFarToMove.setText("");
-                            nextTurnMovement.setText("");
-                            if (turnNotificationForPopup != null)
-                                showHintAtWaypoint(MAKETURN_NOTIFIER);
-                            walkedWaypoint = 0;
-                            sourceID = navigationPath.get(1)._waypointID;
-                            if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
-                                imageTurnIndicator.setImageResource(R.drawable.stairs_up);
-                            else
-                                imageTurnIndicator.setImageResource(R.drawable.stairs_down);
-                            Log.i("xxx_stair","stairCase神經部 in WRONG");
+
+                            switch (turnNotificationForPopup) {
+
+                                case RIGHT:
+                                    nextTurnMovement.setText(THEN_TURN_RIGHT);
+                                    imageTurnIndicator.setImageResource(R.drawable.straight_right);
+                                    break;
+                                case LEFT:
+                                    nextTurnMovement.setText(THEN_TURN_LEFT);
+                                    imageTurnIndicator.setImageResource(R.drawable.straight_left);
+                                    break;
+                                case FRONT_RIGHT:
+                                    nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                                    imageTurnIndicator.setImageResource(R.drawable.right_up);
+                                    break;
+                                case FRONT_LEFT:
+                                    nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                                    imageTurnIndicator.setImageResource(R.drawable.left_up);
+                                    break;
+                                case REAR_RIGHT:
+                                    nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                    break;
+                                case REAR_LEFT:
+                                    nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                    break;
+                                case FRONT:
+                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                    break;
+                                case FRONT_LEFTSIDE:
+                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                    break;
+                                case FRONT_RIGHTSIDE:
+                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                    break;
+                            }
+                            Log.i("xxx_wrong", "navigationPath(0) & (1) = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
+                            if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
+                                Log.i("xxx_wrong", "navigationPath(0) & (1) -2  = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
+                                ShowDirectionFromConnectPoint();
+                                elevationDisplay(ELEVATOR_WAYPOINT, navigationPath.get(1)._elevation);
+                                //----------------
+                                turnNotificationForPopup = STAIR;
+                                if (navigationPath.size() > 2) {
+                                    //上樓
+                                    if (navigationPath.get(2)._elevation > navigationPath.get(0)._elevation) {
+                                        switch (navigationPath.get(2)._elevation) {
+                                            case 0:
+                                                firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                                                break;
+                                            case 1:
+                                                firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                                                break;
+                                            case 2:
+                                                firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                                                break;
+                                            case 3:
+                                                firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                                                break;
+                                        }
+                                    } else if (navigationPath.get(2)._elevation < navigationPath.get(0)._elevation) {
+                                        switch (navigationPath.get(2)._elevation) {
+                                            case 0:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
+                                                break;
+                                            case 1:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
+                                                break;
+                                            case 2:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
+                                                break;
+                                            case 3:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
+                                                break;
+                                        }
+                                    }
+                                } else if (navigationPath.size() == 2) {
+                                    //上樓
+                                    if (navigationPath.get(1)._elevation > navigationPath.get(0)._elevation) {
+                                        switch (navigationPath.get(1)._elevation) {
+                                            case 0:
+                                                firstMovement.setText(WALKING_UP_STAIR + toBasement);
+                                                break;
+                                            case 1:
+                                                firstMovement.setText(WALKING_UP_STAIR + toFirstFloor);
+                                                break;
+                                            case 2:
+                                                firstMovement.setText(WALKING_UP_STAIR + toSecondFloor);
+                                                break;
+                                            case 3:
+                                                firstMovement.setText(WALKING_UP_STAIR + toThirdFloor);
+                                                break;
+                                        }
+                                    } else if (navigationPath.get(1)._elevation < navigationPath.get(0)._elevation) {
+                                        switch (navigationPath.get(1)._elevation) {
+                                            case 0:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toBasement);
+                                                break;
+                                            case 1:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toFirstFloor);
+                                                break;
+                                            case 2:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toSecondFloor);
+                                                break;
+                                            case 3:
+                                                firstMovement.setText(WALKING_DOWN_STAIR + toThirdFloor);
+                                                break;
+                                        }
+                                    }
+                                }
+                                howFarToMove.setText("");
+                                nextTurnMovement.setText("");
+                                if (turnNotificationForPopup != null)
+                                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                                walkedWaypoint = 0;
+                                sourceID = navigationPath.get(1)._waypointID;
+                                if (navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
+                                    imageTurnIndicator.setImageResource(R.drawable.stairs_up);
+                                else
+                                    imageTurnIndicator.setImageResource(R.drawable.stairs_down);
+                                Log.i("xxx_stair", "stairCase神經部 in WRONG");
+                            }
+
+                        } else {
+
+                            nextTurnMovement.setText("然後抵達目的地");
                         }
 
-                    } else {
-
-                        nextTurnMovement.setText("然後抵達目的地");
+                        // Show New Path
+                        for (int xx = 0; xx < navigationPath.size(); xx++) {
+                            Log.i("xxx_recompute", "navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
+                        }
+                        //showHintAtWaypoint(MAKETURN_NOTIFIER);
+                        passedGroupID = navigationPath.get(0)._groupID;
+                        navigationPath.remove(0);
                     }
-
-                    // Show New Path
-                    for(int xx = 0;xx < navigationPath.size();xx++) {
-                        Log.i("xxx_recompute","navigationPath(" + xx + ") = " + navigationPath.get(xx)._waypointName);
-                    }
-                    //showHintAtWaypoint(MAKETURN_NOTIFIER);
-                    passedGroupID = navigationPath.get(0)._groupID;
-                    navigationPath.remove(0);
                 }
-
                 break;
         }
         //After the navigational instruction for current waypoint is properly given,
@@ -1446,8 +1437,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             turnNotificationForPopup = FRONT;
             nextTurnMovement.setText(THEN_GO_STRAIGHT);
         }*/
-
-        readNavigationInstruction();
+        if(arriveinwrong == false)
+            readNavigationInstruction();
 
 
 
@@ -2119,7 +2110,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     // popup window for turn direction notification
+    @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
     public void showPopupWindow(String popmsg){
+        beaconManager.removeAllMonitorNotifiers();
+        beaconManager.removeAllRangeNotifiers();
+        beaconManager.unbind(this);
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup, null);
@@ -2139,6 +2134,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             @Override
             public void onClick(View v){
                     popupWindow.dismiss();
+                    beaconManagerSetup();
             }
         });
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
