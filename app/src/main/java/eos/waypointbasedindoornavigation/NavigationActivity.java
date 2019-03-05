@@ -1749,9 +1749,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                 appendLog(navigationPath.get(0)._waypointName);
 
-                if (popupWindow != null)
-                    popupWindow.dismiss();
-
                 whichWaypointOnProgressBar += 1;
 
                 // Input waypoint name for debug mode
@@ -2115,6 +2112,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.removeAllMonitorNotifiers();
         beaconManager.removeAllRangeNotifiers();
         beaconManager.unbind(this);
+
+        Log.i("xxx_inpop","popstart");
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.popup, null);
@@ -2493,6 +2492,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     }
 
     // enter a waypoint ID to emulate the navigator receiving the corresponding Lbeacon ID (for demo)
+    @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
     public void enterWaypointID(View view) {
 
         if (popupWindow != null)
