@@ -25,6 +25,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import eos.waypointbasedindoornavigation.RecyclerViewAdapter.MyViewHolder;
@@ -54,23 +56,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
         View view = inflater.inflate(R.layout.rowitem, null);
         MyViewHolder holder = new MyViewHolder(view);
 
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Log.i("xxx_List","onBindViewHolder");
+        Log.i("xxx_List","onBindViewHolder Postion = " + position);
         final Node current = data.get(position);
 
         // determine which of location information to be displayed on UI
         holder.title.setText(current.getName());
         //holder.region.setText(current.get_regionID());
-
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        holder.title.setWidth(width);
         // an onclick listener for location names in ListViewActivity
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Log.i("xxx_List","title");
                 // send Name, ID and Region of the selected location
                 //to MainActivity
                 Intent i = new Intent(context, NavigationActivity.class);
@@ -89,13 +95,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView title, region;
+        private Button title;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            title = (TextView) itemView.findViewById(R.id.listText);
+            title = (Button) itemView.findViewById(R.id.listText);
           /*  region = (TextView) itemView.findViewById(R.id.listRegion);*/
+
         }
     }
 }
