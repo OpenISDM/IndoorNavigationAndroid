@@ -455,7 +455,7 @@ public static List<Node> getVirtualNode(Context context,int UpOrDown) {
 
                 String tag = null;
                 String id = null;
-                String name = null;
+                boolean outcrop = false;
                 // get initDirectionData
                 if (eventType == XmlPullParser.START_TAG) {
 
@@ -476,17 +476,19 @@ public static List<Node> getVirtualNode(Context context,int UpOrDown) {
                                     if (attributeName.substring(0, 8).equals("neighbor")) {
                                         if (!pullParser.getAttributeValue(i).isEmpty()) {
                                             Log.i("xxx_initDirectionName", "Neighbor  : " + pullParser.getAttributeValue(i));
-                                            if (pullParser.getAttributeValue(i).equals(NextUUID))
+                                            if (pullParser.getAttributeValue(i).equals(NextUUID)) {
                                                 offset = i - 2;
+                                                outcrop = true;
+                                            }
                                         }
                                     }
                                    // find first direction destribe and move by the offset
                                    if (attributeName.substring(0, 9).equals("direction") && inD == false) {
-                                        if (!pullParser.getAttributeValue(i).isEmpty()) {
-                                            inD = true;
-                                            base = i;
-                                            DirectionName = pullParser.getAttributeValue(base + offset);
-                                        }
+                                            if (!pullParser.getAttributeValue(i).isEmpty()) {
+                                                inD = true;
+                                                base = i;
+                                                DirectionName = pullParser.getAttributeValue(base + offset);
+                                            }
                                     }
                                 }
                             }
@@ -495,10 +497,14 @@ public static List<Node> getVirtualNode(Context context,int UpOrDown) {
                     }
                 }
                 eventType = pullParser.next();
+                if(outcrop == false)
+                    DirectionName = "樓梯";
             }
         } catch (IOException e) {
         } catch (XmlPullParserException e) {
         }
+
+
         Log.i("xxx_initDirectionName","Exit DirectionName = " + DirectionName);
         return DirectionName;
     }

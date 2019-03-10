@@ -503,7 +503,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         //樓梯或電梯方向顯示
         if(navigationPath.size() >= 2 && !turnDirection.equals(WRONG))
             ShowDirectionFromConnectPoint();
-        FirstTurn = false;
+
         switch (turnDirection) {
 
             case LEFT:
@@ -1006,7 +1006,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
                 howFarToMove.setText("");
                 nextTurnMovement.setText("");
-                if (turnNotificationForPopup != null)
+                if (turnNotificationForPopup != null && FirstTurn == false)
                     showHintAtWaypoint(MAKETURN_NOTIFIER);
                 walkedWaypoint = 0;
                 sourceID = navigationPath.get(1)._waypointID;
@@ -1374,7 +1374,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         }
 
-        if(arriveinwrong == false)
+        if(arriveinwrong == false && FirstTurn == false)
             readNavigationInstruction();
 
 
@@ -1387,11 +1387,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                showBackImage();
+                if(FirstTurn = false)
+                    showBackImage();
                 Log.i("xxx_timer", "Timercomplete");
             }
         }, 1000);
 
+        FirstTurn = false;
     }
 
 
@@ -1613,7 +1615,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
                     Log.i("xxx_initDirectionName", "" + initDirectionName);
                     //顯示初始方向指令
-                    showPopupWindow(initDirectionName);
+                    if(initDirectionName != null)
+                        showPopupWindow(initDirectionName);
                 }
 
                 isFirstBeacon = false;
@@ -2028,6 +2031,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             public void onClick(View v){
                     popupWindow.dismiss();
                     beaconManagerSetup();
+                    readNavigationInstruction();
+                    showBackImage();
             }
         });
         popupWindow.showAtLocation(positionOfPopup, Gravity.CENTER, 0, 0);
@@ -2088,124 +2093,124 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             //處理空白跳框情形
             // image.setImageResource(R.drawable.turn_back);
             Log.i("1227","turnNotififorPop = " + turnNotificationForPopup);
-            switch (turnNotificationForPopup) {
+               switch (turnNotificationForPopup) {
 
-                case RIGHT:
-                    turnDirection = PLEASE_TURN_RIGHT;
-                    image.setImageResource(R.drawable.right_now);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case LEFT:
-                    turnDirection = PLEASE_TURN_LEFT;
-                    image.setImageResource(R.drawable.left_now);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case FRONT_RIGHT:
-                    turnDirection = PLEASE_TURN__FRONT_RIGHT;
-                    if (LastisSlash == false) {
-                        image.setImageResource(R.drawable.rightup_now);
-                        LastisSlash = true;
-                    } else {
+                    case RIGHT:
+                        turnDirection = PLEASE_TURN_RIGHT;
+                        image.setImageResource(R.drawable.right_now);
+                        LastisSlash = false;
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case LEFT:
+                        turnDirection = PLEASE_TURN_LEFT;
+                        image.setImageResource(R.drawable.left_now);
+                        LastisSlash = false;
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case FRONT_RIGHT:
+                        turnDirection = PLEASE_TURN__FRONT_RIGHT;
+                        if (LastisSlash == false) {
+                            image.setImageResource(R.drawable.rightup_now);
+                            LastisSlash = true;
+                        } else {
+                            image.setImageResource(R.drawable.up_now);
+                            LastisSlash = false;
+                        }
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case FRONT_LEFT:
+                        turnDirection = PLEASE_TURN_FRONT_LEFT;
+                        if (LastisSlash == false) {
+                            image.setImageResource(R.drawable.leftup_now);
+                            LastisSlash = true;
+                        } else {
+                            image.setImageResource(R.drawable.up_now);
+                            LastisSlash = false;
+                        }
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case REAR_RIGHT:
+                        turnDirection = PLEASE_TURN__REAR_RIGHT;
+                        image.setImageResource(R.drawable.rightdown_now);
+                        LastisSlash = false;
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case REAR_LEFT:
+                        turnDirection = PLEASE_TURN_REAR_LEFT;
+                        image.setImageResource(R.drawable.leftdown_now);
+                        LastisSlash = false;
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case FRONT:
+                        turnDirection = PLEASE_GO_STRAIGHT;
                         image.setImageResource(R.drawable.up_now);
                         LastisSlash = false;
-                    }
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case FRONT_LEFT:
-                    turnDirection = PLEASE_TURN_FRONT_LEFT;
-                    if (LastisSlash == false) {
-                        image.setImageResource(R.drawable.leftup_now);
-                        LastisSlash = true;
-                    } else {
-                        image.setImageResource(R.drawable.up_now);
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case FRONT_RIGHTSIDE:
+                        turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
+                        if (LastisSlash == false) {
+                            image.setImageResource(R.drawable.up_rightside);
+                            LastisSlash = true;
+                        } else {
+                            image.setImageResource(R.drawable.up_now);
+                            LastisSlash = false;
+                        }
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case FRONT_LEFTSIDE:
+                        turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
+                        if (LastisSlash == false) {
+                            image.setImageResource(R.drawable.up_leftside);
+                            LastisSlash = true;
+                        } else {
+                            image.setImageResource(R.drawable.up_now);
+                            LastisSlash = false;
+                        }
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case ELEVATOR:
+                        turnDirection = PLEASE_TAKE_ELEVATOR;
+                        image.setImageResource(R.drawable.elevator);
                         LastisSlash = false;
-                    }
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case REAR_RIGHT:
-                    turnDirection = PLEASE_TURN__REAR_RIGHT;
-                    image.setImageResource(R.drawable.rightdown_now);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case REAR_LEFT:
-                    turnDirection = PLEASE_TURN_REAR_LEFT;
-                    image.setImageResource(R.drawable.leftdown_now);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case FRONT:
-                    turnDirection = PLEASE_GO_STRAIGHT;
-                    image.setImageResource(R.drawable.up_now);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case FRONT_RIGHTSIDE:
-                    turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
-                    if (LastisSlash == false) {
-                        image.setImageResource(R.drawable.up_rightside);
-                        LastisSlash = true;
-                    } else {
-                        image.setImageResource(R.drawable.up_now);
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case STAIR:
+                        turnDirection = PLEASE_WALK_UP_STAIR;
+                        if (navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
+                            image.setImageResource(R.drawable.stairs_up);
+                        else
+                            image.setImageResource(R.drawable.stairs_down);
                         LastisSlash = false;
-                    }
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case FRONT_LEFTSIDE:
-                    turnDirection = PLEASE_GO_STRAIGHT_LEFTSIDE;
-                    if (LastisSlash == false) {
-                        image.setImageResource(R.drawable.up_leftside);
-                        LastisSlash = true;
-                    } else {
-                        image.setImageResource(R.drawable.up_now);
-                        LastisSlash = false;
-                    }
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case ELEVATOR:
-                    turnDirection = PLEASE_TAKE_ELEVATOR;
-                    image.setImageResource(R.drawable.elevator);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case STAIR:
-                    turnDirection = PLEASE_WALK_UP_STAIR;
-                    if(navigationPath.get(1)._elevation > navigationPath.get(0)._elevation)
-                        image.setImageResource(R.drawable.stairs_up);
-                    else
-                        image.setImageResource(R.drawable.stairs_down);
-                    LastisSlash = false;
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    break;
-                case "goback":
-                    turnDirection = " ";
-                    image.setImageResource(R.drawable.turn_back);
-                    Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                    // setNowPostition();
-                    break;
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        break;
+                    case "goback":
+                        turnDirection = " ";
+                        image.setImageResource(R.drawable.turn_back);
+                        Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
+                        // setNowPostition();
+                        break;
 
-            }
+                }
+
         }
-        tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
-
-        Log.i("showHint", "showHint");
-        if (turnNotificationForPopup != null) {
-            Log.i("xxx_showhint","DistanceForShowHint  = " + DistanceForShowHint);
-            initToast(toast);
-            if(DistanceForShowHint > 8) {
-                Log.i("xxx_showhint","ShowHintLong");
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        initToast(toast);
-                    }
-                }, 1000);
+            tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
+            Log.i("showHint", "showHint");
+            if (turnNotificationForPopup != null) {
+                Log.i("xxx_showhint", "DistanceForShowHint  = " + DistanceForShowHint);
+                initToast(toast);
+                if (DistanceForShowHint > 8) {
+                    Log.i("xxx_showhint", "ShowHintLong");
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            initToast(toast);
+                        }
+                    }, 1000);
+                }
+                myVibrator.vibrate(new long[]{50, 100, 50}, -1);
             }
-            myVibrator.vibrate(new long[]{50, 100, 50}, -1);
-        }
 
     }
 
@@ -2391,10 +2396,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             //初始設定
             String initDirectionName = null;
             if(navigationPath.size() >= 1 && isFirstBeacon == true) {
+                Log.i("xxx_initD","0 = " + navigationPath.get(0)._waypointName + "1 = " + navigationPath.get(1)._waypointName);
                 initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
                 Log.i("xxx_initDirectionName", "" + initDirectionName);
                 //顯示初始方向指令
-                showPopupWindow(initDirectionName);
+                if(initDirectionName != null)
+                    showPopupWindow(initDirectionName);
             }
 
             isFirstBeacon = false;
