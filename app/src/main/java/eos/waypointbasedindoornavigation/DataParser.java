@@ -451,11 +451,11 @@ public static List<Node> getVirtualNode(Context context,int UpOrDown) {
             String DirectionUUID = null;
             int base = 0, offset = 0;
             boolean inD = false;
+            boolean outcrop = false;
             while (eventType != XmlPullParser.END_DOCUMENT) {
 
                 String tag = null;
                 String id = null;
-                boolean outcrop = false;
                 // get initDirectionData
                 if (eventType == XmlPullParser.START_TAG) {
 
@@ -497,9 +497,9 @@ public static List<Node> getVirtualNode(Context context,int UpOrDown) {
                     }
                 }
                 eventType = pullParser.next();
-                if(outcrop == false)
-                    DirectionName = "樓梯";
             }
+            if(outcrop == false)
+                DirectionName = "樓梯";
         } catch (IOException e) {
         } catch (XmlPullParserException e) {
         }

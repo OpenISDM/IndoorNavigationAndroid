@@ -498,7 +498,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if(FirstTurn == true) {
             lastNode = navigationPath.get(0);
+            if(navigationPath.size() == 2 && navigationPath.get(0)._elevation != navigationPath.get(1)._elevation)
+                turnDirection = STAIR;
         }
+
         Log.i("xxx_stair","LastNode = " + lastNode._waypointName + " navigationPath(0) = " + navigationPath.get(0)._waypointName);
         //樓梯或電梯方向顯示
         if(navigationPath.size() >= 2 && !turnDirection.equals(WRONG))
@@ -1383,16 +1386,16 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             lastNode = navigationPath.get(0);
             navigationPath.remove(0);
         }
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(FirstTurn = false)
+        if(FirstTurn == false) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     showBackImage();
-                Log.i("xxx_timer", "Timercomplete");
-            }
-        }, 1000);
-
+                    Log.i("xxx_timer", "Timercomplete");
+                }
+            }, 1000);
+        }
         FirstTurn = false;
     }
 
@@ -1611,7 +1614,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 appendLog("StartNavigation");
                 //顯示初始方向指令
                 String initDirectionName = null;
-                if(navigationPath.size() >= 1 && isFirstBeacon == true) {
+                if(navigationPath.size() > 1 && isFirstBeacon == true) {
                     initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
                     Log.i("xxx_initDirectionName", "" + initDirectionName);
                     //顯示初始方向指令
@@ -2541,7 +2544,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }else{
                         turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
                     }
-                    showHintAtWaypoint(MAKETURN_NOTIFIER);
+                    if(FirstTurn == false)
+                        showHintAtWaypoint(MAKETURN_NOTIFIER);
                     isInVirtualNode = true;
                 }
             }
