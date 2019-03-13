@@ -19,10 +19,14 @@ public class DeviceParameter {
     private static final String name = "name";
     private static final String parameter = "parameter";
     private static final String install_hight = "install_hight";
+    private static final String a_value = "a";
+    private static final String b_value = "b";
+    private static final String c_value = "c";
     private static HashMap<String, Node> allWaypointData = new HashMap<>();
     private static JSONArray jarray = new JSONArray();
     private ReadWrite_File wf= new ReadWrite_File();
     private static Context c;
+
     public void DeviceParameter(){
         Log.i("init", "DeviceParameter set");
     }
@@ -46,11 +50,15 @@ public class DeviceParameter {
                     JSONObject tmp_jobject = jarray.getJSONObject(i);
                     con_dif1.add(tmp_jobject.getString(this.id));
                 }
+                //所有Node UUID list
                 Log.i("JSONtag0",con_dif0.toString());
+                //檔案中有的uuid
                 Log.i("JSONtag1",con_dif1.toString());
                 con_dif0.removeAll(con_dif1);
+                //缺少的Node list
                 Log.i("JSONtag1",con_dif0.toString());
                 if (!con_dif0.isEmpty()){
+                    //檔案裡面的資訊
                     Log.i("JSONtag2",jarray.toString());
                     for (String tmp_arraylist: con_dif0){
                         for (Node tmp_node : allWaypointData.values()) {
@@ -67,6 +75,7 @@ public class DeviceParameter {
                             }
                         }
                     }
+                    //將資訊加入預設值，建立最新的JSON File
                     Log.i("JSONtag3",jarray.toString());
                     wf.writejson(jarray.toString());
                 }
@@ -142,6 +151,48 @@ public class DeviceParameter {
         }
         return 0;
     }
+    //---------------New Type For ax^2 + bx + c----------------------
+    public double get_a(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return tmp_jobject.getDouble(this.a_value);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+    public double get_b(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return tmp_jobject.getDouble(this.b_value);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+    public double get_c(String s){
+        for (int i=0; i < jarray.length(); i ++){
+            try {
+                JSONObject tmp_jobject = jarray.getJSONObject(i);
+                if(tmp_jobject.getString(this.id).equals(s)){
+                    return tmp_jobject.getDouble(this.c_value);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+    //----------------------------------------------------------------------
+
     public void Change_paramation(String id, int parameter){
         JSONArray tmp_jarray = new JSONArray();
         for (int i=0; i < jarray.length(); i ++){

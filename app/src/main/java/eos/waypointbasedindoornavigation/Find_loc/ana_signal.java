@@ -58,6 +58,9 @@ public class ana_signal {
             for (int i = 0; i < data_list.size(); i++)
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
+
+            for(int i = 0; i< data_list.size(); i++)
+                Log.i("xxx_datalist","Value(" + i +") = " + data_list.get(i).getUuid() + " Rssilist = " + data_list.get(i).getrssilist() + " Rssi = " + data_list.get(i).countavg());
             List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range, offset);
             if (tmp_count_dif != null)
                 if (tmp_count_dif.size() > 2) {
