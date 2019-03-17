@@ -15,6 +15,8 @@ import java.util.Queue;
 
 import javax.xml.transform.dom.DOMLocator;
 
+import static java.lang.Math.pow;
+
 //Log.i("Queue2", o_member.toString());
 public class ana_signal {
     private Queue<siganl_data_type> weight_queue = new LinkedList<>();
@@ -164,7 +166,7 @@ public class ana_signal {
                 return weight_list;
             case 2:
                 for (int i = 0; i < weight_size + 2; i++)
-                    weight_list.add((float) Math.pow(2, i));
+                    weight_list.add((float) pow(2, i));
                 return weight_list;
             case 3:
                 for (int i = 0; i < weight_size + 2; i++)
@@ -258,6 +260,7 @@ public class ana_signal {
         Collections.sort(count_data_weight);
         return count_data_weight;
     }
+    /*
     private List<String> ana_signal_4
             (List<siganl_data_type> data_list) {
         Log.i("def_algo", "algo4");
@@ -287,7 +290,7 @@ public class ana_signal {
         else
             return null;
 
-    }
+    }*/
   /*  private float ana_signal_5
             (List<siganl_data_type> data_list, float range) {
         Log.i("def_algo", "algo5");
@@ -361,10 +364,14 @@ public class ana_signal {
                 tmp_returen.clear();
                 Log.i("algo6", String.valueOf(distance));
                 double[] tmp_difference = new double[2];
-                double t_range = count_real_Rd(data_list.get(0).getUuid(),remind_range);
-                tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range, offset);
-                t_range = count_real_Rd(data_list.get(1).getUuid(),distance - remind_range);
-                tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range, offset);
+                //-------------------------log 函數------------------------
+              //  double t_range = count_real_Rd(data_list.get(0).getUuid(),remind_range);
+               // tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range, offset);
+               // t_range = count_real_Rd(data_list.get(1).getUuid(),distance - remind_range);
+              //  tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range, offset);
+                //----------------------二次曲線--------------------------------------
+                tmp_difference[0] = count_Quadratic(data_list.get(0).getUuid(), remind_range, offset);
+                tmp_difference[1] = count_Quadratic(data_list.get(1).getUuid(), distance - remind_range, offset);
                 Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
                 tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
                 tmp_returen.add((float) (tmp_difference[0]));
@@ -388,19 +395,28 @@ public class ana_signal {
 //                (Math.pow(dp.get_install_hight(s),2)
 //                        +Math.pow(range,2)));
         r_return = Math.sqrt(
-                (Math.pow(dp.get_install_hight(s),2)
-                        +Math.pow(range+dp.get_Paramater(s),2)));
+                (pow(dp.get_install_hight(s),2)
+                        + pow(range+dp.get_Paramater(s),2)));
         return r_return;
     }
     private double count_distance(String s,double Rd){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return Math.pow(10,((Rd-R0)/(10*n_vlaue)))/dp.get_install_hight(s);
+        return pow(10,((Rd-R0)/(10*n_vlaue)))/dp.get_install_hight(s);
 //        return Math.pow(10,((Rd-R0)/(10*n_vlaue))/1.3);
     }
-    private double count_Rd(String s,double range,double offset){
+    private double count_Rd(String s,double t_range,double offset){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return (R0+(10*n_vlaue*Math.log10(range/1.5))) * offset;
+        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) * offset;
     }
+
+    private double count_Quadratic(String s,double range, double offset){
+        double a_value = dp.get_a(s);
+        double b_value = dp.get_b(s);
+        double c_vaule = dp.get_c(s);
+
+        return (a_value*pow(range,2) + b_value* range + c_vaule) * offset;
+    }
+
 }

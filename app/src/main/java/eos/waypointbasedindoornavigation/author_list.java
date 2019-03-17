@@ -96,7 +96,7 @@ public class author_list extends AppCompatActivity {
 
 
         List<String> version = new ArrayList<>();
-        version.add("版本:1.0.0.0   ( 2018.12.26 )");
+        version.add("版本:1.0.0.0   ( 2019.03.27 )");
 
         List<String> profect_name = new ArrayList<>();
         profect_name.add("台大醫院雲林分院跨學界計畫");
@@ -104,8 +104,8 @@ public class author_list extends AppCompatActivity {
         profect_name.add("中央研究院主題計畫");
 
         List<String> cooperation = new ArrayList<>();
-        cooperation.add("雲科大朱宗賢老師實驗室 (張肇浚、王士嘉、黃柏晨、黃子哲、陳楷捷)");
-        cooperation.add("台大醫院雲林分院資訊室 (許鈞主任、吳惠美組長)");
+        cooperation.add("雲科大朱宗賢老師實驗室");
+        cooperation.add("台大醫院雲林分院資訊室");
         cooperation.add("中研院資訊所張韻詩老師實驗室");
 
         List<String> author = new ArrayList<>();

@@ -363,7 +363,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                     countOffset(maxUuid,3);
                    // showtxt.append(" "+'\n');
                     SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    float offset = offsetPref.getFloat("offset",(float) 1.155);
+                    float offset = offsetPref.getFloat("offset",(float) 1.1);
                     showtxt.append("\n調整比率 = "+String.format("%.2f ", Float.valueOf(offset)));
                     list.clear();
                     rssimap.clear();
@@ -404,12 +404,14 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
             actualRssi = -list.get(0);
             offset = actualRssi / estimate;
+            if(offset < 1 || offset > 1.4)
+                offset = 1.1;
             editor.putFloat("offset",(float)offset);
             editor.commit();
 
         }
         else {
-            editor.putFloat("offset", (float) 1.155);
+            editor.putFloat("offset", (float) 1.1);
             editor.commit();
         }
     }

@@ -70,6 +70,9 @@ public class DeviceParameter {
                                 tmp_add_jobject.put(this.R0, -45);
                                 tmp_add_jobject.put(this.n_value, -2.14);
                                 tmp_add_jobject.put(this.install_hight, 1.5);
+                                tmp_add_jobject.put(this.a_value, 0.1175);
+                                tmp_add_jobject.put(this.b_value, -3.4473);
+                                tmp_add_jobject.put(this.c_value,  -49.029);
                                 jarray.put(tmp_add_jobject);
                                 break;
                             }
@@ -207,6 +210,9 @@ public class DeviceParameter {
                     tmp_jobject2.put(this.n_value,tmp_jobject.getInt(this.n_value));
                     tmp_jobject2.put(this.install_hight,tmp_jobject.getInt(this.install_hight));
                     tmp_jobject2.put(this.name,tmp_jobject.getInt(this.name));
+                    tmp_jobject2.put(this.a_value, tmp_jobject2.getInt(this.a_value));
+                    tmp_jobject2.put(this.b_value, tmp_jobject2.getInt(this.b_value));
+                    tmp_jobject2.put(this.c_value, tmp_jobject2.getInt(this.c_value));
                     tmp_jarray.put(tmp_jobject2);
                 }
                 else tmp_jarray.put(tmp_jobject);

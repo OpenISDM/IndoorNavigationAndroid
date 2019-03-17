@@ -2025,9 +2025,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         TextView popupTitle = (TextView)customView.findViewById(R.id.popupText_waypointName);
             popupTitle.setText("提醒");
             popupTitle.setBackgroundColor(Color.BLUE);
-            popupText.setText("請面對" + popmsg + "開始導航");
+            popupText.setText("請面對" + popmsg);
             tts.speak(popupText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-            popupButton.setText("OK");
+            popupButton.setText("開始導航");
 
         popupButton.setOnClickListener(new View.OnClickListener(){
             @Override

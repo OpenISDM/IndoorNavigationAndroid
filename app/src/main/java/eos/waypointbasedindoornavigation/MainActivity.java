@@ -146,9 +146,25 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.gear){
-            Intent intent = new Intent();
-            intent = new Intent(MainActivity.this, initSignal.class);
-            startActivity(intent);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            dialog.setTitle("系統");
+            dialog.setMessage("是否開始進行訊號校正?");
+            dialog.setCancelable(false);
+            dialog.setNegativeButton("確定",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Intent intent = new Intent();
+                    intent = new Intent(MainActivity.this, initSignal.class);
+                    startActivity(intent);
+                }
+            });
+            dialog.setPositiveButton("取消",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                }
+            });
+
+            dialog.show();
         }else if(item.getItemId() == R.id.information){
             Intent intent = new Intent();
             intent = new Intent(MainActivity.this, author_list.class);
