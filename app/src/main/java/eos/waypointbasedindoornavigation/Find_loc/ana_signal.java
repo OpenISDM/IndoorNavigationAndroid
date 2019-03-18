@@ -416,7 +416,7 @@ public class ana_signal {
         double b_value = dp.get_b(s);
         double c_vaule = dp.get_c(s);
 
-        return (a_value*pow(range,2) + b_value* range + c_vaule) * offset;
+        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) * offset;
     }
 
 }
