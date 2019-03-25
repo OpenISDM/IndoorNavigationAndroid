@@ -47,10 +47,10 @@
 		<node id='0x3219b8410xfc3ef042' name='神經部檢查室/心臟血管功能檢查室岔路' neighbor1='0x5d74b9410x175df042' neighbor2='0x0200c8410x0721f342' neighbor3='0x2d57c2410x3050f642' direction1='心臟血管功能檢查室' direction2='電梯' direction3='神經部檢查室'/>
 		<node id='0x2d57c2410x3050f642' name='神經部檢查室'  neighbor1='0x3419b8410x4d06f042' neighbor2='0x3219b8410xfc3ef042' direction1='迴轉樓梯' direction2='心臟血管功能檢查室'/>
 		<node id='0x3419b8410x4d06f042' name='迴轉樓梯' neighbor1='0x2d57c2410x3050f642' neighbor2='0x3319b8410x4d06f042' direction1='神經部檢查室' direction2='內視鏡室'/>
-		<node id='0x5d74b9410x175df042' name='心臟血管功能檢查室' neighbor1='0x3219b8410xfc3ef042' neighbor2='0xff14f0420x00000000' direction1='神經部檢查室' direction2='迴轉樓梯'/>
-		<node id='0xff14f0420x00000000' name='迴轉樓梯'  neighbor1='0x5d74b9410x175df042' neighbor2='0x3219b8410x4d06f042' direction1='心臟血管功能檢查室' direction2='病理部'/>
+		<node id='0x5d74b9410x175df042' name='心臟血管功能檢查室' neighbor1='0x3219b8410xfc3ef042' neighbor2='0x001234160x00020000' direction1='神經部檢查室' direction2='迴轉樓梯'/>
+		<node id='0x001234160x00020000' name='迴轉樓梯'  neighbor1='0x5d74b9410x175df042' neighbor2='0x3219b8410x4d06f042' direction1='心臟血管功能檢查室' direction2='病理部'/>
 		<node id='0x3319b8410x4d06f042' name='內視鏡/一般超音波檢查室' neighbor1='0x3219b8410x4d06f042' neighbor2='0x3419b8410x4d06f042' direction1='病理部' direction2='迴轉樓梯'/>
-		<node id='0x3219b8410x4d06f042' name='病理部' neighbor1='0xff14f0420x00000000' neighbor2='0x3319b8410x4d06f042' direction1='迴轉樓梯' direction2='綠色佈告欄'/>
+		<node id='0x3219b8410x4d06f042' name='病理部' neighbor1='0x001234160x00020000' neighbor2='0x3319b8410x4d06f042' direction1='迴轉樓梯' direction2='綠色佈告欄'/>
 		<node id='0x0193bd410x780df142' name='樓梯' neighbor1='0x5c93bd410x4f0df142' neighbor2='0x5519b8410x5506f042' direction1='X光報到處' direction2='電梯'/>
 		<node id='0x5c93bd410x4f0df142' name='X光報到處' neighbor1='0x0193bd410x780df142' direction1='樓梯'/>
 		<node id='0x5519b8410x5506f042' name='電梯' neighbor1='0x0193bd410x780df142' direction1='樓梯'/>

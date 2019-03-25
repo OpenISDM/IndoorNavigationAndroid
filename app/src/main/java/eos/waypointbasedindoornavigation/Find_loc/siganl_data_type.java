@@ -145,7 +145,7 @@ public class siganl_data_type implements Comparable<siganl_data_type>{
               return "迴轉樓梯(神經部前)(D3)";
           case "0x5d74b9410x175df042":
               return "心臟血管功能檢查室(D5)";
-          case "0xff14f0420x00000000":
+          case "0x001234160x00020000":
               return "迴轉樓梯(心臟血管功能檢查室)(D6)";
           case "0x3319b8410x4d06f042":
               return "內視鏡/一般超音波檢查室(D7)";

@@ -405,8 +405,8 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             //estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
             //actualRssi = -list.get(0);
             offset = actualRssi - estimate;
-            if(Math.abs(offset) > 7)
-                offset = 0;
+            //if(Math.abs(offset) > 7)
+                //offset = 0;
             editor.putFloat("offset",(float)offset);
             editor.commit();
 
