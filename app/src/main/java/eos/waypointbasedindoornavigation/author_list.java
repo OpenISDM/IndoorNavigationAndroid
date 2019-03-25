@@ -104,7 +104,7 @@ public class author_list extends AppCompatActivity {
         profect_name.add("中央研究院主題計畫");
 
         List<String> cooperation = new ArrayList<>();
-        cooperation.add("雲科大朱宗賢老師實驗室");
+        cooperation.add("雲科大嵌入式作業系統實驗室");
         cooperation.add("台大醫院雲林分院資訊室");
         cooperation.add("中研院資訊所張韻詩老師實驗室");
 

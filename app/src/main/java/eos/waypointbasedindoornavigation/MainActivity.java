@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         //float offset = pref.getFloat("offset",1);
 
         //寫入offset初始值至內存
-        double offset = 1.155;
+        double offset = 0;
         SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = offsetPref.edit();
         editor.putFloat("offset", (float) offset);

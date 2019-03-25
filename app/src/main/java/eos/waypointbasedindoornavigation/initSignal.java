@@ -360,11 +360,11 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
                         }
                     }
 
-                    countOffset(maxUuid,3);
+                    countOffset(maxUuid,3+dp.get_Paramater(maxUuid));
                    // showtxt.append(" "+'\n');
                     SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    float offset = offsetPref.getFloat("offset",(float) 1.1);
-                    showtxt.append("\n調整比率 = "+String.format("%.2f ", Float.valueOf(offset)));
+                    float offset = offsetPref.getFloat("offset",(float) 0);
+                    showtxt.append("\n調整差值 = "+String.format("%.2f ", Float.valueOf(offset)));
                     list.clear();
                     rssimap.clear();
                     map.clear();
@@ -390,28 +390,29 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
 
     public void countOffset(String uuid,double range)
     {
-        double R0 = dp.get_R0(uuid);
-        double n_vlaue = dp.get_n(uuid);
-        double estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
-        double actualRssi = list.get(0);
+        double a_value = dp.get_a(uuid);
+        double b_value = dp.get_b(uuid);
+        double c_value = dp.get_c(uuid);
+        double estimate = a_value*Math.pow(range,2)+b_value*range+c_value;
+        double actualRssi = -list.get(0);
         double offset;
         SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = offsetPref.edit();
         if(dp.our_Beacon(uuid))
         {
-            R0 = dp.get_R0(uuid);
-            n_vlaue = dp.get_n(uuid);
-            estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
-            actualRssi = -list.get(0);
-            offset = actualRssi / estimate;
-            if(offset < 1 || offset > 1.4)
-                offset = 1.1;
+            // R0 = dp.get_R0(uuid);
+            //n_vlaue = dp.get_n(uuid);
+            //estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
+            //actualRssi = -list.get(0);
+            offset = actualRssi - estimate;
+            if(Math.abs(offset) > 7)
+                offset = 0;
             editor.putFloat("offset",(float)offset);
             editor.commit();
 
         }
         else {
-            editor.putFloat("offset", (float) 1.1);
+            editor.putFloat("offset", (float) 0);
             editor.commit();
         }
     }
@@ -447,7 +448,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             e.printStackTrace();
         }
     }
-    public String bytesToHex(byte[] bytes) {
+  /*  public String bytesToHex(byte[] bytes) {
 
         char[] hexArray = "0123456789ABCDEF".toCharArray();
 
@@ -471,7 +472,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             double accuracy = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
             return accuracy;
         }
-    }
+    }*/
 
     public void appendLog(String text)
     {

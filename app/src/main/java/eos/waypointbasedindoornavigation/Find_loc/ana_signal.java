@@ -6,8 +6,16 @@ import android.util.LongSparseArray;
 import eos.waypointbasedindoornavigation.GeoCalulation;
 import eos.waypointbasedindoornavigation.Node;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +30,7 @@ public class ana_signal {
     private Queue<siganl_data_type> weight_queue = new LinkedList<>();
     private  List<siganl_data_type> data_list = new ArrayList<>();
     private int weight_size = 5;
+    private boolean FirstTime = true;
     private static DeviceParameter dp = new DeviceParameter();
     private static ReadWrite_File wf = new ReadWrite_File();
     private static float distance = 0;
@@ -54,6 +63,8 @@ public class ana_signal {
                         setvalue(Integer.parseInt(((List<String>) lq.get(i)).get(1)));
             }
         }
+
+
 //        find difference between first and second higher RSSI of UUID
         List<String> location_range = new ArrayList<>();
         if (data_list.size() >1) {
@@ -61,6 +72,8 @@ public class ana_signal {
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
 
+            //data_list.get(0).setvalue_extreme_value();
+            //data_list.get(1).setvalue_extreme_value();
             for(int i = 0; i< data_list.size(); i++)
                 Log.i("xxx_datalist","Value(" + i +") = " + data_list.get(i).getUuid() + " Rssilist = " + data_list.get(i).getrssilist() + " Rssi = " + data_list.get(i).countavg());
             List<Float> tmp_count_dif = ana_signal_6(data_list, remind_range, offset);
@@ -74,22 +87,30 @@ public class ana_signal {
                             data_list.get(Math.round(tmp_count_dif.get(2))).getUuid() +
                             data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " " +
                             String.valueOf(data_list.get(1).countavg()));
+                    SignalLog("實地量測資料 ：" + data_list.get(0).getUuid_Name() +
+                            data_list.get(0).getrssilist().toString() + " 平均：" +
+                            String.valueOf(data_list.get(0).countavg()) + " 中位數：" + String.valueOf(data_list.get(0).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(0).countStandard_Deviation()) + " \t " +
+                            data_list.get(Math.round(tmp_count_dif.get(2))).getUuid_Name() +
+                            data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " 平均：" +
+                            String.valueOf(data_list.get(1).countavg()) + " 中位數：" + String.valueOf(data_list.get(1).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(1).countStandard_Deviation()));
+                    SignalLog("實際訊號差：" +  String.valueOf(data_list.get(0).countavg() - data_list.get(1).countavg()));
                    if(data_list.get(0).countavg() > tmp_count_dif.get(1)) {
-                       if (tmp_dif > tmp_count_dif.get(0) &&
-                               data_list.get(0).countavg() > tmp_count_dif.get(1)) {
+                       if(FirstTime == true &&  data_list.get(0).countavg() > tmp_count_dif.get(1)){
                            Log.i("def_range", "close " + data_list.get(0).getUuid());
                            Log.i("tmp_count", "threshold = " + tmp_count_dif.get(1));
                            location_range.add("close");
                            location_range.add(data_list.get(0).getUuid());
+                           SignalLog("Close Beacon");
+                           FirstTime = false;
+                       }else if (FirstTime == false && tmp_dif > tmp_count_dif.get(0) &&
+                              data_list.get(0).countavg() > tmp_count_dif.get(1)) {
+                           Log.i("def_range", "close " + data_list.get(0).getUuid());
+                           Log.i("tmp_count", "threshold = " + tmp_count_dif.get(1));
+                           location_range.add("close");
+                           location_range.add(data_list.get(0).getUuid());
+                           SignalLog("Close Beacon");
                        }
                    }
-//                else if (tmp_dif < ana_signal_5(data_list,near_range) &&
-//                        data_list.get(1).countavg() > count_Rd(data_list.get(1).getUuid(),distance-near_range)) {
-//                    Log.i("def_range", "middle of " + data_list.get(0).getUuid()
-//                            + " and " + data_list.get(1).getUuid());
-//                    location_range.add(data_list.get(0).getUuid());
-//                    location_range.add(data_list.get(1).getUuid());
-//                }
                     else {
                         Log.i("def_range", "near " + data_list.get(0).getUuid());
                         Log.i("tmp_count","threshold = " + tmp_count_dif.get(1));
@@ -104,6 +125,7 @@ public class ana_signal {
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
                         location_range.add("close");
                         location_range.add(data_list.get(0).getUuid());
+                        SignalLog("Close Beacon");
                     }
                     else {
                         Log.i("def_range", "near " + data_list.get(0).getUuid());
@@ -121,6 +143,7 @@ public class ana_signal {
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
                 location_range.add("close");
                 location_range.add(data_list.get(0).getUuid());
+                SignalLog("Close Beacon");
             }
             else {
                 Log.i("def_range", "near " + data_list.get(0).getUuid());
@@ -254,78 +277,12 @@ public class ana_signal {
                         setvalue(Math.round(get_weight_data.get(i).getrssi()*weight_list.get(i)));
             }
         }
-//        Log.i("SLW",count_data_weight.get(0).getrssilist());
         tmplistUUID.clear();
 
         Collections.sort(count_data_weight);
         return count_data_weight;
     }
-    /*
-    private List<String> ana_signal_4
-            (List<siganl_data_type> data_list) {
-        Log.i("def_algo", "algo4");
-//       計算距離
-        Node[] tmp_dis_Node = new Node[2];
-        for (Node tmp_path_P:  tmp_path){
-            if (data_list.get(0).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[0] = tmp_path_P;
-            if (data_list.get(1).getUuid().equals(tmp_path_P.getID())) tmp_dis_Node[1] = tmp_path_P;
-        }
-        if (data_list.size()>2) {
-            if (!tmp_dis_Node[1].equals(null) && !tmp_dis_Node[0].equals(null))
-                distance = GeoCalulation.getDistance(tmp_dis_Node[0], tmp_dis_Node[1]);
-            else distance = 0;
-            double[] tmp_disatnce = new double[2];
-            tmp_disatnce[0] = count_distance(data_list.get(0).getUuid(), data_list.get(0).countavg());
-            tmp_disatnce[1] = count_distance(data_list.get(1).getUuid(), data_list.get(1).countavg());
-            double tmp = tmp_disatnce[0] * distance / (tmp_disatnce[0] + tmp_disatnce[1]);
-            tmp_disatnce[1] = tmp_disatnce[1] * distance / (tmp_disatnce[0] + tmp_disatnce[1]);
-            tmp_disatnce[0] = tmp;
-            List<String> tmp_returen = new ArrayList<>();
-            for (int i = 0; i < 2; i++){
-                tmp_returen.add(data_list.get(i).getUuid());
-                tmp_returen.add(String.valueOf(tmp_disatnce[i]));
-            }
-            return tmp_returen;
-        }
-        else
-            return null;
 
-    }*/
-  /*  private float ana_signal_5
-            (List<siganl_data_type> data_list, float range) {
-        Log.i("def_algo", "algo5");
-        Log.i("algo5", String.valueOf(tmp_path.length));
-//       計算距離
-        Node[] tmp_dis_Node = new Node[2];
-        for (Node tmp_path_P:  tmp_path){
-            Log.i("TDN",tmp_path_P.getID()+"\t"+data_list.get(0).getUuid()
-                    +"\t"+data_list.get(1).getUuid());
-            if (data_list.get(0).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[0] = tmp_path_P;
-            if (data_list.get(1).getUuid().equals(tmp_path_P.getID()))tmp_dis_Node[1] = tmp_path_P;
-        }
-        try {
-            if (data_list.size() > 1) {
-                if (tmp_dis_Node[1] != null && tmp_dis_Node[0]!=null)
-                    distance = GeoCalulation.getDistance(tmp_dis_Node[0], tmp_dis_Node[1]);
-                else {
-                    distance = 0;
-                    return 9999;
-                }
-                Log.i("algo5", String.valueOf(distance));
-                double[] tmp_difference = new double[2];
-                tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), range);
-                tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), distance - range);
-                Log.i("algo5", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
-                float tmp_returen = (float) (tmp_difference[0] - tmp_difference[1]);
-                return tmp_returen;
-            } else
-                return 9999;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("TDN2","null error");
-            return 0;
-        }
-    }*/
     List<Float> tmp_returen = new ArrayList<>();
     private List<Float> ana_signal_6
             (List<siganl_data_type> data_list, float remind_range,double offset) {
@@ -365,14 +322,31 @@ public class ana_signal {
                 Log.i("algo6", String.valueOf(distance));
                 double[] tmp_difference = new double[2];
                 //-------------------------log 函數------------------------
-              //  double t_range = count_real_Rd(data_list.get(0).getUuid(),remind_range);
-               // tmp_difference[0] = count_Rd(data_list.get(0).getUuid(), t_range, offset);
-               // t_range = count_real_Rd(data_list.get(1).getUuid(),distance - remind_range);
-              //  tmp_difference[1] = count_Rd(data_list.get(1).getUuid(), t_range, offset);
+              /*  double t_range = count_real_Rd(data_list.get(0).getUuid(),remind_range);
+                double test_log0,testlog1;
+                test_log0 = count_Rd(data_list.get(0).getUuid(), t_range, offset);
+                t_range = count_real_Rd(data_list.get(1).getUuid(),distance - remind_range);
+                testlog1 = count_Rd(data_list.get(1).getUuid(), t_range, offset);
+                SignalLog("----------------log預估-------------");
+                SignalLog("預估最強UUID : " + data_list.get(0).getUuid_Name() + " 預估RSSI：" + String.valueOf(test_log0));
+                SignalLog("預估次強值UUID : " + data_list.get(1).getUuid_Name() + " 預估RSSI" + String.valueOf(testlog1));
+                SignalLog("預估差值：" + String.valueOf((test_log0 - testlog1)));
+                SignalLog("經緯度計算兩顆Beacon距離：" + distance);
+                SignalLog("Threshold : " + String.valueOf(test_log0));
+                SignalLog("----------------log預估結束-------------");*/
                 //----------------------二次曲線--------------------------------------
                 tmp_difference[0] = count_Quadratic(data_list.get(0).getUuid(), remind_range, offset);
                 tmp_difference[1] = count_Quadratic(data_list.get(1).getUuid(), distance - remind_range, offset);
                 Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
+                SignalLog("----------------二次曲線預估-------------");
+                SignalLog("Remind Range : " + remind_range);
+                SignalLog("預估最強UUID : " + data_list.get(0).getUuid_Name() + " 預估RSSI：" + String.valueOf(tmp_difference[0]));
+                SignalLog("預估次強值UUID : " + data_list.get(1).getUuid_Name() + " 預估RSSI" + String.valueOf(tmp_difference[1]));
+                SignalLog("預估差值：" + String.valueOf(tmp_difference[0]-tmp_difference[1]));
+                SignalLog("經緯度計算兩顆Beacon距離：" + distance);
+                SignalLog("Threshold : " + String.valueOf(tmp_difference[0]));
+                SignalLog("訊號調整值  = " + offset);
+                SignalLog("----------------二次曲線結束-------------");
                 tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
                 tmp_returen.add((float) (tmp_difference[0]));
                 tmp_returen.add((float) tmp_compare);
@@ -408,7 +382,7 @@ public class ana_signal {
     private double count_Rd(String s,double t_range,double offset){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) * offset;
+        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) + offset;
     }
 
     private double count_Quadratic(String s,double range, double offset){
@@ -416,7 +390,40 @@ public class ana_signal {
         double b_value = dp.get_b(s);
         double c_vaule = dp.get_c(s);
 
-        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) * offset;
+        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset;
+    }
+
+    public void SignalLog(String text)
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss - ");
+        Date date = new Date(System.currentTimeMillis());
+        simpleDateFormat.format(date);
+        File logFile = new File("sdcard/signalLog.txt");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            Writer buf = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile,true),"UTF-8"));
+            buf.append( simpleDateFormat.format(date).toString());
+            buf.append(text + "\n");
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }

@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:paddingTop="15dp"
-                android:text="接收Beacon訊號開始進行導航"
+                android:text="接收網路訊號中"
                 android:textColor="@android:color/black"
                 android:textSize="30sp" />
 
