@@ -187,6 +187,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String toFirstFloor = "至一樓";
     private static final String toSecondFloor = "至二樓";
     private static final String toThirdFloor = "至三樓";
+    private static String recordbeacon;
+    private static int error_count = 0;
 
 
     private BluetoothManager bluetoothManager;
@@ -212,7 +214,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     boolean JumpNode = false;
     boolean arriveinwrong = false;
     boolean isLongerPath = false;
-    boolean CallDirectionInStair = false;
+    boolean CallDirectionInWrong = false;
     Node startNode;
     Node endNode;
     Node lastNode;
@@ -326,8 +328,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     int whichWaypointOnProgressBar = 0;
 
     boolean inpath = false;
-    String recordbeacon = null;
-    int error_count = 0;
     // Find_loc part
     private Find_Loc LBD = new Find_Loc();
     private DateFormat df = new SimpleDateFormat("yy_MM_DD_hh_mm");
@@ -1211,52 +1211,86 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         imageTurnIndicator.setImageResource(R.drawable.up_now);
                         if (navigationPath.size() >= 3) {
 
-                            turnNotificationForPopup = getDirectionFromBearing
-                                    (navigationPath.get(0), navigationPath.get(1), navigationPath.get(2));
-                            Log.i("xxx_Direction", "navigationPath(0) = " + navigationPath.get(0)._waypointName);
-                            Log.i("xxx_Direction", "navigationPath(1) = " + navigationPath.get(1)._waypointName);
-                            Log.i("xxx_Direction", "navigationPath(2) = " + navigationPath.get(2)._waypointName);
+                            if(navigationPath.get(2)._elevation == navigationPath.get(1)._elevation) {
+                                turnNotificationForPopup = getDirectionFromBearing
+                                        (navigationPath.get(0), navigationPath.get(1), navigationPath.get(2));
+                                Log.i("xxx_Direction", "navigationPath(0) = " + navigationPath.get(0)._waypointName);
+                                Log.i("xxx_Direction", "navigationPath(1) = " + navigationPath.get(1)._waypointName);
+                                Log.i("xxx_Direction", "navigationPath(2) = " + navigationPath.get(2)._waypointName);
 
+                                switch (turnNotificationForPopup) {
 
-                            switch (turnNotificationForPopup) {
-
-                                case RIGHT:
-                                    nextTurnMovement.setText(THEN_TURN_RIGHT);
-                                    imageTurnIndicator.setImageResource(R.drawable.straight_right);
-                                    break;
-                                case LEFT:
-                                    nextTurnMovement.setText(THEN_TURN_LEFT);
-                                    imageTurnIndicator.setImageResource(R.drawable.straight_left);
-                                    break;
-                                case FRONT_RIGHT:
-                                    nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
-                                    imageTurnIndicator.setImageResource(R.drawable.right_up);
-                                    break;
-                                case FRONT_LEFT:
-                                    nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
-                                    imageTurnIndicator.setImageResource(R.drawable.left_up);
-                                    break;
-                                case REAR_RIGHT:
-                                    nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
-                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                    break;
-                                case REAR_LEFT:
-                                    nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
-                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                    break;
-                                case FRONT:
-                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                    break;
-                                case FRONT_LEFTSIDE:
-                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                    break;
-                                case FRONT_RIGHTSIDE:
-                                    nextTurnMovement.setText(THEN_GO_STRAIGHT);
-                                    imageTurnIndicator.setImageResource(R.drawable.up_now);
-                                    break;
+                                    case RIGHT:
+                                        nextTurnMovement.setText(THEN_TURN_RIGHT);
+                                        imageTurnIndicator.setImageResource(R.drawable.straight_right);
+                                        break;
+                                    case LEFT:
+                                        nextTurnMovement.setText(THEN_TURN_LEFT);
+                                        imageTurnIndicator.setImageResource(R.drawable.straight_left);
+                                        break;
+                                    case FRONT_RIGHT:
+                                        nextTurnMovement.setText(THEN_TURN__FRONT_RIGHT);
+                                        imageTurnIndicator.setImageResource(R.drawable.right_up);
+                                        break;
+                                    case FRONT_LEFT:
+                                        nextTurnMovement.setText(THEN_TURN_FRONT_LEFT);
+                                        imageTurnIndicator.setImageResource(R.drawable.left_up);
+                                        break;
+                                    case REAR_RIGHT:
+                                        nextTurnMovement.setText(THEN_TURN__REAR_RIGHT);
+                                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                        break;
+                                    case REAR_LEFT:
+                                        nextTurnMovement.setText(THEN_TURN_REAR_LEFT);
+                                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                        break;
+                                    case FRONT:
+                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                        break;
+                                    case FRONT_LEFTSIDE:
+                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                        break;
+                                    case FRONT_RIGHTSIDE:
+                                        nextTurnMovement.setText(THEN_GO_STRAIGHT);
+                                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                                        break;
+                                }
+                            }else if (navigationPath.get(2)._elevation > navigationPath.get(0)._elevation) {
+                                ShowDirectionFromConnectPoint();
+                                switch (navigationPath.get(2)._elevation) {
+                                    case 0:
+                                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toBasement);
+                                        break;
+                                    case 1:
+                                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toFirstFloor);
+                                        break;
+                                    case 2:
+                                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toSecondFloor);
+                                        break;
+                                    case 3:
+                                        nextTurnMovement.setText(THEN_WALK_UP_STAIR + toThirdFloor);
+                                        break;
+                                }
+                            } else if (navigationPath.get(2)._elevation < navigationPath.get(0)._elevation) {
+                                ShowDirectionFromConnectPoint();
+                                switch (navigationPath.get(2)._elevation) {
+                                    case 0:
+                                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toBasement);
+                                        break;
+                                    case 1:
+                                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toFirstFloor);
+                                        break;
+                                    case 2:
+                                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toSecondFloor);
+                                        break;
+                                    case 3:
+                                        nextTurnMovement.setText(THEN_WALK_DOWN_STAIR + toThirdFloor);
+                                        break;
+                                }
                             }
+
                             Log.i("xxx_wrong", "navigationPath(0) & (1) = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
                             if (navigationPath.get(0)._connectPointID != 0 && navigationPath.get(0)._connectPointID == navigationPath.get(1)._connectPointID) {
                                 Log.i("xxx_wrong", "navigationPath(0) & (1) -2  = " + navigationPath.get(0)._waypointName + "&" + navigationPath.get(1)._waypointName);
@@ -1355,8 +1389,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                         Log.i("xxx_stair"," in WRONG Exit LastNode = " + lastNode._waypointName + " navigationPath(0) = " + navigationPath.get(0)._waypointName);
                         if(JumpNode == false) {
-                            CallDirectionInStair = true;
-                            ShowDirectionFromConnectPoint();
+                           CallDirectionInWrong = true;
+                           ShowDirectionFromConnectPoint();
                         }
                         lastNode = navigationPath.get(0);
                         navigationPath.remove(0);
@@ -2595,7 +2629,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         }else {
                             turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
                         }
-                        if(FirstTurn == false && CallDirectionInStair == false)
+                        if(FirstTurn == false && CallDirectionInWrong == false)
                            showHintAtWaypoint(MAKETURN_NOTIFIER);
                         isInVirtualNode = true;
                     }
@@ -2634,13 +2668,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }else{
                         turnNotificationForPopup = getDirectionFromBearing(lastNode, navigationPath.get(0), virtualNodeUp.get(i));
                     }
-                    if(FirstTurn == false && CallDirectionInStair == false)
+                    if(FirstTurn == false && CallDirectionInWrong == false)
                         showHintAtWaypoint(MAKETURN_NOTIFIER);
                     isInVirtualNode = true;
                 }
             }
         }
-        CallDirectionInStair = false;
+        CallDirectionInWrong = false;
     }
 
 
