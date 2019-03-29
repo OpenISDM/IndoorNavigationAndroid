@@ -53,7 +53,6 @@ public class Find_Loc {
                 data_queue.add(data_list);
                 long endT = System.currentTimeMillis();
                 if ((endT-startT)>1000){
-                    SignalLog("-------定位模組開始---------");
                     startT = System.currentTimeMillis();
                     researchdata.addAll(as.ana_signal(data_queue,algo_num,weight_type, remind_range, offset));
 //                    wf.writeFile("LBD:"+data_queue.toString() +"\t"
@@ -61,7 +60,6 @@ public class Find_Loc {
                     Log.i("LBD1",data_queue.toString());
                     Log.i("LBD2",researchdata.toString());
                     data_queue.clear();
-                    SignalLog("-------定位模組結束---------");
                 return researchdata;
             }
         }

@@ -87,13 +87,6 @@ public class ana_signal {
                             data_list.get(Math.round(tmp_count_dif.get(2))).getUuid() +
                             data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " " +
                             String.valueOf(data_list.get(1).countavg()));
-                    SignalLog("實地量測資料 ：" + data_list.get(0).getUuid_Name() +
-                            data_list.get(0).getrssilist().toString() + " 平均：" +
-                            String.valueOf(data_list.get(0).countavg()) + " 中位數：" + String.valueOf(data_list.get(0).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(0).countStandard_Deviation()) + " \t " +
-                            data_list.get(Math.round(tmp_count_dif.get(2))).getUuid_Name() +
-                            data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " 平均：" +
-                            String.valueOf(data_list.get(1).countavg()) + " 中位數：" + String.valueOf(data_list.get(1).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(1).countStandard_Deviation()));
-                    SignalLog("實際訊號差：" +  String.valueOf(data_list.get(0).countavg() - data_list.get(1).countavg()));
                    if(data_list.get(0).countavg() > tmp_count_dif.get(1)) {
                        if(FirstTime == true &&  data_list.get(0).countavg() > tmp_count_dif.get(1)){
                            Log.i("def_range", "close " + data_list.get(0).getUuid());
@@ -104,11 +97,30 @@ public class ana_signal {
                            FirstTime = false;
                        }else if (FirstTime == false && tmp_dif > tmp_count_dif.get(0) &&
                               data_list.get(0).countavg() > tmp_count_dif.get(1)) {
+                           SignalLog("-------定位模組開始---------");
+                           SignalLog("----------------二次曲線預估-------------");
+                           SignalLog("Remind Range : " + (remind_range+dp.get_Paramater(data_list.get(0).getUuid())));
+                           SignalLog("預估最強UUID : " + data_list.get(0).getUuid_Name() + " 預估RSSI：" + String.valueOf(tmp_count_dif.get(1)));
+                           SignalLog("預估次強值UUID : " + data_list.get(1).getUuid_Name() + " 預估RSSI" + String.valueOf(tmp_count_dif.get(1) - tmp_count_dif.get(0)));
+                           SignalLog("預估差值：" + String.valueOf(tmp_count_dif.get(0)));
+                           SignalLog("經緯度計算兩顆Beacon距離：" + distance);
+                           SignalLog("Threshold : " + String.valueOf(tmp_count_dif.get(1)));
+                           SignalLog("訊號調整值  = " + offset);
+                           SignalLog("----------------二次曲線結束-------------");
+                           SignalLog("實地量測資料 ：" + data_list.get(0).getUuid_Name() +
+                                   data_list.get(0).getrssilist().toString() + " 平均：" +
+                                   String.valueOf(data_list.get(0).countavg()) + " 中位數：" + String.valueOf(data_list.get(0).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(0).countStandard_Deviation()) + " \t " +
+                                   data_list.get(Math.round(tmp_count_dif.get(2))).getUuid_Name() +
+                                   data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " 平均：" +
+                                   String.valueOf(data_list.get(1).countavg()) + " 中位數：" + String.valueOf(data_list.get(1).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(1).countStandard_Deviation()));
+                           SignalLog("實際訊號差：" +  String.valueOf(data_list.get(0).countavg() - data_list.get(1).countavg()));
+                           SignalLog("Close Beacon");
+                           SignalLog("-------定位模組結束---------");
                            Log.i("def_range", "close " + data_list.get(0).getUuid());
                            Log.i("tmp_count", "threshold = " + tmp_count_dif.get(1));
                            location_range.add("close");
                            location_range.add(data_list.get(0).getUuid());
-                           SignalLog("Close Beacon");
+
                        }
                    }
                     else {
@@ -137,7 +149,7 @@ public class ana_signal {
         }
         else {
             int tmp_dif = Math.round(data_list.get(0).countavg());
-            if (tmp_dif > dp.get_RSSI_threshold(data_list.get(0).getUuid())) {
+            if (tmp_dif > -60) {
                 Log.i("tmp_count_RSSI","threshold = " + dp.get_RSSI_threshold(data_list.get(0).getUuid()));
 //                Log.i("def_range", "close " + data_list.get(0).getUuid()+ "\t"+
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
@@ -338,15 +350,6 @@ public class ana_signal {
                 tmp_difference[0] = count_Quadratic(data_list.get(0).getUuid(), remind_range, offset);
                 tmp_difference[1] = count_Quadratic(data_list.get(1).getUuid(), distance - remind_range, offset);
                 Log.i("algo6", String.valueOf(tmp_difference[0]) + "\t" + String.valueOf(tmp_difference[1]));
-                SignalLog("----------------二次曲線預估-------------");
-                SignalLog("Remind Range : " + remind_range);
-                SignalLog("預估最強UUID : " + data_list.get(0).getUuid_Name() + " 預估RSSI：" + String.valueOf(tmp_difference[0]));
-                SignalLog("預估次強值UUID : " + data_list.get(1).getUuid_Name() + " 預估RSSI" + String.valueOf(tmp_difference[1]));
-                SignalLog("預估差值：" + String.valueOf(tmp_difference[0]-tmp_difference[1]));
-                SignalLog("經緯度計算兩顆Beacon距離：" + distance);
-                SignalLog("Threshold : " + String.valueOf(tmp_difference[0]));
-                SignalLog("訊號調整值  = " + offset);
-                SignalLog("----------------二次曲線結束-------------");
                 tmp_returen.add((float) Math.abs(tmp_difference[0] - tmp_difference[1]));
                 tmp_returen.add((float) (tmp_difference[0]));
                 tmp_returen.add((float) tmp_compare);
@@ -382,7 +385,7 @@ public class ana_signal {
     private double count_Rd(String s,double t_range,double offset){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) + offset;
+        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) - offset;
     }
 
     private double count_Quadratic(String s,double range, double offset){
@@ -390,7 +393,7 @@ public class ana_signal {
         double b_value = dp.get_b(s);
         double c_vaule = dp.get_c(s);
 
-        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset;
+        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) - offset;
     }
 
     public void SignalLog(String text)

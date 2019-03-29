@@ -28,6 +28,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -187,8 +189,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String toFirstFloor = "至一樓";
     private static final String toSecondFloor = "至二樓";
     private static final String toThirdFloor = "至三樓";
-    private static String recordbeacon;
-    private static int error_count = 0;
+    String recordbeacon;
+    int error_count = 0;
 
 
     private BluetoothManager bluetoothManager;
@@ -1578,12 +1580,20 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
         );
         builder.setContentIntent(pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("My Notification Channel ID",
+                    "My Notification Name", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("My Notification Channel Description");
+            NotificationManager notificationManager = (NotificationManager) getSystemService(
+                    Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+            builder.setChannelId(channel.getId());
+        }
         beaconManager.enableForegroundServiceScanning(builder.build(), 456);
         beaconManager.setEnableScheduledScanJobs(false);
         beaconManager.setBackgroundBetweenScanPeriod(0);
         beaconManager.setBackgroundScanPeriod(1100);
         beaconManager.bind(NavigationActivity.this);
-
     }
 
     @Override
@@ -1630,7 +1640,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if (beacon.size() > 2) {
 
-
             Log.i("beacon", "beacon 0: " + beacon.get(0));
 
             Log.i("beacon", "beacon 1: " + beacon.get(1));
@@ -1643,11 +1652,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             Log.i("NAP1", beacon.toString());
             receivebeacon = null;
 
-            if (beacon.get(2).equals("close"))
-                receivebeacon = beacon.get(3);
+//            if (beacon.get(2).equals("close"))
+  //              receivebeacon = beacon.get(3);
 
             //連續收兩次判斷，close才進去
-            if(beacon.get(2).equals("close") && receivebeacon != null) {
+/*            if(beacon.get(2).equals("close") && receivebeacon != null) {
                 if (isFirstBeacon == false && navigationPath.size() > 1) {
                     inpath = false;
                     if (navigationPath.get(1)._waypointID.equals(receivebeacon))
@@ -1677,16 +1686,27 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     }
                 }
 
-            }
-            /*if (beacon.get(2).equals("close")) {
-                twotimesClose = twotimesClose + 1;
-                if(twotimesClose >= 2) {
-                    twotimesClose = 0;
+            }*/
+            if (beacon.get(2).equals("close")) {
+                if(navigationPath.size() > 0 && navigationPath.get(0)._waypointID.equals(beacon.get(3))){
+                   receivebeacon = beacon.get(3);
+                   error_count = 0;
+                }else if(navigationPath.size() > 0 && !navigationPath.get(0)._waypointID.equals(beacon.get(3)) && error_count == 0){
+                    recordbeacon = beacon.get(3);
+                    error_count ++;
+                }else if(navigationPath.size() > 0 && !navigationPath.get(0)._waypointID.equals(beacon.get(3)) && error_count == 1){
+                    if(recordbeacon.equals(beacon.get(3))){
+                        receivebeacon = beacon.get(3);
+                        error_count = 0;
+                    }
+                    else{
+                        error_count = 0;
+                    }
+                }else {
                     receivebeacon = beacon.get(3);
+                    error_count = 0;
                 }
-            }else
-                twotimesClose = 0;*/
-
+            }
             Log.i("NAP1", beacon.toString() + receivebeacon);
 
             receiveNode = allWaypointData.get(receivebeacon);
