@@ -21,15 +21,18 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +55,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import eos.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 import eos.waypointbasedindoornavigation.Find_loc.Find_Loc;
@@ -187,6 +191,30 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             startActivityForResult( enableIntent, REQUEST_ENABLE_BT ); }
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
+
+        // 定位權限要求
+        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean providerEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!providerEnabled) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            dialog.setTitle("系統");
+            dialog.setMessage("請開啟定位權限");
+            dialog.setCancelable(false);
+            dialog.setNegativeButton("允許",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    Intent locationintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(locationintent);
+                }
+            });
+            dialog.setPositiveButton("取消",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                }
+            });
+            dialog.show();
+
+        }
 
 
 

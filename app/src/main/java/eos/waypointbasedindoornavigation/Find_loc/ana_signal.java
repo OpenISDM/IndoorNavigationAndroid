@@ -385,7 +385,7 @@ public class ana_signal {
     private double count_Rd(String s,double t_range,double offset){
         double R0 = dp.get_R0(s);
         double n_vlaue = dp.get_n(s);
-        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) - offset;
+        return (R0+(10*n_vlaue*Math.log10(t_range/1.5))) + offset;
     }
 
     private double count_Quadratic(String s,double range, double offset){
@@ -393,7 +393,7 @@ public class ana_signal {
         double b_value = dp.get_b(s);
         double c_vaule = dp.get_c(s);
 
-        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) - offset;
+        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset -5;
     }
 
     public void SignalLog(String text)
