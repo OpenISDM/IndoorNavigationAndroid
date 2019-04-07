@@ -19,6 +19,7 @@ Author:
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -192,30 +193,30 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
 
+
         // 定位權限要求
-        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+       LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean providerEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!providerEnabled) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle("系統");
             dialog.setMessage("請開啟定位權限");
             dialog.setCancelable(false);
-            dialog.setNegativeButton("允許",new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton("取消",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                }
+            });
+            dialog.setPositiveButton("確定",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     Intent locationintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(locationintent);
                 }
             });
-            dialog.setPositiveButton("取消",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                }
-            });
             dialog.show();
 
         }
-
 
 
 

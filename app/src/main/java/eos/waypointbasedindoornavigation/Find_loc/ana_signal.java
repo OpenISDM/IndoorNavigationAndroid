@@ -63,8 +63,6 @@ public class ana_signal {
                         setvalue(Integer.parseInt(((List<String>) lq.get(i)).get(1)));
             }
         }
-
-
 //        find difference between first and second higher RSSI of UUID
         List<String> location_range = new ArrayList<>();
         if (data_list.size() >1) {
@@ -393,7 +391,7 @@ public class ana_signal {
         double b_value = dp.get_b(s);
         double c_vaule = dp.get_c(s);
 
-        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset -5;
+        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset - 5;
     }
 
     public void SignalLog(String text)

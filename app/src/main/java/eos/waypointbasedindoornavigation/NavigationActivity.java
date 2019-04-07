@@ -189,7 +189,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     private static final String toFirstFloor = "至一樓";
     private static final String toSecondFloor = "至二樓";
     private static final String toThirdFloor = "至三樓";
-    String recordbeacon;
+    Node tmpNode;
+    Node recordbeacon;
     int error_count = 0;
 
 
@@ -1198,8 +1199,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                                 ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0xf295c2410x63a8f042") && navigationPath.get(2)._waypointID.equals("0x283ff0420x00000000")) //核子->樓梯->新舊大樓連接走廊
                                 ||(navigationPath.get(0)._waypointID.equals("0x3519b8410x4d06f042") && navigationPath.get(1)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(2)._waypointID.equals("0xf295c2410x63a8f042")) //電腦斷層大廳->抽血->樓梯
                                 ||(navigationPath.get(0)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(1)._waypointID.equals("0xf295c2410x63a8f042") && navigationPath.get(2)._waypointID.equals("0x283ff0420x00000000")) //抽血->樓梯->連接走廊
-                                ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x0800b8410x0200f042") && navigationPath.get(2)._waypointID.equals("0x300000000x48d2b060")) //核子->病歷室大廳->後門出口
-                                ||(navigationPath.get(0)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(1)._waypointID.equals("0x3519b8410x4d06f042") && navigationPath.get(2)._waypointID.equals("0x300000000x48d2b060")) //抽血->電腦斷層大廳->後門出口
+                                ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x0800b8410x0200f042") && navigationPath.get(2)._waypointID.equals("0xeb57ba410xfb95f042")) //核子->病歷室大廳->後門出口
+                                ||(navigationPath.get(0)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(1)._waypointID.equals("0x3519b8410x4d06f042") && navigationPath.get(2)._waypointID.equals("0xeb57ba410xfb95f042")) //抽血->電腦斷層大廳->後門出口
                            ){
                             Log.i("xxx_Slash", "強制轉為直走in wrong");
                             imageTurnIndicator.setImageResource(R.drawable.up_now);
@@ -1424,8 +1425,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                        ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0xf295c2410x63a8f042") && navigationPath.get(2)._waypointID.equals("0x283ff0420x00000000")) //核子->樓梯->新舊大樓連接走廊
                        ||(navigationPath.get(0)._waypointID.equals("0x3519b8410x4d06f042") && navigationPath.get(1)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(2)._waypointID.equals("0xf295c2410x63a8f042")) //電腦斷層大廳->抽血->樓梯
                        ||(navigationPath.get(0)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(1)._waypointID.equals("0xf295c2410x63a8f042") && navigationPath.get(2)._waypointID.equals("0x283ff0420x00000000")) //抽血->樓梯->連接走廊
-                       ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x0800b8410x0200f042") && navigationPath.get(2)._waypointID.equals("0x300000000x48d2b060")) //核子->病歷室大廳->後門出口
-                       ||(navigationPath.get(0)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(1)._waypointID.equals("0x3519b8410x4d06f042") && navigationPath.get(2)._waypointID.equals("0x300000000x48d2b060")) //抽血->電腦斷層大廳->後門出口
+                       ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x0800b8410x0200f042") && navigationPath.get(2)._waypointID.equals("0xeb57ba410xfb95f042")) //核子->病歷室大廳->後門出口
+                       ||(navigationPath.get(0)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(1)._waypointID.equals("0x3519b8410x4d06f042") && navigationPath.get(2)._waypointID.equals("0xeb57ba410xfb95f042")) //抽血->電腦斷層大廳->後門出口
                        ||(navigationPath.get(0)._waypointID.equals("0x8193bd410x540df142") && navigationPath.get(1)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(2)._waypointID.equals("0x0800b8410x0200f042") && FirstTurn == true) //樓梯(靠新大樓)->核子->病歷室大廳
                        ||(navigationPath.get(0)._waypointID.equals("0xf295c2410x63a8f042") && navigationPath.get(1)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(2)._waypointID.equals("0x0800b8410x0200f042") && FirstTurn == true) //樓梯->核子->病歷室大廳
                        ||(navigationPath.get(0)._waypointID.equals("0x8193bd410x540df142") && navigationPath.get(1)._waypointID.equals("0xde57c8410x0721f342") && navigationPath.get(2)._waypointID.equals("0x3519b8410x4d06f042") && FirstTurn == true) //樓梯(靠新大樓)->抽血->電腦斷層大廳
@@ -1656,53 +1657,37 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
   //              receivebeacon = beacon.get(3);
 
             //連續收兩次判斷，close才進去
-/*            if(beacon.get(2).equals("close") && receivebeacon != null) {
-                if (isFirstBeacon == false && navigationPath.size() > 1) {
-                    inpath = false;
-                    if (navigationPath.get(1)._waypointID.equals(receivebeacon))
-                        inpath = true;
-
-                    if (inpath == false && error_count == 0) {
-                        recordbeacon = receivebeacon;
-                        error_count++;
-                        receivebeacon = null;
-                        Log.i("xxx_receive_inPath","false & first in end ...  recordbeacon =" + recordbeacon + " count = " + error_count);
-                    } else if (inpath == false && error_count == 1) {
-                        if (!recordbeacon.equals(receivebeacon)) {
-                            recordbeacon = receivebeacon;
-                            receivebeacon = null;
-                            error_count = 1;
-                            Log.i("xxx_receive_inPath","not equal & false & second time  in end ...  recordbeacon =" + recordbeacon + " count = " + error_count);
-                        } else {
-                            recordbeacon = null;
-                            error_count = 0;
-                            Log.i("xxx_receive_inPath","double false & second time  in end(Reset)");
-                        }
-                    } else if (inpath == true) {
-                        recordbeacon = null;
-                        error_count = 0;
-                        Log.i("xxx_receive_inPath","inPath (Reset)");
-
-                    }
-                }
-
-            }*/
-            if (beacon.get(2).equals("close")) {
-                if(navigationPath.size() > 0 && navigationPath.get(0)._waypointID.equals(beacon.get(3))){
+            if (beacon.get(2).equals("close") && navigationPath.size() > 0) {
+                tmpNode = allWaypointData.get(beacon.get(3));
+                if(navigationPath.get(0)._waypointID.equals(beacon.get(3))){
+                    //inpath Next equal receive close
                    receivebeacon = beacon.get(3);
                    error_count = 0;
-                }else if(navigationPath.size() > 0 && !navigationPath.get(0)._waypointID.equals(beacon.get(3)) && error_count == 0){
-                    recordbeacon = beacon.get(3);
+                }else if(navigationPath.get(0)._groupID !=0 && navigationPath.get(0)._groupID == tmpNode._groupID){
+                    //inpath Next equal receive group close
+                    receivebeacon = beacon.get(3);
+                    error_count = 0;
+                }else if(!navigationPath.get(0)._waypointID.equals(beacon.get(3)) && error_count == 0){
+                    //Not inpath First times
+                    recordbeacon = allWaypointData.get(beacon.get(3));
                     error_count ++;
-                }else if(navigationPath.size() > 0 && !navigationPath.get(0)._waypointID.equals(beacon.get(3)) && error_count == 1){
-                    if(recordbeacon.equals(beacon.get(3))){
+                }else if(!navigationPath.get(0)._waypointID.equals(beacon.get(3)) && error_count == 1){
+                    //Not inpath Second times
+                    if(recordbeacon._waypointID.equals(beacon.get(3))){
                         receivebeacon = beacon.get(3);
                         error_count = 0;
-                    }
-                    else{
+                    }else if(!recordbeacon._waypointID.equals(beacon.get(3)) && recordbeacon._groupID != 0){
+
+                        if(tmpNode._groupID == recordbeacon._groupID){
+                            receivebeacon = beacon.get(3);
+                            error_count = 0;
+                        }else{
+                            error_count = 0;
+                        }
+                    } else{
                         error_count = 0;
                     }
-                }else {
+                }else{
                     receivebeacon = beacon.get(3);
                     error_count = 0;
                 }
