@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.gear){
+      /*  if(item.getItemId() == R.id.gear){
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle("系統");
             dialog.setMessage("是否開始進行訊號校正?");
@@ -170,7 +170,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             });
 
             dialog.show();
-        }else if(item.getItemId() == R.id.information){
+        }else */
+            if(item.getItemId() == R.id.information){
             Intent intent = new Intent();
             intent = new Intent(MainActivity.this, author_list.class);
             startActivity(intent);
@@ -367,9 +368,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
                 //如果該種類只有一種，直接導入導航頁面，否則導入目的地選單
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -391,9 +394,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -422,9 +427,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -446,9 +453,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -470,9 +479,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -494,9 +505,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -518,9 +531,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
@@ -542,9 +557,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                     }
                 }
                 if(CList.size() == 1){
+                    destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
                     Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);

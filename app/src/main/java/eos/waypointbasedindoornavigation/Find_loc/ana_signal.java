@@ -391,7 +391,7 @@ public class ana_signal {
         double b_value = dp.get_b(s);
         double c_vaule = dp.get_c(s);
 
-        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset - 5;
+        return (a_value*pow(range + dp.get_Paramater(s),2) + b_value* (range + dp.get_Paramater(s)) + c_vaule) + offset;
     }
 
     public void SignalLog(String text)

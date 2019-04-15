@@ -5,7 +5,7 @@
  
 	    <node id='0xfa53bd410xff54f142' name='前門出口' region='region1' category='出口'/>
 		<node id='0xcf90b8410x3424f042' name='批價掛號櫃臺' region='region1' category='批價櫃檯'/>
-		<node id='0x0054bd410x0055f142' name='領藥處' region='region1' category='領藥處'/>
+		<node id='0x0454bd410x0155f142' name='藥局' region='region1' category='領藥處'/>
 		<node id='0x4993bd410x640df142' name='萊爾富' region='region1' category='超商'/>	  
 		<node id='0x6029b8410x580af042' name='心臟內科/內科/體檢區(1~10診)' region='region1' category='各科門診'/>
 		<node id='0x3ef8b8410x0f3ef042' name='耳鼻喉科/小兒科/婦產科(11~20診)' region='region1' category='各科門診'/>

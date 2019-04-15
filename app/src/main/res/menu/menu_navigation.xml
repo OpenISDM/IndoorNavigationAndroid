@@ -4,16 +4,16 @@
 
 
 
-
+<!--
     <item android:id="@+id/menu_previous_page"
         android:title="各科門診"
         android:icon="@drawable/stethoscope"
         android:orderInCategory="101"
         app:showAsAction="always" />
-
+-->
     <item android:id="@+id/menu_home"
         android:title="首頁"
-        android:icon="@drawable/home"
+        android:icon="@drawable/home1"
         android:orderInCategory="50"
         app:showAsAction="always" />
 

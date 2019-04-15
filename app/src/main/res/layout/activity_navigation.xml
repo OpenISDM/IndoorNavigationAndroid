@@ -50,11 +50,22 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/insturction0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:textColor="@android:color/black"
+                android:textSize="30sp" />
+
+            <TextView
                 android:id="@+id/instruction1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:textColor="@android:color/black"/>
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:textColor="@android:color/black"
+                android:textSize="30sp" />
 
 
             <TextView
@@ -71,9 +82,9 @@
                 android:id="@+id/insturction3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
                 android:paddingTop="15dp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textSize="25sp" />
 
         </LinearLayout>
 

@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/menu_home"
-        android:icon="@drawable/home"
+        android:icon="@drawable/home1"
         android:orderInCategory="50"
         android:title="首頁"
         app:showAsAction="ifRoom" />

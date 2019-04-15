@@ -80,6 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
                 // send Name, ID and Region of the selected location
                 //to MainActivity
                 Intent i = new Intent(context, NavigationActivity.class);
+                i.putExtra("destinationName", current.getName());
                 i.putExtra("destinationID", current.getID());
                 i.putExtra("destinationRegion", current.get_regionID());
                 context.startActivity(i);
