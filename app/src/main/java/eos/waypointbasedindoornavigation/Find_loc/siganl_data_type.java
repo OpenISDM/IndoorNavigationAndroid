@@ -75,9 +75,9 @@ public class siganl_data_type implements Comparable<siganl_data_type>{
               return "精神科/神經內科(A12)";
           case "0xdeceb8410xb833f042":
               return "26~29診走廊出口(A13)";
-          case "0xfe53bd410xff54f142":
-              return "中央走廊(A8)";
           case "0x4b81ca410x0e21f342":
+              return "中央走廊(A8)";
+          case "0x12f6af410x5442f242":
               return "自動繳費機(A10)";
           case "0x3ef8b8410x0f3ef042":
               return "小兒科(A14)";
@@ -137,13 +137,13 @@ public class siganl_data_type implements Comparable<siganl_data_type>{
               return "後門出口(後)(C10)";
           case "0x001234110x00020000":
               return "樓梯(舊大樓2F電梯旁)(D1)";
-          case "0x001234120x00020000":
+          case "0x001234150x00020000":
               return "神經部檢查室/心臟血管功能檢查室岔路(D4)";
           case "0x001234130x00020000":
               return "神經部檢查室(D2)";
           case "0x001234140x00020000":
               return "迴轉樓梯(神經部前)(D3)";
-          case "0x001234150x00020000":
+          case "0x001234120x00020000":
               return "心臟血管功能檢查室(D5)";
           case "0x001234160x00020000":
               return "迴轉樓梯(心臟血管功能檢查室)(D6)";

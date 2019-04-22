@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_main);
         setTitle("台大雲林分院室內導航系統");
         Log.i("Main_Create_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
+        //檢查藍芽權限
         BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if(!mBtAdapter.isEnabled()) {
             Intent enableIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_ENABLE );
@@ -194,6 +195,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, 1001);
 
+        //BLE權限
+        if(!getPackageManager().hasSystemFeature(getPackageManager().FEATURE_BLUETOOTH_LE)){
+            Toast.makeText(this, "您的裝置不支援BLE藍牙功能！", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         // 定位權限要求
        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

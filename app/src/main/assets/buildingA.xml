@@ -26,7 +26,7 @@
 	
 	<region id='2' name='region2' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>
      
-	<node id='0x001234150x00020000' name='心臟血管檢查室' region='region2' category='檢查室'/>
+	<node id='0x001234120x00020000' name='心臟血管檢查室' region='region2' category='檢查室'/>
 	<node id='0x001234140x00020000' name='內視鏡/一般超音波檢查室' region='region2' category='檢查室'/>
 	<node id='0x001234130x00020000' name='神經部檢查室' region='region2' category='檢查室'/>
 

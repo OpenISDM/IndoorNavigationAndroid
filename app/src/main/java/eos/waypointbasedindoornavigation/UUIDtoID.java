@@ -28,7 +28,7 @@ public class UUIDtoID {
                 return "C09";
             case "0xdeceb8410xb833f042":
                 return "C10";
-            case "0xfe53bd410xff54f142":
+            case "0x12f6af410x5442f242":
                 return "C11";
             case "0x3ef8b8410x0f3ef042":
                 return "C12";

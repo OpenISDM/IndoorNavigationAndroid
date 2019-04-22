@@ -67,6 +67,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -1399,9 +1402,9 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         }else{
                             turnNotificationForPopup = getDirectionFromBearing(lastNode,navigationPath.get(0),navigationPath.get(1));
                             showHintAtWaypoint(MAKETURN_NOTIFIER);
-                            turnNotificationForPopup = getDirectionFromBearing(navigationPath.get(0),navigationPath.get(1),navigationPath.get(2));
                             //強制轉為直走in Wrong Case(僅修改跳出的圖)
                             if(navigationPath.size() > 2) {
+                                turnNotificationForPopup = getDirectionFromBearing(navigationPath.get(0),navigationPath.get(1),navigationPath.get(2));
                                 if ((navigationPath.get(0)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(0)._elevation == lastNode._elevation) //只有兩個鄰居，且自己不在樓梯
                                         || (navigationPath.get(0)._waypointID.equals("0x0800b8410x0200f042") && navigationPath.get(1)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(2)._waypointID.equals("0x8193bd410x540df142")) //病歷室大廳->核子->樓梯
                                         || (navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x8193bd410x540df142") && navigationPath.get(2)._waypointID.equals("0x283ff0420x00000000")) //核子->樓梯->新舊大樓連接走廊
@@ -2241,12 +2244,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             dialog.setNegativeButton("同意",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
-                    Uri uri = Uri.parse("https://forms.gle/5SHRm6utPDnYyFBW9");
+                    Intent i = new Intent(NavigationActivity.this, Questionwebview.class);
+                    startActivity(i);
+                    finish();
+                   /* Uri uri = Uri.parse("https://forms.gle/5SHRm6utPDnYyFBW9");
                     Intent it = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(it);
-                    //Intent i = new Intent(NavigationActivity.this, MainActivity.class);
-                    //startActivity(i);
-                    finish();
+                    finish();*/
                 }
             });
             dialog.show();

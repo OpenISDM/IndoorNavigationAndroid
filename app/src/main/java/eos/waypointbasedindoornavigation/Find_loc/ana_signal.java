@@ -65,7 +65,7 @@ public class ana_signal {
         }
 //        find difference between first and second higher RSSI of UUID
         List<String> location_range = new ArrayList<>();
-        if (data_list.size() >1) {
+        if (data_list.size() > 0) {
             for (int i = 0; i < data_list.size(); i++)
                 data_list.get(i).set_sort_way(1);
             Collections.sort(data_list);
@@ -79,10 +79,10 @@ public class ana_signal {
                 if (tmp_count_dif.size() > 2) {
                     float tmp_dif = Math.abs(data_list.get(0).countavg()
                             - data_list.get(Math.round(tmp_count_dif.get(2))).countavg());
-                    Log.i("tmp_count_dif1",  data_list.get(0).getUuid()+
+                    Log.i("tmp_count_dif1",  data_list.get(0).getUuid_Name()+
                             data_list.get(0).getrssilist().toString() + " " +
                             String.valueOf(data_list.get(0).countavg()) + "\t" +
-                            data_list.get(Math.round(tmp_count_dif.get(2))).getUuid() +
+                            data_list.get(Math.round(tmp_count_dif.get(2))).getUuid_Name() +
                             data_list.get(Math.round(tmp_count_dif.get(2))).getrssilist().toString() + " " +
                             String.valueOf(data_list.get(1).countavg()));
                    if(data_list.get(0).countavg() > tmp_count_dif.get(1)) {
