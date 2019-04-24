@@ -1445,7 +1445,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             //強制轉換的Case in 台大醫院
             //判斷下個Node鄰居數與是否為電/樓梯()
             Log.i("xxx_Slash", "LastNode = " + lastNode._waypointName + " n(0) = " + navigationPath.get(0)._waypointName + " n(1) = " + navigationPath.get(1)._waypointName);
-           if(!turnDirection.equals(WRONG) && navigationPath.size() > 2){
+           if(!turnDirection.equals(WRONG) && navigationPath.size() > 2 && lastNode._elevation == navigationPath.get(0)._elevation){
                if((navigationPath.get(0)._adjacentWaypoints.size() <= 2 && navigationPath.get(1)._adjacentWaypoints.size() <= 2 && navigationPath.get(0)._elevation == navigationPath.get(1)._elevation) //只有兩個鄰居，且自己不在樓梯
                        ||(navigationPath.get(0)._waypointID.equals("0x0800b8410x0200f042") && navigationPath.get(1)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(2)._waypointID.equals("0x8193bd410x540df142")) //病歷室大廳->核子->樓梯(靠新大樓)
                        ||(navigationPath.get(0)._waypointID.equals("0xc43af3420x00000000") && navigationPath.get(1)._waypointID.equals("0x8193bd410x540df142") && navigationPath.get(2)._waypointID.equals("0x283ff0420x00000000")) //核子->樓梯(靠新大樓)->新舊大樓連接走廊
@@ -1657,6 +1657,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     Iterator<Beacon> beaconIterator = beacons.iterator();
                     while (beaconIterator.hasNext()) {
                         Beacon beacon = beaconIterator.next();
+                        Log.i("xxx_offsettest","offset = " + offset);
                         logBeaconData(LBD.Find_Loc(beacon, 3, offset));
                     }
                 }
@@ -2336,7 +2337,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                         break;
                     case REAR_LEFT:
-                        nowDoInstruction.setText(NOW_TURN__REAR_RIGHT);
+                        nowDoInstruction.setText(NOW_TURN_REAR_LEFT);
                         turnDirection = PLEASE_TURN_REAR_LEFT;
                         imageTurnIndicator.setImageResource(R.drawable.leftdown_now);
                         image.setImageResource(R.drawable.leftdown_now);

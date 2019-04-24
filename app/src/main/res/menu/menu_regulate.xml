@@ -9,7 +9,7 @@
         app:showAsAction="always"
         android:orderInCategory="50"
         />
-        -->
+-->
     <item android:id="@+id/information"
         android:title="相關資訊"
         android:icon="@drawable/info"

@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-      /*  if(item.getItemId() == R.id.gear){
+      /* if(item.getItemId() == R.id.gear){
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle("系統");
             dialog.setMessage("是否開始進行訊號校正?");
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             });
 
             dialog.show();
-        }else */
+        }else*/
             if(item.getItemId() == R.id.information){
             Intent intent = new Intent();
             intent = new Intent(MainActivity.this, author_list.class);

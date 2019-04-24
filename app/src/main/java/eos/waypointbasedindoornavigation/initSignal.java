@@ -405,7 +405,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         double b_value = dp.get_b(uuid);
         double c_value = dp.get_c(uuid);
         double estimate = a_value*Math.pow(range,2)+b_value*range+c_value;
-        double actualRssi = list.get(0);
+        double actualRssi = -list.get(0);
         double offset;
         SharedPreferences offsetPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = offsetPref.edit();
@@ -416,6 +416,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
             //estimate = R0+(10*n_vlaue*Math.log10(range/1.5));
             //actualRssi = -list.get(0);
             offset = actualRssi - estimate;
+            Log.i("xxx_offsettest","actualRSSI = " + actualRssi + "estimateRssi = " + estimate);
             //if(Math.abs(offset) > 7)
                 //offset = 0;
             editor.putFloat("offset",(float)offset);

@@ -28,7 +28,7 @@
      
 	<node id='0x006317170x00020000' name='心臟血管檢查室' region='region2' category='檢查室'/>
 	<node id='0x553bc2410x2d44f042' name='內視鏡/一般超音波檢查室' region='region2' category='檢查室'/>
-	<node id='0x300000000x48d2b060' name='神經部檢查室' region='region2' category='檢查室'/>
+	<node id='0x021234110x00020000' name='神經部檢查室' region='region2' category='檢查室'/>
 
     </region>
 

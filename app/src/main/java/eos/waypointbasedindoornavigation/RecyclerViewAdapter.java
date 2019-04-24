@@ -40,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
     private LayoutInflater inflater;
 
     List<Node> data = Collections.emptyList();
-
+    Boolean clicked = false;
     Context context;
 
     public RecyclerViewAdapter(Context context, List<Node> data){
@@ -62,9 +62,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Log.i("xxx_List","onBindViewHolder Postion = " + position);
-        final Node current = data.get(position);
 
+        Log.i("xxx_List", "onBindViewHolder Postion = " + position);
+        final Node current = data.get(position);
         // determine which of location information to be displayed on UI
         holder.title.setText(current.getName());
         //holder.region.setText(current.get_regionID());
@@ -72,19 +72,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<MyViewHolder>{
         int width = wm.getDefaultDisplay().getWidth();
         holder.title.setWidth(width);
         // an onclick listener for location names in ListViewActivity
+
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.i("xxx_List","title");
-                // send Name, ID and Region of the selected location
-                //to MainActivity
-                Intent i = new Intent(context, NavigationActivity.class);
-                i.putExtra("destinationName", current.getName());
-                i.putExtra("destinationID", current.getID());
-                i.putExtra("destinationRegion", current.get_regionID());
-                context.startActivity(i);
-                ((Activity)context).finish();
+                if(clicked == false) {
+                    clicked = true;
+                    Log.i("xxx_List", "title");
+                    // send Name, ID and Region of the selected location
+                    //to MainActivity
+                    Intent i = new Intent(context, NavigationActivity.class);
+                    i.putExtra("destinationName", current.getName());
+                    i.putExtra("destinationID", current.getID());
+                    i.putExtra("destinationRegion", current.get_regionID());
+                    context.startActivity(i);
+                    ((Activity) context).finish();
+                }
             }
         });
     }
