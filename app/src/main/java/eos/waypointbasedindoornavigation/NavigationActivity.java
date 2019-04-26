@@ -226,7 +226,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
     // IDs and Regions of source and destination input by user on home screen
     String sourceID, destinationID, sourceRegion, destinationRegion, destinationName, wrongdestinationID, wrongdestinationRegion, tmpdestinationID, tmpdestinationRegion;
     String currentLocationName;
-
+    boolean search_in_image = false;
     boolean isFirstBeacon = true;
     boolean FirstTurn = true;
     boolean isInVirtualNode = false;
@@ -1485,6 +1485,10 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             lastNode = navigationPath.get(0);
             navigationPath.remove(0);
         }
+
+        SignalLog("----------指令模組結束----------");
+        FirstTurn = false;
+
         if(FirstTurn == false) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -1495,8 +1499,6 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }, 1000);
         }
-        SignalLog("----------指令模組結束----------");
-        FirstTurn = false;
     }
 
 
@@ -1626,6 +1628,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         beaconManager.setBackgroundScanPeriod(1100);
         beaconManager.bind(NavigationActivity.this);
     }
+
+    @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        beaconManagerSetup();
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -1764,13 +1774,25 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
 
                 appendLog("StartNavigation");
-                //顯示初始方向指令
+
+                //初始設定
                 String initDirectionName = null;
-                if(navigationPath.size() > 1 && isFirstBeacon == true) {
+                if(navigationPath.size() >= 1 && isFirstBeacon == true) {
                     initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
-                    Log.i("xxx_initDirectionName", "" + initDirectionName);
-                    //顯示初始方向指令
-                    if(initDirectionName != null)
+                    search_in_image = GetInitShowType();
+                    //初始方向顯示圖片
+                    if (search_in_image == true){
+                        beaconManager.removeAllMonitorNotifiers();
+                        beaconManager.removeAllRangeNotifiers();
+                        beaconManager.unbind(this);
+                        Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
+                        intent.putExtra("nowID", navigationPath.get(0)._waypointID);
+                        intent.putExtra("nextID", navigationPath.get(1)._waypointID);
+                        startActivity(intent);
+                        nowDoInstruction.setText("請面對" + initDirectionName);
+                        imageTurnIndicator.setImageResource(R.drawable.up_now);
+                        showBackImage();
+                    }else if(initDirectionName != null)  //顯示初始方向指令
                         showPopupWindow(initDirectionName);
                 }
 
@@ -2619,11 +2641,21 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             //初始設定
             String initDirectionName = null;
             if(navigationPath.size() >= 1 && isFirstBeacon == true) {
-                Log.i("xxx_initD","0 = " + navigationPath.get(0)._waypointName + "1 = " + navigationPath.get(1)._waypointName);
                 initDirectionName = DataParser.getInitDirectionName(this, navigationPath.get(0)._waypointID, navigationPath.get(1)._waypointID);
-                Log.i("xxx_initDirectionName", "" + initDirectionName);
-                //顯示初始方向指令
-                if(initDirectionName != null)
+                search_in_image = GetInitShowType();
+                //初始方向顯示圖片
+               if (search_in_image == true){
+                   beaconManager.removeAllMonitorNotifiers();
+                   beaconManager.removeAllRangeNotifiers();
+                   beaconManager.unbind(this);
+                   Intent intent = new Intent(NavigationActivity.this, InitDirectionImage.class);
+                   intent.putExtra("nowID", navigationPath.get(0)._waypointID);
+                   intent.putExtra("nextID", navigationPath.get(1)._waypointID);
+                   startActivity(intent);
+                   nowDoInstruction.setText("請面對" + initDirectionName);
+                   imageTurnIndicator.setImageResource(R.drawable.up_now);
+                   showBackImage();
+                }else if(initDirectionName != null)  //顯示初始方向指令
                     showPopupWindow(initDirectionName);
             }
 
@@ -2671,6 +2703,103 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             }
         }
 
+    }
+
+    private boolean GetInitShowType() {
+        boolean inittype = false;
+        //imageTable
+        switch (navigationPath.get(0)._waypointID){
+            case "0x6029b8410x580af042": //A2(心臟內科/內科/體檢區)
+                if(navigationPath.get(1)._waypointID.equals("0xbf52c8410x3323f542") || navigationPath.get(1)._waypointID.equals("0xeb57ca410x0e21f342")) //服務台(A4 & A5)
+                  inittype = true;
+            break;
+            case "0x0f3eb8410x3921f342": //A3(心臟內科/內科/體檢區)
+                if(navigationPath.get(1)._waypointID.equals("0xbf52c8410x3323f542") || navigationPath.get(1)._waypointID.equals("0xeb57ca410x0e21f342")) //服務台(A4 & A5)
+                    inittype = true;
+            break;
+            case "0xcf90b8410x3424f042": //A11批價
+                if(navigationPath.get(1)._waypointID.equals("0x0154bd410x0055f142")) //30~41診走廊交叉口
+                    inittype = true;
+            break;
+            case "0xdeceb8410xb833f042": //A13 26~29診走廊出口
+                if(navigationPath.get(1)._waypointID.equals("0x2ebab8410x8c2ef042")) //精神科
+                    inittype = true;
+                break;
+            case "0x3ef8b8410x0f3ef042": //A14耳鼻喉科
+                if(navigationPath.get(1)._waypointID.equals("0xff53bd410x0055f142") || navigationPath.get(1)._waypointID.equals("0xbb3fc8410x0721f342")) //健康教育中心(A14 & A15)
+                    inittype = true;
+                break;
+            case "0xee0cb9410x3b43f042": //A15耳鼻喉科
+                if(navigationPath.get(1)._waypointID.equals("0xff53bd410x0055f142") || navigationPath.get(1)._waypointID.equals("0xbb3fc8410x0721f342")) //健康教育中心(A14 & A15)
+                    inittype = true;
+                break;
+            case "0xff53bd410x0055f142": //A16健康教育中心
+                if(navigationPath.get(1)._waypointID.equals("0xbf52c8410x3323f542") || navigationPath.get(1)._waypointID.equals("0xeb57ca410x0e21f342")) //服務台(A4 & A5)
+                    inittype = true;
+                break;
+            case "0xbb3fc8410x0721f342": //A17健康教育中心
+                if(navigationPath.get(1)._waypointID.equals("0xbf52c8410x3323f542") || navigationPath.get(1)._waypointID.equals("0xeb57ca410x0e21f342")) //服務台(A4 & A5)
+                    inittype = true;
+                break;
+            case "0x0154bd410x0055f142": //A19 30~41診走廊交叉口
+                if(navigationPath.get(1)._waypointID.equals("0x4d36b9410x934df042")) //樓梯
+                    inittype = true;
+                if(navigationPath.get(1)._waypointID.equals(" 0x7cf0b9410x1f7cf042")) //42~49診走廊交叉口
+                    inittype = true;
+                break;
+            case "0x0254bd410x0055f142": //A20 外科/骨科/牙科
+                if(navigationPath.get(1)._waypointID.equals("0x0154bd410x0055f142")) //A19 30~41診走廊交叉口
+                    inittype = true;
+                break;
+            case "0x0254bd410x0155f142": //A21 外科/骨科/牙科
+                if(navigationPath.get(1)._waypointID.equals("0x0154bd410x0055f142")) //A19 30~41診走廊交叉口
+                    inittype = true;
+                break;
+            case "0xed4cc8410x0e21f342": //A22 腎臟科/腎膽腸內科/新陳代謝分泌科
+                if(navigationPath.get(1)._waypointID.equals("0x1cc7b9410xc771f042")) //A23 無障礙領藥窗口
+                    inittype = true;
+                break;
+            case "0x1cc7b9410xc771f042": //A23 無障礙領藥窗口
+                if(navigationPath.get(1)._waypointID.equals("0xff53bd410x0055f142") || navigationPath.get(1)._waypointID.equals("0xbb3fc8410x0721f342")) //A16 & A17 健康教育中心
+                    inittype = true;
+                break;
+            case "0x2c05ba410x4b81f042": //A27 眼科/皮膚科
+                if(navigationPath.get(1)._waypointID.equals("0x7cf0b9410x1f7cf042")) //A19 30~41診走廊交叉口
+                    inittype = true;
+                break;
+            case "0xdc19ba410x7786f042": //A28 眼科/皮膚科
+                if(navigationPath.get(1)._waypointID.equals("0x7cf0b9410x1f7cf042")) //A19 30~41診走廊交叉口
+                    inittype = true;
+                break;
+            case "0x8b2eba410xa38bf042": //A29 42~49診走廊出口
+                if(navigationPath.get(1)._waypointID.equals("0x2c05ba410x4b81f042") || navigationPath.get(1)._waypointID.equals("0xdc19ba410x7786f042")) //A27 & A28眼科/皮膚科
+                    inittype = true;
+                break;
+            case "0x0193bd410x780df142": //B1 樓梯
+                if(navigationPath.get(1)._waypointID.equals("0x5c93bd410x4f0df142")) //B3 X光報到處
+                    inittype = true;
+                break;
+            case "0x5c93bd410x4f0df142": //B3 X光報到處
+                if(navigationPath.get(1)._waypointID.equals("0x0193bd410x780df142"))  //B1 樓梯
+                    inittype = true;
+                break;
+            case "0x0800b8410x0200f042": //C6 大廳(病歷室前)
+                if(navigationPath.get(1)._waypointID.equals("0x3519b8410x4d06f042")) //C9 大廳(電腦斷層室前)
+                    inittype = true;
+                break;
+            case "0x3319b8410x4d06f042": //D1  樓梯
+                if(navigationPath.get(1)._waypointID.equals("0x3219b8410x4d06f042")) //D2 岔路
+                    inittype = true;
+                break;
+            case "0x021234110x00020000": //D2 神經部檢查室
+                if(navigationPath.get(1)._waypointID.equals("0x3219b8410x4d06f042")) //D2 岔路
+                    inittype = true;
+                break;
+            default:
+                inittype = false;
+        }
+
+        return inittype;
     }
 
     public void clearEditText(View v) {

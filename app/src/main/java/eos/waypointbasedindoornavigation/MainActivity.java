@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     //Define which search bar is to be filled with location information
     static boolean searchBarClicked = false;
-
+    boolean ButtonClicked = false;
     //Store names, IDs and Regions of source and destination
     static String destinationName, destinationID, destinationRegion;
 
@@ -361,30 +361,32 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
+        if(ButtonClicked == false){
         switch (view.getId()) {
             case R.id.btn_stethoscope:
+                ButtonClicked = true;
                 //取出listForStoringAllNodes中的Category與各科門診相同的Node加至CList
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("各科門診")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("各科門診")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
                 //如果該種類只有一種，直接導入導航頁面，否則導入目的地選單
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "各科門診");
                     startActivity(intent);
                     finish();
@@ -392,25 +394,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
 
             case R.id.btn_examination_room:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("檢查室")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("檢查室")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "檢查室");
                     startActivity(intent);
                     finish();
@@ -418,32 +421,34 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
 
             case R.id.btn_other:
-                intent = new Intent(MainActivity.this,ListViewActivity.class);
+                ButtonClicked = true;
+                intent = new Intent(MainActivity.this, ListViewActivity.class);
                 intent.putExtra("Category", "其他");
                 startActivity(intent);
                 finish();
                 break;
 
             case R.id.btn_bill:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("批價櫃檯")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("批價櫃檯")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "批價櫃檯");
                     startActivity(intent);
                     finish();
@@ -451,25 +456,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
 
             case R.id.btn_medicent:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("領藥處")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("領藥處")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "領藥處");
                     startActivity(intent);
                     finish();
@@ -477,25 +483,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
 
             case R.id.btn_wc:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("廁所")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("廁所")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "廁所");
                     startActivity(intent);
                     finish();
@@ -503,25 +510,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
             //出口
             case R.id.btn_exit:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("出口")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("出口")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "出口");
                     startActivity(intent);
                     finish();
@@ -529,25 +537,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
             //萊爾富
             case R.id.btn_convenience_store:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("超商")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("超商")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "超商");
                     startActivity(intent);
                     finish();
@@ -555,25 +564,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
             //抽血處
             case R.id.btn_exsanguinate:
-                for(int i = 0; i < listForStoringAllNodes.size(); i++) {
+                ButtonClicked = true;
+                for (int i = 0; i < listForStoringAllNodes.size(); i++) {
                     Log.i("asdd", listForStoringAllNodes.get(i)._category);
-                    if(listForStoringAllNodes.get(i)._category.equals("抽血處")) {
+                    if (listForStoringAllNodes.get(i)._category.equals("抽血處")) {
                         Log.i("asdd", listForStoringAllNodes.get(i)._category + "2");
                         CList.add(listForStoringAllNodes.get(i));
                     }
                 }
-                if(CList.size() == 1){
+                if (CList.size() == 1) {
                     destinationName = CList.get(0)._waypointName;
                     destinationID = CList.get(0)._waypointID;
                     destinationRegion = CList.get(0)._regionID;
-                    Intent  i = new Intent(MainActivity.this,NavigationActivity.class);
+                    Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                     i.putExtra("destinationName", destinationName);
                     i.putExtra("destinationID", destinationID);
                     i.putExtra("destinationRegion", destinationRegion);
                     startActivity(i);
                     finish();
-                }else if (CList.size() > 1){
-                    intent = new Intent(MainActivity.this,ListViewActivity.class);
+                } else if (CList.size() > 1) {
+                    intent = new Intent(MainActivity.this, ListViewActivity.class);
                     intent.putExtra("Category", "抽血處");
                     startActivity(intent);
                     finish();
@@ -581,6 +591,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 break;
 
         }
+    }
     }
 
     public void loadLocationDatafromRegionGraph() {
