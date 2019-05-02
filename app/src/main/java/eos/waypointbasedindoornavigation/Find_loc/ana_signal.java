@@ -91,11 +91,11 @@ public class ana_signal {
                            Log.i("tmp_count", "threshold = " + tmp_count_dif.get(1));
                            location_range.add("close");
                            location_range.add(data_list.get(0).getUuid());
-                           SignalLog("Close Beacon");
+                           //SignalLog("Close Beacon");
                            FirstTime = false;
                        }else if (FirstTime == false && tmp_dif > tmp_count_dif.get(0) &&
                               data_list.get(0).countavg() > tmp_count_dif.get(1)) {
-                           SignalLog("-------定位模組開始---------");
+                           /*SignalLog("-------定位模組開始---------");
                            SignalLog("----------------二次曲線預估-------------");
                            SignalLog("Remind Range : " + (remind_range+dp.get_Paramater(data_list.get(0).getUuid())));
                            SignalLog("預估最強UUID : " + data_list.get(0).getUuid_Name() + " 預估RSSI：" + String.valueOf(tmp_count_dif.get(1)));
@@ -113,7 +113,7 @@ public class ana_signal {
                                    String.valueOf(data_list.get(1).countavg()) + " 中位數：" + String.valueOf(data_list.get(1).getmiddlenum()) + " 標準差：" + String.valueOf(data_list.get(1).countStandard_Deviation()));
                            SignalLog("實際訊號差：" +  String.valueOf(data_list.get(0).countavg() - data_list.get(1).countavg()));
                            SignalLog("Close Beacon");
-                           SignalLog("-------定位模組結束---------");
+                           SignalLog("-------定位模組結束---------");*/
                            Log.i("def_range", "close " + data_list.get(0).getUuid());
                            Log.i("tmp_count", "threshold = " + tmp_count_dif.get(1));
                            location_range.add("close");
@@ -135,7 +135,7 @@ public class ana_signal {
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
                         location_range.add("close");
                         location_range.add(data_list.get(0).getUuid());
-                        SignalLog("Close Beacon");
+                        //SignalLog("Close Beacon");
                     }
                     else {
                         Log.i("def_range", "near " + data_list.get(0).getUuid());
@@ -153,7 +153,7 @@ public class ana_signal {
 //                        dp.get_Paramater(data_list.get(0).getUuid()));
                 location_range.add("close");
                 location_range.add(data_list.get(0).getUuid());
-                SignalLog("Close Beacon");
+                //SignalLog("Close Beacon");
             }
             else {
                 Log.i("def_range", "near " + data_list.get(0).getUuid());

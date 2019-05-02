@@ -297,7 +297,7 @@ public class initSignal extends AppCompatActivity implements BeaconConsumer {
         }
         String logRecord = null;
         logRecord = UUID + " = " + Double.parseDouble(rssi);
-        appendLog(logRecord);
+        //appendLog(logRecord);
         // Log.i("map UUID",map.get(UUID).toString());
 
 

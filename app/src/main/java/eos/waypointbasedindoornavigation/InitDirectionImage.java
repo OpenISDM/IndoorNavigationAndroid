@@ -62,7 +62,7 @@ public class InitDirectionImage extends AppCompatActivity{
             break;
         case "0x0f3eb8410x3921f342": //A3(心臟內科/內科/體檢區)
             if(nextWaypointID .equals("0xbf52c8410x3323f542") || nextWaypointID .equals("0xeb57ca410x0e21f342")) //服務台(A4 & A5)
-                image.setImageResource(R.drawable.a2);
+                image.setImageResource(R.drawable.a3);
             break;
         case "0xcf90b8410x3424f042": //A11批價
             if(nextWaypointID .equals("0x0154bd410x0055f142")) //30~41診走廊交叉口
@@ -78,7 +78,7 @@ public class InitDirectionImage extends AppCompatActivity{
             break;
         case "0xee0cb9410x3b43f042": //A15耳鼻喉科
             if(nextWaypointID .equals("0xff53bd410x0055f142") || nextWaypointID .equals("0xbb3fc8410x0721f342")) //健康教育中心(A14 & A15)
-                image.setImageResource(R.drawable.a14);
+                image.setImageResource(R.drawable.a15);
             break;
         case "0xff53bd410x0055f142": //A16健康教育中心
             if(nextWaypointID .equals("0xbf52c8410x3323f542") || nextWaypointID .equals("0xeb57ca410x0e21f342")) //服務台(A4 & A5)
@@ -100,7 +100,7 @@ public class InitDirectionImage extends AppCompatActivity{
             break;
         case "0x0254bd410x0155f142": //A21 外科/骨科/牙科
             if(nextWaypointID .equals("0x0154bd410x0055f142")) //A19 30~41診走廊交叉口
-                image.setImageResource(R.drawable.a20);
+                image.setImageResource(R.drawable.a21);
             break;
         case "0xed4cc8410x0e21f342": //A22 腎臟科/腎膽腸內科/新陳代謝分泌科
             if(nextWaypointID .equals("0x1cc7b9410xc771f042")) //A23 無障礙領藥窗口
@@ -116,7 +116,7 @@ public class InitDirectionImage extends AppCompatActivity{
             break;
         case "0xdc19ba410x7786f042": //A28 眼科/皮膚科
             if(nextWaypointID .equals("0x7cf0b9410x1f7cf042")) //A19 30~41診走廊交叉口
-                image.setImageResource(R.drawable.a27);
+                image.setImageResource(R.drawable.a28);
             break;
         case "0x8b2eba410xa38bf042": //A29 42~49診走廊出口
             if(nextWaypointID .equals("0x2c05ba410x4b81f042") || nextWaypointID .equals("0xdc19ba410x7786f042")) //A27 & A28眼科/皮膚科

@@ -26,12 +26,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
@@ -62,9 +68,26 @@ import eos.waypointbasedindoornavigation.Find_loc.DeviceParameter;
 import eos.waypointbasedindoornavigation.Find_loc.Find_Loc;
 
 import org.altbeacon.beacon.BeaconManager;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -141,6 +164,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     Intent intent;
     Button btn_stethoscope, btn_bill, btn_exit, btn_medicent, btn_convenience_store, btn_wc,btn_exsanguinate,btn_examination_room,btn_other;
     TextView tv_description;
+    TextView localVersionText = null;
+    //PHP
+    String url = "http://140.125.45.113/test/index.php";// 要加上"http://" 否則會連線失敗
+    String phpVersion = null;
+    String VersionCode = "1.0.1";
+    private static int count = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,7 +216,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_main);
         setTitle("台大雲林分院室內導航系統");
         Log.i("Main_Create_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
-        //檢查藍芽權限
+
+        if(count == 0) {//僅在首次開啟app時檢查
+            count = 1;
+            //檢測網路權限
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) { //網路有開啟，檢查擷取php版本
+                new Thread(runnable).start();//啟動執行序runnable
+            }
+        }
+      //檢查藍芽權限
         BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if(!mBtAdapter.isEnabled()) {
             Intent enableIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_ENABLE );
@@ -251,25 +290,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         btn_other = (Button)findViewById(R.id.btn_other);
         btn_exsanguinate = (Button)findViewById(R.id.btn_exsanguinate);
         tv_description = (TextView)findViewById(R.id.tv_description);
-
-
-
-        //Decide which search bar to be set value
-      /*  if(searchBarClicked == true) {
-            destinationName = namePassedFromListView;
-            destinationID = IDPassedFromListView;
-            destinationRegion = regionPassedFromListView;
-            searchBarForDestination.setText(destinationName);
-            StartButton.setVisibility(View.VISIBLE);
-        }*/
-
+        localVersionText = (TextView)findViewById(R.id.VersiontextView);
+        localVersionText.setText("v" + VersionCode);
         loadLocationDatafromRegionGraph();
         List<Node> data = Collections.emptyList();
         for(int i = 0 ; i < categoryList.size() ; i++) {
             Log.i("xxx_List", "Categorylist = " + categoryList.get(i));
         }
-
-
 
     }
 
@@ -290,48 +317,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         Log.i("Main_Destroy_Mem", "usedMemory: Heap/Allocated Heap "+ Debug.getNativeHeapSize() + "/" + Debug.getNativeHeapAllocatedSize());
         super.onDestroy();
     }
-
-    // Switch to ListView Activity when one of the search bars is clicked
-    /*public void switchToListView(View v){
-
-        //Create Intent variable to switch to ListViewActivity
-        Intent i = new Intent(this, ListViewActivity.class);
-
-        //start ListViewActivity
-        startActivity(i);
-        finish();
-    }*/
-
-
-    //Press "Start" button to start navigation
-    /*public void startNavigation(View view){
-        //Start NavigationActivity and pass IDs and Regions of source and destination to it
-        Intent i = new Intent(this, NavigationActivity.class);
-        i.putExtra("destinationID", destinationID);
-        i.putExtra("destinationRegion", destinationRegion);
-        //Initialize values of static variables
-        searchBarClicked = false;
-        namePassedFromListView = null;
-        IDPassedFromListView = null;
-        regionPassedFromListView = null;
-        destinationName = null;
-        destinationID = null;
-        destinationRegion = null;
-
-        startActivity(i);
-        finish();
-    }*/
-
-
-  /*  public void exitProgram(View view){
-        android.os.Process.killProcess(android.os.Process.myPid());
-        Log.i("xxx", "InexitProgram");
-    }
-
-    public  void signalInit(View view){
-        Intent i = new Intent(this, initSignal.class);
-        startActivity(i);
-    }*/
 
     public void resetSignal(View view){
         //取得目前offset設定值
@@ -630,7 +615,109 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    //PHP
+    Handler handler_Success = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String val = data.getString("key");//取出key中的字串存入val
+            //Toast.makeText(getApplicationContext(), val, Toast.LENGTH_LONG).show();
+            try {
+                phpVersion = getVersionFormphp(val);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.i("xxx_update","phpVersion = " + phpVersion);
+            if(!VersionCode.equals(phpVersion) && phpVersion != null){
 
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("系統");
+                dialog.setMessage("偵測到有最新版本，是否進行更新?(建議使用Wi-Fi下載)");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("確定",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://drive.google.com/drive/folders/1imN5pw_g38IMHgdqT98hlHUX_unKz4X0?fbclid=IwAR2eHY-TVgPM1G4yRWs_H7SG8O-egQnKiMygWwQe4mGqrrBP7cJnugnXZ7Y"));
+                        startActivity(intent);
+                    }
+                });
+                dialog.setNegativeButton("取消",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    }
+                });
+                dialog.show();
+            }
 
+        }
 
+    };
+
+    Handler handler_Error = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String val = data.getString("key");
+            Log.i("xxx_update","" + val);
+        }
+    };
+
+    Handler handler_Nodata = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String val = data.getString("key");
+            Log.i("xxx_update","" + val);
+        }
+    };
+
+    Runnable runnable = new Runnable(){
+        @Override
+        public void run() {
+            //
+            // TODO: http request.
+            //
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            msg.setData(data);
+            try
+            {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost method = new HttpPost(url);//連線到 url網址
+                HttpResponse response = httpclient.execute(method);
+                HttpEntity entity = response.getEntity();
+
+                if(entity != null){
+                    data.putString("key", EntityUtils.toString(entity));//如果成功將網頁內容存入key
+                    handler_Success.sendMessage(msg);
+                }
+                else{
+                    data.putString("key","無資料");
+                    handler_Nodata.sendMessage(msg);
+                }
+            }
+            catch(Exception e){
+                data.putString("key","連線失敗");
+                handler_Error.sendMessage(msg);
+            }
+
+        }
+    };
+
+    public String getVersionFormphp(String all) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject(all);
+        String version = jsonObject.getString("version");
+
+        return version;
+    }
 }
+
+
+
+

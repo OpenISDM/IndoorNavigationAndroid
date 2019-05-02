@@ -45,6 +45,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
@@ -383,8 +385,8 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         currentLocationReminder = (TextView) findViewById(R.id.nowAt);
         imageTurnIndicator = (ImageView) findViewById(imageView);
         positionOfPopup = (LinearLayout) findViewById(R.id.navigationLayout);
-        waypointIDInput = (EditText) findViewById(R.id.inputID);
-        waypointIDInputButton = (Button) findViewById(R.id.inputButton);
+        //waypointIDInput = (EditText) findViewById(R.id.inputID);
+        //waypointIDInputButton = (Button) findViewById(R.id.inputButton);
         //drawPanel = (ImageView) findViewById(R.id.drawpanel);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressNumber = (TextView) findViewById(R.id.progressNumber);
@@ -408,7 +410,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 }
             }
         });
-
+/*
         if (Setting.getModeValue() == USER_MODE) {
             waypointIDInput.setVisibility(View.INVISIBLE);
             waypointIDInputButton.setVisibility(View.INVISIBLE);
@@ -416,7 +418,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             waypointIDInput.setVisibility(View.VISIBLE);
             waypointIDInputButton.setVisibility(View.VISIBLE);
         }
-
+*/
 
         // receive value passed from MainActivity,
         //including IDs and Regions of source and destination
@@ -520,7 +522,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     void navigationInstructionDisplay(String turnDirection, int distance) {
 
-        SignalLog("----------指令模組開始----------");
+        //SignalLog("----------指令模組開始----------");
         //關閉後面圖示顯示UI
         closeImage();
 
@@ -1079,7 +1081,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                 break;
 
             case WRONG:
-                SignalLog("跳出重新計算路線指令");
+                //SignalLog("跳出重新計算路線指令");
                 Log.i("wrong", "Out");
                 List<Node> newPath = new ArrayList<>();
                 List<Node> wrongPath = new ArrayList<>();
@@ -1161,7 +1163,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
                     if (isLongerPath) {
                         String gobackDirection = null;
-                        appendLog("重新規劃路線，且是返回走");
+                        //appendLog("重新規劃路線，且是返回走");
                         currentLBeaconID = "EmptyString";
                         //navigationPath.add(0, lastNode);
                         //navigationPath.add(0, wrongWaypoint);
@@ -1189,7 +1191,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
                     } else {
-                        appendLog("重新規劃路線");
+                        //appendLog("重新規劃路線");
                         //showHintAtWaypoint(WRONGWAY_NOTIFIER);
 
                         navigationPath = newPath;
@@ -1486,7 +1488,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             navigationPath.remove(0);
         }
 
-        SignalLog("----------指令模組結束----------");
+        //SignalLog("----------指令模組結束----------");
         FirstTurn = false;
 
         if(FirstTurn == false) {
@@ -1773,7 +1775,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     isFirstBeacon = false;
                 }
 
-                appendLog("StartNavigation");
+                //appendLog("StartNavigation");
 
                 //初始設定
                 String initDirectionName = null;
@@ -1828,7 +1830,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             // block the Lbeacon ID the navigator just received
             if (pass) {
 
-                appendLog(navigationPath.get(0)._waypointName);
+                //appendLog(navigationPath.get(0)._waypointName);
 
                 whichWaypointOnProgressBar += 1;
 
@@ -2243,7 +2245,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
         Vibrator myVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
         if (instruction == ARRIVED_NOTIFIER) {
-            appendLog("EndNavigation");
+            //appendLog("EndNavigation");
             turnDirection = YOU_HAVE_ARRIVE;
             //image.setImageResource(R.drawable.arrived_image);
             //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
@@ -2252,11 +2254,12 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
             beaconManager.removeAllMonitorNotifiers();
             beaconManager.removeAllRangeNotifiers();
             beaconManager.unbind(NavigationActivity.this);
-            android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(NavigationActivity.this);
-            dialog.setTitle("您已抵達目的地附近");
-            dialog.setMessage("是否同意協助我們填寫導航滿意度調查問卷?");
-            dialog.setCancelable(false);
-            dialog.setPositiveButton("不同意",new DialogInterface.OnClickListener() {
+            //-----------------------
+            android.support.v7.app.AlertDialog.Builder dialog2 = new android.support.v7.app.AlertDialog.Builder(NavigationActivity.this);
+            dialog2.setTitle("系統");
+            dialog2.setMessage("是否同意協助我們填寫導航滿意度調查問卷?");
+            dialog2.setCancelable(false);
+            dialog2.setNegativeButton("下次再填",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     Intent i = new Intent(NavigationActivity.this, MainActivity.class);
@@ -2264,19 +2267,38 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                     finish();
                 }
             });
-            dialog.setNegativeButton("同意",new DialogInterface.OnClickListener() {
+            dialog2.setPositiveButton("同意",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
-                    Intent i = new Intent(NavigationActivity.this, Questionwebview.class);
-                    startActivity(i);
-                    finish();
-                   /* Uri uri = Uri.parse("https://forms.gle/5SHRm6utPDnYyFBW9");
-                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(it);
-                    finish();*/
+                    ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+                    if(mNetworkInfo != null) {
+                        Intent i = new Intent(NavigationActivity.this, Questionwebview.class);
+                        startActivity(i);
+                        finish();
+                    }else{
+                        Toast toast = Toast.makeText(NavigationActivity.this,
+                                "尚未連接至網路！", Toast.LENGTH_LONG);
+                        toast.show();
+                        Intent i = new Intent(NavigationActivity.this, MainActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                }
+            });
+            dialog2.show();
+            //-------------------------
+            android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(NavigationActivity.this);
+            dialog.setTitle("系統");
+            dialog.setMessage("您已達目的地附近！！");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("確定",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
                 }
             });
             dialog.show();
+           //--------------------------
         } else if (instruction == WRONGWAY_NOTIFIER) {
             turnDirection = "正在幫您重新計算路線";
             //tts.speak(turnDirection, TextToSpeech.QUEUE_ADD, null);
@@ -2304,7 +2326,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         image.setImageResource(R.drawable.right_now);
                         LastisSlash = false;
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                        SignalLog("跳出右轉指令");
+                        //SignalLog("跳出右轉指令");
                         break;
                     case LEFT:
                         nowDoInstruction.setText(NOW_TURN_LEFT);
@@ -2313,7 +2335,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         image.setImageResource(R.drawable.left_now);
                         LastisSlash = false;
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                        SignalLog("跳出左轉指令");
+                        //SignalLog("跳出左轉指令");
                         break;
                     case FRONT_RIGHT:
                         turnDirection = PLEASE_TURN__FRONT_RIGHT;
@@ -2321,13 +2343,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nowDoInstruction.setText(NOW_TURN__FRONT_RIGHT);
                             image.setImageResource(R.drawable.rightup_now);
                             imageTurnIndicator.setImageResource(R.drawable.rightup_now);
-                            SignalLog("跳出右前指令");
+                            //SignalLog("跳出右前指令");
                             LastisSlash = true;
                         } else {
                             nowDoInstruction.setText(NOW_GO_STRAIGHT);
                             imageTurnIndicator.setImageResource(R.drawable.up_now);
                             image.setImageResource(R.drawable.up_now);
-                            SignalLog("跳出直走指令");
+                            //SignalLog("跳出直走指令");
                             LastisSlash = false;
                         }
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
@@ -2338,13 +2360,13 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nowDoInstruction.setText(NOW_TURN_FRONT_LEFT);
                             imageTurnIndicator.setImageResource(R.drawable.leftup_now);
                             image.setImageResource(R.drawable.leftup_now);
-                            SignalLog("跳出左前指令");
+                            //SignalLog("跳出左前指令");
                             LastisSlash = true;
                         } else {
                             nowDoInstruction.setText(NOW_GO_STRAIGHT);
                             imageTurnIndicator.setImageResource(R.drawable.up_now);
                             image.setImageResource(R.drawable.up_now);
-                            SignalLog("跳出直走指令");
+                            //SignalLog("跳出直走指令");
                             LastisSlash = false;
                         }
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
@@ -2355,7 +2377,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         imageTurnIndicator.setImageResource(R.drawable.rightdown_now);
                         image.setImageResource(R.drawable.rightdown_now);
                         LastisSlash = false;
-                        SignalLog("跳出往右迴轉指令");
+                        //SignalLog("跳出往右迴轉指令");
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                         break;
                     case REAR_LEFT:
@@ -2364,7 +2386,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         imageTurnIndicator.setImageResource(R.drawable.leftdown_now);
                         image.setImageResource(R.drawable.leftdown_now);
                         LastisSlash = false;
-                        SignalLog("跳出往左迴轉指令");
+                        //SignalLog("跳出往左迴轉指令");
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                         break;
                     case FRONT:
@@ -2374,7 +2396,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         image.setImageResource(R.drawable.up_now);
                         LastisSlash = false;
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
-                        SignalLog("跳出直走指令");
+                        //SignalLog("跳出直走指令");
                         break;
                     case FRONT_RIGHTSIDE:
                         turnDirection = PLEASE_GO_STRAIGHT_RIGHTSIDE;
@@ -2382,11 +2404,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nowDoInstruction.setText(NOW_GO_STRAIGHT_RIGHTSIDE);
                             imageTurnIndicator.setImageResource(R.drawable.up_rightside);
                             image.setImageResource(R.drawable.up_rightside);
-                            SignalLog("跳出靠右指令");
+                            //SignalLog("跳出靠右指令");
                             LastisSlash = true;
                         } else {
                             nowDoInstruction.setText(NOW_GO_STRAIGHT);
-                            SignalLog("跳出直走指令");
+                            //SignalLog("跳出直走指令");
                             imageTurnIndicator.setImageResource(R.drawable.up_now);
                             image.setImageResource(R.drawable.up_now);
                             LastisSlash = false;
@@ -2399,11 +2421,11 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                             nowDoInstruction.setText(NOW_GO_STRAIGHT_LEFTSIDE);
                             imageTurnIndicator.setImageResource(R.drawable.up_leftside);
                             image.setImageResource(R.drawable.up_leftside);
-                            SignalLog("跳出靠左指令");
+                            //SignalLog("跳出靠左指令");
                             LastisSlash = true;
                         } else {
                             nowDoInstruction.setText(NOW_GO_STRAIGHT);
-                            SignalLog("跳出直走指令");
+                            //SignalLog("跳出直走指令");
                             imageTurnIndicator.setImageResource(R.drawable.up_now);
                             image.setImageResource(R.drawable.up_now);
                             LastisSlash = false;
@@ -2414,7 +2436,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         turnDirection = PLEASE_TAKE_ELEVATOR;
                         image.setImageResource(R.drawable.elevator);
                         LastisSlash = false;
-                        SignalLog("跳出電梯指令");
+                        //SignalLog("跳出電梯指令");
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                         break;
                     case STAIR:
@@ -2424,14 +2446,14 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
                         else
                             image.setImageResource(R.drawable.stairs_down);
                         LastisSlash = false;
-                        SignalLog("跳出樓梯指令");
+                        //SignalLog("跳出樓梯指令");
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                         break;
                     case "goback":
                         turnDirection = " ";
                         imageTurnIndicator.setImageResource(R.drawable.turn_back);
                         image.setImageResource(R.drawable.turn_back);
-                        SignalLog("跳出正後方迴轉指令");
+                        //SignalLog("跳出正後方迴轉指令");
                         Log.i("xxx_Direction", "跳出指令方向 = " + turnNotificationForPopup);
                         // setNowPostition();
                         break;
@@ -2636,7 +2658,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
 
 
-            appendLog("StartNavigation");
+            //appendLog("StartNavigation");
 
             //初始設定
             String initDirectionName = null;
@@ -2694,7 +2716,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
         if (pass) {
 
-            appendLog(navigationPath.get(0)._waypointName);
+            //appendLog(navigationPath.get(0)._waypointName);
             synchronized (sync) {
 
                 Log.i("enter", "sync");
@@ -2972,7 +2994,7 @@ public class NavigationActivity extends AppCompatActivity implements BeaconConsu
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        appendLog("EndNavigation");
+        //appendLog("EndNavigation");
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             beaconManager.removeAllMonitorNotifiers();
