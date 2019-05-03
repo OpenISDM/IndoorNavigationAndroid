@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     //PHP
     String url = "http://140.125.45.113/test/index.php";// 要加上"http://" 否則會連線失敗
     String phpVersion = null;
-    String VersionCode = "1.0.1";
+    String VersionCode = "1.0.2";
     private static int count = 0;
 
     @Override

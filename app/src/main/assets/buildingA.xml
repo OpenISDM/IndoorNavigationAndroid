@@ -19,7 +19,6 @@
 		<node id='0xc43af3420x00000000' name='核子醫學部' region='region1' category='檢查室'/>
 		<node id='0xde57c8410x0721f342' name='抽血處' region='region1' category='抽血處'/>
 		<node id='0x0800b8410x0200f042' name='病歷室' region='region1' category='舊大樓一樓'/>
-		<node id='0x3519b8410x4d06f042' name='電腦斷層室' region='region1' category='檢查室'/>
 		<node id='0xeb57ba410xfb95f042' name='後門出口' region='region1' category='出口'/>
 	
 	</region>
@@ -27,7 +26,7 @@
 	<region id='2' name='region2' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='2'>
      
 	<node id='0x006317170x00020000' name='心臟血管檢查室' region='region2' category='檢查室'/>
-	<node id='0x553bc2410x2d44f042' name='內視鏡/一般超音波檢查室' region='region2' category='檢查室'/>
+	<node id='0x553bc2410x2d44f042' name='內視鏡/超音波檢查室' region='region2' category='檢查室'/>
 	<node id='0x021234110x00020000' name='神經部檢查室' region='region2' category='檢查室'/>
 
     </region>
@@ -35,7 +34,7 @@
 
     <region id='3' name='region3' neighbor1='region1' neighbor2='' neighbor3='' neighbor4='' elevation='0'>
      
-	 <node id='0x5c93bd410x4f0df142' name='X光報到處' region='region3' category='檢查室'/>
+	 <node id='0x5c93bd410x4f0df142' name='X光/電腦斷層室' region='region3' category='檢查室'/>
 
     </region>
 

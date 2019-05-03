@@ -104,27 +104,26 @@
                 android:layout_weight="0.33">
 
                 <Button
-                    android:id="@+id/btn_exit"
+                    android:id="@+id/btn_medicent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background"
                     android:gravity="center|bottom"
                     android:paddingBottom="10dp"
-
-                    android:singleLine="false"
-                    android:text="出口"
+                    android:text="領藥處"
                     android:onClick="onClick"
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/im_exit"
+                    android:id="@+id/im_medicent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="35dip"
-                    android:src="@drawable/exit3" />
+                    android:src="@drawable/pill" />
             </RelativeLayout>
+
         </TableRow>
 
         <TableRow
@@ -163,24 +162,24 @@
                 android:layout_weight="0.33">
 
                 <Button
-                    android:id="@+id/btn_medicent"
+                    android:id="@+id/btn_exsanguinate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background"
                     android:gravity="center|bottom"
                     android:paddingBottom="10dp"
-                    android:text="領藥處"
+                    android:text="抽血處"
                     android:onClick="onClick"
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/im_medicent"
+                    android:id="@+id/im_exsanguinate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="35dip"
-                    android:src="@drawable/pill" />
+                    android:src="@drawable/exsanguinate" />
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="0dp"
@@ -264,30 +263,33 @@
                     android:layout_marginBottom="35dip"
                     android:src="@drawable/bathroom" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.33">
 
                 <Button
-                    android:id="@+id/btn_exsanguinate"
+                    android:id="@+id/btn_exit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background"
                     android:gravity="center|bottom"
                     android:paddingBottom="10dp"
-                    android:text="抽血處"
+
+                    android:singleLine="false"
+                    android:text="出口"
                     android:onClick="onClick"
                     android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/im_exsanguinate"
+                    android:id="@+id/im_exit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="35dip"
-                    android:src="@drawable/exsanguinate" />
+                    android:src="@drawable/exit3" />
             </RelativeLayout>
         </TableRow>
 
