@@ -78,6 +78,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -166,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     TextView tv_description;
     TextView localVersionText = null;
     //PHP
-    String url = "http://140.125.45.113/test/index.php";// 要加上"http://" 否則會連線失敗
     String phpVersion = null;
     String VersionCode = "1.0.2";
     private static int count = 0;
@@ -687,13 +687,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             msg.setData(data);
             try
             {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost method = new HttpPost(url);//連線到 url網址
-                HttpResponse response = httpclient.execute(method);
-                HttpEntity entity = response.getEntity();
+                URL url = new URL("http://140.125.45.113/test/index.php");
+                HttpURLConnection mUrlConnection = (HttpURLConnection) url.openConnection();
+                mUrlConnection.setDoInput(true);
 
-                if(entity != null){
-                    data.putString("key", EntityUtils.toString(entity));//如果成功將網頁內容存入key
+                InputStream is = new BufferedInputStream(mUrlConnection.getInputStream());
+                BufferedReader  bufferedReader  = new BufferedReader( new InputStreamReader(is) );
+
+                String tempStr;
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while( ( tempStr = bufferedReader.readLine() ) != null ) {
+                    stringBuffer.append( tempStr );
+                }
+                bufferedReader.close();
+                is.close();
+
+                String responseString = stringBuffer.toString();
+
+                if(responseString!= null){
+                    data.putString("key", responseString);//如果成功將網頁內容存入key
                     handler_Success.sendMessage(msg);
                 }
                 else{
