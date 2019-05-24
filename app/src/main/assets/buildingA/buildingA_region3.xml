@@ -3,9 +3,9 @@
 
 
     <region3>
-        <node id='0x0193bd410x780df142' name='樓梯' region='region3' lat='23.698511120350034' lon='120.52726000409886' neighbor1='0x5c93bd410x4f0df142' neighbor2='0x5519b8410x5506f042' neighbor3='' neighbor4='' category='新大樓地下一樓' nodeType='2' connectPointID='1' groupID='' mainID='' elevation='0'/>
-        <node id='0x5c93bd410x4f0df142' name='X光報到處' region='region3' lat='23.698395010350037' lon='120.52726000409886' neighbor1='0x0193bd410x780df142' neighbor2='' neighbor3='' neighbor4='' category='新大樓地下一樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='0'/>
-        <node id='0x5519b8410x5506f042' name='電梯' region='region3' lat='23.698511120350034' lon='120.52730219409887' neighbor1='0x0193bd410x780df142' neighbor2='' neighbor3='' neighbor4='' category='新大樓地下一樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='0'/>
+        <node id='0x0193bd410x780df142' name='樓梯(B1)' region='region3' lat='23.698511120350034' lon='120.52726000409886' neighbor1='0x5c93bd410x4f0df142' neighbor2='0x5519b8410x5506f042' neighbor3='' neighbor4='' category='新大樓地下一樓' nodeType='2' connectPointID='1' groupID='' mainID='' elevation='0'/>
+        <node id='0x5c93bd410x4f0df142' name='X光報到處(B3)' region='region3' lat='23.698395010350037' lon='120.52726000409886' neighbor1='0x0193bd410x780df142' neighbor2='' neighbor3='' neighbor4='' category='新大樓地下一樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='0'/>
+        <node id='0x5519b8410x5506f042' name='電梯(B2)' region='region3' lat='23.698511120350034' lon='120.52730219409887' neighbor1='0x0193bd410x780df142' neighbor2='' neighbor3='' neighbor4='' category='新大樓地下一樓' nodeType='' connectPointID='' groupID='' mainID='' elevation='0'/>
     </region3>
 
 
